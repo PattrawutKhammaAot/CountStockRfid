@@ -1,22 +1,22 @@
-part of 'master_rfid_bloc.dart';
+part of 'transaction_bloc.dart';
 
-class MasterRfidState extends Equatable {
-  final List<Master_rfidData>? data;
+class TransactionState extends Equatable {
+  final List<TransactionsDBData>? data;
   final FetchStatus status;
   final DefaultResponse? dataDefaultResponse;
   final String message;
-  const MasterRfidState(
+  const TransactionState(
       {this.data,
       this.status = FetchStatus.init,
       this.message = '',
       this.dataDefaultResponse});
 
-  MasterRfidState copyWith(
-      {List<Master_rfidData>? data,
+  TransactionState copyWith(
+      {List<TransactionsDBData>? data,
       FetchStatus? status,
       String? message,
       DefaultResponse? dataDefaultResponse}) {
-    return MasterRfidState(
+    return TransactionState(
         data: data = data ?? this.data,
         status: status = status ?? this.status,
         message: message = message ?? this.message,
@@ -31,7 +31,4 @@ class MasterRfidState extends Equatable {
       ];
 }
 
-class MasterRfidInitial extends MasterRfidState {
-  @override
-  List<Object> get props => [];
-}
+final class TransactionInitial extends TransactionState {}

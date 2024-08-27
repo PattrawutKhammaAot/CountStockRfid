@@ -4,19 +4,19 @@
 
 import 'dart:convert';
 
-TotalScanModel totalScanModelFromJson(String str) =>
-    TotalScanModel.fromJson(json.decode(str));
+SumReportModel totalScanModelFromJson(String str) =>
+    SumReportModel.fromJson(json.decode(str));
 
-String totalScanModelToJson(TotalScanModel data) => json.encode(data.toJson());
+String totalScanModelToJson(SumReportModel data) => json.encode(data.toJson());
 
-class TotalScanModel {
+class SumReportModel {
   int? totalMaster;
   int? totalLoss;
   int? totalFound;
   bool? statusCode;
   String? message;
 
-  TotalScanModel({
+  SumReportModel({
     this.totalMaster,
     this.totalLoss,
     this.totalFound,
@@ -24,14 +24,14 @@ class TotalScanModel {
     this.message,
   });
 
-  TotalScanModel copyWith({
+  SumReportModel copyWith({
     int? totalMaster,
     int? totalLoss,
     int? totalFound,
     bool? statusCode,
     String? message,
   }) =>
-      TotalScanModel(
+      SumReportModel(
         totalMaster: totalMaster ?? this.totalMaster,
         totalLoss: totalLoss ?? this.totalLoss,
         totalFound: totalFound ?? this.totalFound,
@@ -39,7 +39,7 @@ class TotalScanModel {
         message: message ?? this.message,
       );
 
-  factory TotalScanModel.fromJson(Map<String, dynamic> json) => TotalScanModel(
+  factory SumReportModel.fromJson(Map<String, dynamic> json) => SumReportModel(
         totalMaster: json["total_master"],
         totalLoss: json["total_loss"],
         totalFound: json["total_found"],

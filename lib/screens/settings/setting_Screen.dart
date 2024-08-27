@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:rfid/config/appData.dart';
-import 'package:rfid/main.dart';
+import 'package:countstock_rfid/config/appData.dart';
+import 'package:countstock_rfid/main.dart';
 
 import '../../app.dart';
 import '../../nativefunction/nativeFunction.dart';

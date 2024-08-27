@@ -1,5 +1,5 @@
 // import 'package:connectivity_plus/connectivity_plus.dart';
-// import 'package:rfid/blocs/network/bloc/network_bloc.dart';
+// import 'package:countstock_rfid/blocs/network/bloc/network_bloc.dart';
 
 // class NetworkHelper {
 //   static void observeNetwork() {

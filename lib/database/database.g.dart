@@ -3,704 +3,849 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $Master_rfidTable extends Master_rfid
-    with TableInfo<$Master_rfidTable, Master_rfidData> {
+class $ItemMasterDBTable extends ItemMasterDB
+    with TableInfo<$ItemMasterDBTable, ItemMasterDBData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $Master_rfidTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _key_idMeta = const VerificationMeta('key_id');
+  $ItemMasterDBTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _item_idMeta =
+      const VerificationMeta('item_id');
   @override
-  late final GeneratedColumn<int> key_id = GeneratedColumn<int>(
-      'key_id', aliasedName, false,
+  late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
+      'item_id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _rfid_tagMeta =
-      const VerificationMeta('rfid_tag');
+  static const VerificationMeta _ItemCodeMeta =
+      const VerificationMeta('ItemCode');
   @override
-  late final GeneratedColumn<String> rfid_tag = GeneratedColumn<String>(
-      'rfid_tag', aliasedName, true,
+  late final GeneratedColumn<String> ItemCode = GeneratedColumn<String>(
+      'item_code', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  static const VerificationMeta _ItemNameMeta =
+      const VerificationMeta('ItemName');
   @override
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-      'status', aliasedName, true,
+  late final GeneratedColumn<String> ItemName = GeneratedColumn<String>(
+      'item_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _rssiMeta = const VerificationMeta('rssi');
+  static const VerificationMeta _ItemDescriptionMeta =
+      const VerificationMeta('ItemDescription');
   @override
-  late final GeneratedColumn<String> rssi = GeneratedColumn<String>(
-      'rssi', aliasedName, true,
+  late final GeneratedColumn<String> ItemDescription = GeneratedColumn<String>(
+      'item_description', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
+  static const VerificationMeta _SerialNumberMeta =
+      const VerificationMeta('SerialNumber');
   @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
+  late final GeneratedColumn<String> SerialNumber = GeneratedColumn<String>(
+      'serial_number', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _QuantityMeta =
+      const VerificationMeta('Quantity');
   @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  late final GeneratedColumn<String> Quantity = GeneratedColumn<String>(
+      'quantity', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _Udf01Meta = const VerificationMeta('Udf01');
   @override
-  List<GeneratedColumn> get $columns =>
-      [key_id, rfid_tag, status, rssi, created_at, updated_at];
+  late final GeneratedColumn<String> Udf01 = GeneratedColumn<String>(
+      'udf01', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _Udf02Meta = const VerificationMeta('Udf02');
+  @override
+  late final GeneratedColumn<String> Udf02 = GeneratedColumn<String>(
+      'udf02', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _Udf03Meta = const VerificationMeta('Udf03');
+  @override
+  late final GeneratedColumn<String> Udf03 = GeneratedColumn<String>(
+      'udf03', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _Udf04Meta = const VerificationMeta('Udf04');
+  @override
+  late final GeneratedColumn<String> Udf04 = GeneratedColumn<String>(
+      'udf04', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _Udf05Meta = const VerificationMeta('Udf05');
+  @override
+  late final GeneratedColumn<String> Udf05 = GeneratedColumn<String>(
+      'udf05', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        item_id,
+        ItemCode,
+        ItemName,
+        ItemDescription,
+        SerialNumber,
+        Quantity,
+        Udf01,
+        Udf02,
+        Udf03,
+        Udf04,
+        Udf05
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'master_rfid';
+  static const String $name = 'item_master_d_b';
   @override
-  VerificationContext validateIntegrity(Insertable<Master_rfidData> instance,
+  VerificationContext validateIntegrity(Insertable<ItemMasterDBData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('key_id')) {
-      context.handle(_key_idMeta,
-          key_id.isAcceptableOrUnknown(data['key_id']!, _key_idMeta));
+    if (data.containsKey('item_id')) {
+      context.handle(_item_idMeta,
+          item_id.isAcceptableOrUnknown(data['item_id']!, _item_idMeta));
     }
-    if (data.containsKey('rfid_tag')) {
-      context.handle(_rfid_tagMeta,
-          rfid_tag.isAcceptableOrUnknown(data['rfid_tag']!, _rfid_tagMeta));
+    if (data.containsKey('item_code')) {
+      context.handle(_ItemCodeMeta,
+          ItemCode.isAcceptableOrUnknown(data['item_code']!, _ItemCodeMeta));
     }
-    if (data.containsKey('status')) {
-      context.handle(_statusMeta,
-          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    if (data.containsKey('item_name')) {
+      context.handle(_ItemNameMeta,
+          ItemName.isAcceptableOrUnknown(data['item_name']!, _ItemNameMeta));
     }
-    if (data.containsKey('rssi')) {
+    if (data.containsKey('item_description')) {
       context.handle(
-          _rssiMeta, rssi.isAcceptableOrUnknown(data['rssi']!, _rssiMeta));
+          _ItemDescriptionMeta,
+          ItemDescription.isAcceptableOrUnknown(
+              data['item_description']!, _ItemDescriptionMeta));
     }
-    if (data.containsKey('created_at')) {
+    if (data.containsKey('serial_number')) {
       context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
+          _SerialNumberMeta,
+          SerialNumber.isAcceptableOrUnknown(
+              data['serial_number']!, _SerialNumberMeta));
     }
-    if (data.containsKey('updated_at')) {
+    if (data.containsKey('quantity')) {
+      context.handle(_QuantityMeta,
+          Quantity.isAcceptableOrUnknown(data['quantity']!, _QuantityMeta));
+    }
+    if (data.containsKey('udf01')) {
       context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
+          _Udf01Meta, Udf01.isAcceptableOrUnknown(data['udf01']!, _Udf01Meta));
+    }
+    if (data.containsKey('udf02')) {
+      context.handle(
+          _Udf02Meta, Udf02.isAcceptableOrUnknown(data['udf02']!, _Udf02Meta));
+    }
+    if (data.containsKey('udf03')) {
+      context.handle(
+          _Udf03Meta, Udf03.isAcceptableOrUnknown(data['udf03']!, _Udf03Meta));
+    }
+    if (data.containsKey('udf04')) {
+      context.handle(
+          _Udf04Meta, Udf04.isAcceptableOrUnknown(data['udf04']!, _Udf04Meta));
+    }
+    if (data.containsKey('udf05')) {
+      context.handle(
+          _Udf05Meta, Udf05.isAcceptableOrUnknown(data['udf05']!, _Udf05Meta));
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {key_id};
+  Set<GeneratedColumn> get $primaryKey => {item_id};
   @override
-  Master_rfidData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ItemMasterDBData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Master_rfidData(
-      key_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}key_id'])!,
-      rfid_tag: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}rfid_tag']),
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}status']),
-      rssi: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}rssi']),
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
+    return ItemMasterDBData(
+      item_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
+      ItemCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}item_code']),
+      ItemName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}item_name']),
+      ItemDescription: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}item_description']),
+      SerialNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}serial_number']),
+      Quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}quantity']),
+      Udf01: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}udf01']),
+      Udf02: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}udf02']),
+      Udf03: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}udf03']),
+      Udf04: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}udf04']),
+      Udf05: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}udf05']),
     );
   }
 
   @override
-  $Master_rfidTable createAlias(String alias) {
-    return $Master_rfidTable(attachedDatabase, alias);
+  $ItemMasterDBTable createAlias(String alias) {
+    return $ItemMasterDBTable(attachedDatabase, alias);
   }
 }
 
-class Master_rfidData extends DataClass implements Insertable<Master_rfidData> {
-  final int key_id;
-  final String? rfid_tag;
-  final String? status;
-  final String? rssi;
-  final DateTime? created_at;
-  final DateTime? updated_at;
-  const Master_rfidData(
-      {required this.key_id,
-      this.rfid_tag,
-      this.status,
-      this.rssi,
-      this.created_at,
-      this.updated_at});
+class ItemMasterDBData extends DataClass
+    implements Insertable<ItemMasterDBData> {
+  final int item_id;
+  final String? ItemCode;
+  final String? ItemName;
+  final String? ItemDescription;
+  final String? SerialNumber;
+  final String? Quantity;
+  final String? Udf01;
+  final String? Udf02;
+  final String? Udf03;
+  final String? Udf04;
+  final String? Udf05;
+  const ItemMasterDBData(
+      {required this.item_id,
+      this.ItemCode,
+      this.ItemName,
+      this.ItemDescription,
+      this.SerialNumber,
+      this.Quantity,
+      this.Udf01,
+      this.Udf02,
+      this.Udf03,
+      this.Udf04,
+      this.Udf05});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['key_id'] = Variable<int>(key_id);
-    if (!nullToAbsent || rfid_tag != null) {
-      map['rfid_tag'] = Variable<String>(rfid_tag);
+    map['item_id'] = Variable<int>(item_id);
+    if (!nullToAbsent || ItemCode != null) {
+      map['item_code'] = Variable<String>(ItemCode);
     }
-    if (!nullToAbsent || status != null) {
-      map['status'] = Variable<String>(status);
+    if (!nullToAbsent || ItemName != null) {
+      map['item_name'] = Variable<String>(ItemName);
     }
-    if (!nullToAbsent || rssi != null) {
-      map['rssi'] = Variable<String>(rssi);
+    if (!nullToAbsent || ItemDescription != null) {
+      map['item_description'] = Variable<String>(ItemDescription);
     }
-    if (!nullToAbsent || created_at != null) {
-      map['created_at'] = Variable<DateTime>(created_at);
+    if (!nullToAbsent || SerialNumber != null) {
+      map['serial_number'] = Variable<String>(SerialNumber);
     }
-    if (!nullToAbsent || updated_at != null) {
-      map['updated_at'] = Variable<DateTime>(updated_at);
+    if (!nullToAbsent || Quantity != null) {
+      map['quantity'] = Variable<String>(Quantity);
+    }
+    if (!nullToAbsent || Udf01 != null) {
+      map['udf01'] = Variable<String>(Udf01);
+    }
+    if (!nullToAbsent || Udf02 != null) {
+      map['udf02'] = Variable<String>(Udf02);
+    }
+    if (!nullToAbsent || Udf03 != null) {
+      map['udf03'] = Variable<String>(Udf03);
+    }
+    if (!nullToAbsent || Udf04 != null) {
+      map['udf04'] = Variable<String>(Udf04);
+    }
+    if (!nullToAbsent || Udf05 != null) {
+      map['udf05'] = Variable<String>(Udf05);
     }
     return map;
   }
 
-  Master_rfidCompanion toCompanion(bool nullToAbsent) {
-    return Master_rfidCompanion(
-      key_id: Value(key_id),
-      rfid_tag: rfid_tag == null && nullToAbsent
+  ItemMasterDBCompanion toCompanion(bool nullToAbsent) {
+    return ItemMasterDBCompanion(
+      item_id: Value(item_id),
+      ItemCode: ItemCode == null && nullToAbsent
           ? const Value.absent()
-          : Value(rfid_tag),
-      status:
-          status == null && nullToAbsent ? const Value.absent() : Value(status),
-      rssi: rssi == null && nullToAbsent ? const Value.absent() : Value(rssi),
-      created_at: created_at == null && nullToAbsent
+          : Value(ItemCode),
+      ItemName: ItemName == null && nullToAbsent
           ? const Value.absent()
-          : Value(created_at),
-      updated_at: updated_at == null && nullToAbsent
+          : Value(ItemName),
+      ItemDescription: ItemDescription == null && nullToAbsent
           ? const Value.absent()
-          : Value(updated_at),
+          : Value(ItemDescription),
+      SerialNumber: SerialNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(SerialNumber),
+      Quantity: Quantity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(Quantity),
+      Udf01:
+          Udf01 == null && nullToAbsent ? const Value.absent() : Value(Udf01),
+      Udf02:
+          Udf02 == null && nullToAbsent ? const Value.absent() : Value(Udf02),
+      Udf03:
+          Udf03 == null && nullToAbsent ? const Value.absent() : Value(Udf03),
+      Udf04:
+          Udf04 == null && nullToAbsent ? const Value.absent() : Value(Udf04),
+      Udf05:
+          Udf05 == null && nullToAbsent ? const Value.absent() : Value(Udf05),
     );
   }
 
-  factory Master_rfidData.fromJson(Map<String, dynamic> json,
+  factory ItemMasterDBData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Master_rfidData(
-      key_id: serializer.fromJson<int>(json['key_id']),
-      rfid_tag: serializer.fromJson<String?>(json['rfid_tag']),
-      status: serializer.fromJson<String?>(json['status']),
-      rssi: serializer.fromJson<String?>(json['rssi']),
-      created_at: serializer.fromJson<DateTime?>(json['created_at']),
-      updated_at: serializer.fromJson<DateTime?>(json['updated_at']),
+    return ItemMasterDBData(
+      item_id: serializer.fromJson<int>(json['item_id']),
+      ItemCode: serializer.fromJson<String?>(json['ItemCode']),
+      ItemName: serializer.fromJson<String?>(json['ItemName']),
+      ItemDescription: serializer.fromJson<String?>(json['ItemDescription']),
+      SerialNumber: serializer.fromJson<String?>(json['SerialNumber']),
+      Quantity: serializer.fromJson<String?>(json['Quantity']),
+      Udf01: serializer.fromJson<String?>(json['Udf01']),
+      Udf02: serializer.fromJson<String?>(json['Udf02']),
+      Udf03: serializer.fromJson<String?>(json['Udf03']),
+      Udf04: serializer.fromJson<String?>(json['Udf04']),
+      Udf05: serializer.fromJson<String?>(json['Udf05']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'key_id': serializer.toJson<int>(key_id),
-      'rfid_tag': serializer.toJson<String?>(rfid_tag),
-      'status': serializer.toJson<String?>(status),
-      'rssi': serializer.toJson<String?>(rssi),
-      'created_at': serializer.toJson<DateTime?>(created_at),
-      'updated_at': serializer.toJson<DateTime?>(updated_at),
+      'item_id': serializer.toJson<int>(item_id),
+      'ItemCode': serializer.toJson<String?>(ItemCode),
+      'ItemName': serializer.toJson<String?>(ItemName),
+      'ItemDescription': serializer.toJson<String?>(ItemDescription),
+      'SerialNumber': serializer.toJson<String?>(SerialNumber),
+      'Quantity': serializer.toJson<String?>(Quantity),
+      'Udf01': serializer.toJson<String?>(Udf01),
+      'Udf02': serializer.toJson<String?>(Udf02),
+      'Udf03': serializer.toJson<String?>(Udf03),
+      'Udf04': serializer.toJson<String?>(Udf04),
+      'Udf05': serializer.toJson<String?>(Udf05),
     };
   }
 
-  Master_rfidData copyWith(
-          {int? key_id,
-          Value<String?> rfid_tag = const Value.absent(),
-          Value<String?> status = const Value.absent(),
-          Value<String?> rssi = const Value.absent(),
-          Value<DateTime?> created_at = const Value.absent(),
-          Value<DateTime?> updated_at = const Value.absent()}) =>
-      Master_rfidData(
-        key_id: key_id ?? this.key_id,
-        rfid_tag: rfid_tag.present ? rfid_tag.value : this.rfid_tag,
-        status: status.present ? status.value : this.status,
-        rssi: rssi.present ? rssi.value : this.rssi,
-        created_at: created_at.present ? created_at.value : this.created_at,
-        updated_at: updated_at.present ? updated_at.value : this.updated_at,
+  ItemMasterDBData copyWith(
+          {int? item_id,
+          Value<String?> ItemCode = const Value.absent(),
+          Value<String?> ItemName = const Value.absent(),
+          Value<String?> ItemDescription = const Value.absent(),
+          Value<String?> SerialNumber = const Value.absent(),
+          Value<String?> Quantity = const Value.absent(),
+          Value<String?> Udf01 = const Value.absent(),
+          Value<String?> Udf02 = const Value.absent(),
+          Value<String?> Udf03 = const Value.absent(),
+          Value<String?> Udf04 = const Value.absent(),
+          Value<String?> Udf05 = const Value.absent()}) =>
+      ItemMasterDBData(
+        item_id: item_id ?? this.item_id,
+        ItemCode: ItemCode.present ? ItemCode.value : this.ItemCode,
+        ItemName: ItemName.present ? ItemName.value : this.ItemName,
+        ItemDescription: ItemDescription.present
+            ? ItemDescription.value
+            : this.ItemDescription,
+        SerialNumber:
+            SerialNumber.present ? SerialNumber.value : this.SerialNumber,
+        Quantity: Quantity.present ? Quantity.value : this.Quantity,
+        Udf01: Udf01.present ? Udf01.value : this.Udf01,
+        Udf02: Udf02.present ? Udf02.value : this.Udf02,
+        Udf03: Udf03.present ? Udf03.value : this.Udf03,
+        Udf04: Udf04.present ? Udf04.value : this.Udf04,
+        Udf05: Udf05.present ? Udf05.value : this.Udf05,
       );
-  Master_rfidData copyWithCompanion(Master_rfidCompanion data) {
-    return Master_rfidData(
-      key_id: data.key_id.present ? data.key_id.value : this.key_id,
-      rfid_tag: data.rfid_tag.present ? data.rfid_tag.value : this.rfid_tag,
-      status: data.status.present ? data.status.value : this.status,
-      rssi: data.rssi.present ? data.rssi.value : this.rssi,
-      created_at:
-          data.created_at.present ? data.created_at.value : this.created_at,
-      updated_at:
-          data.updated_at.present ? data.updated_at.value : this.updated_at,
+  ItemMasterDBData copyWithCompanion(ItemMasterDBCompanion data) {
+    return ItemMasterDBData(
+      item_id: data.item_id.present ? data.item_id.value : this.item_id,
+      ItemCode: data.ItemCode.present ? data.ItemCode.value : this.ItemCode,
+      ItemName: data.ItemName.present ? data.ItemName.value : this.ItemName,
+      ItemDescription: data.ItemDescription.present
+          ? data.ItemDescription.value
+          : this.ItemDescription,
+      SerialNumber: data.SerialNumber.present
+          ? data.SerialNumber.value
+          : this.SerialNumber,
+      Quantity: data.Quantity.present ? data.Quantity.value : this.Quantity,
+      Udf01: data.Udf01.present ? data.Udf01.value : this.Udf01,
+      Udf02: data.Udf02.present ? data.Udf02.value : this.Udf02,
+      Udf03: data.Udf03.present ? data.Udf03.value : this.Udf03,
+      Udf04: data.Udf04.present ? data.Udf04.value : this.Udf04,
+      Udf05: data.Udf05.present ? data.Udf05.value : this.Udf05,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('Master_rfidData(')
-          ..write('key_id: $key_id, ')
-          ..write('rfid_tag: $rfid_tag, ')
-          ..write('status: $status, ')
-          ..write('rssi: $rssi, ')
-          ..write('created_at: $created_at, ')
-          ..write('updated_at: $updated_at')
+    return (StringBuffer('ItemMasterDBData(')
+          ..write('item_id: $item_id, ')
+          ..write('ItemCode: $ItemCode, ')
+          ..write('ItemName: $ItemName, ')
+          ..write('ItemDescription: $ItemDescription, ')
+          ..write('SerialNumber: $SerialNumber, ')
+          ..write('Quantity: $Quantity, ')
+          ..write('Udf01: $Udf01, ')
+          ..write('Udf02: $Udf02, ')
+          ..write('Udf03: $Udf03, ')
+          ..write('Udf04: $Udf04, ')
+          ..write('Udf05: $Udf05')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(key_id, rfid_tag, status, rssi, created_at, updated_at);
+  int get hashCode => Object.hash(item_id, ItemCode, ItemName, ItemDescription,
+      SerialNumber, Quantity, Udf01, Udf02, Udf03, Udf04, Udf05);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Master_rfidData &&
-          other.key_id == this.key_id &&
-          other.rfid_tag == this.rfid_tag &&
-          other.status == this.status &&
-          other.rssi == this.rssi &&
-          other.created_at == this.created_at &&
-          other.updated_at == this.updated_at);
+      (other is ItemMasterDBData &&
+          other.item_id == this.item_id &&
+          other.ItemCode == this.ItemCode &&
+          other.ItemName == this.ItemName &&
+          other.ItemDescription == this.ItemDescription &&
+          other.SerialNumber == this.SerialNumber &&
+          other.Quantity == this.Quantity &&
+          other.Udf01 == this.Udf01 &&
+          other.Udf02 == this.Udf02 &&
+          other.Udf03 == this.Udf03 &&
+          other.Udf04 == this.Udf04 &&
+          other.Udf05 == this.Udf05);
 }
 
-class Master_rfidCompanion extends UpdateCompanion<Master_rfidData> {
-  final Value<int> key_id;
-  final Value<String?> rfid_tag;
-  final Value<String?> status;
-  final Value<String?> rssi;
-  final Value<DateTime?> created_at;
-  final Value<DateTime?> updated_at;
-  const Master_rfidCompanion({
-    this.key_id = const Value.absent(),
-    this.rfid_tag = const Value.absent(),
-    this.status = const Value.absent(),
-    this.rssi = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.updated_at = const Value.absent(),
+class ItemMasterDBCompanion extends UpdateCompanion<ItemMasterDBData> {
+  final Value<int> item_id;
+  final Value<String?> ItemCode;
+  final Value<String?> ItemName;
+  final Value<String?> ItemDescription;
+  final Value<String?> SerialNumber;
+  final Value<String?> Quantity;
+  final Value<String?> Udf01;
+  final Value<String?> Udf02;
+  final Value<String?> Udf03;
+  final Value<String?> Udf04;
+  final Value<String?> Udf05;
+  const ItemMasterDBCompanion({
+    this.item_id = const Value.absent(),
+    this.ItemCode = const Value.absent(),
+    this.ItemName = const Value.absent(),
+    this.ItemDescription = const Value.absent(),
+    this.SerialNumber = const Value.absent(),
+    this.Quantity = const Value.absent(),
+    this.Udf01 = const Value.absent(),
+    this.Udf02 = const Value.absent(),
+    this.Udf03 = const Value.absent(),
+    this.Udf04 = const Value.absent(),
+    this.Udf05 = const Value.absent(),
   });
-  Master_rfidCompanion.insert({
-    this.key_id = const Value.absent(),
-    this.rfid_tag = const Value.absent(),
-    this.status = const Value.absent(),
-    this.rssi = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.updated_at = const Value.absent(),
+  ItemMasterDBCompanion.insert({
+    this.item_id = const Value.absent(),
+    this.ItemCode = const Value.absent(),
+    this.ItemName = const Value.absent(),
+    this.ItemDescription = const Value.absent(),
+    this.SerialNumber = const Value.absent(),
+    this.Quantity = const Value.absent(),
+    this.Udf01 = const Value.absent(),
+    this.Udf02 = const Value.absent(),
+    this.Udf03 = const Value.absent(),
+    this.Udf04 = const Value.absent(),
+    this.Udf05 = const Value.absent(),
   });
-  static Insertable<Master_rfidData> custom({
-    Expression<int>? key_id,
-    Expression<String>? rfid_tag,
-    Expression<String>? status,
-    Expression<String>? rssi,
-    Expression<DateTime>? created_at,
-    Expression<DateTime>? updated_at,
+  static Insertable<ItemMasterDBData> custom({
+    Expression<int>? item_id,
+    Expression<String>? ItemCode,
+    Expression<String>? ItemName,
+    Expression<String>? ItemDescription,
+    Expression<String>? SerialNumber,
+    Expression<String>? Quantity,
+    Expression<String>? Udf01,
+    Expression<String>? Udf02,
+    Expression<String>? Udf03,
+    Expression<String>? Udf04,
+    Expression<String>? Udf05,
   }) {
     return RawValuesInsertable({
-      if (key_id != null) 'key_id': key_id,
-      if (rfid_tag != null) 'rfid_tag': rfid_tag,
-      if (status != null) 'status': status,
-      if (rssi != null) 'rssi': rssi,
-      if (created_at != null) 'created_at': created_at,
-      if (updated_at != null) 'updated_at': updated_at,
+      if (item_id != null) 'item_id': item_id,
+      if (ItemCode != null) 'item_code': ItemCode,
+      if (ItemName != null) 'item_name': ItemName,
+      if (ItemDescription != null) 'item_description': ItemDescription,
+      if (SerialNumber != null) 'serial_number': SerialNumber,
+      if (Quantity != null) 'quantity': Quantity,
+      if (Udf01 != null) 'udf01': Udf01,
+      if (Udf02 != null) 'udf02': Udf02,
+      if (Udf03 != null) 'udf03': Udf03,
+      if (Udf04 != null) 'udf04': Udf04,
+      if (Udf05 != null) 'udf05': Udf05,
     });
   }
 
-  Master_rfidCompanion copyWith(
-      {Value<int>? key_id,
-      Value<String?>? rfid_tag,
-      Value<String?>? status,
-      Value<String?>? rssi,
-      Value<DateTime?>? created_at,
-      Value<DateTime?>? updated_at}) {
-    return Master_rfidCompanion(
-      key_id: key_id ?? this.key_id,
-      rfid_tag: rfid_tag ?? this.rfid_tag,
-      status: status ?? this.status,
-      rssi: rssi ?? this.rssi,
-      created_at: created_at ?? this.created_at,
-      updated_at: updated_at ?? this.updated_at,
+  ItemMasterDBCompanion copyWith(
+      {Value<int>? item_id,
+      Value<String?>? ItemCode,
+      Value<String?>? ItemName,
+      Value<String?>? ItemDescription,
+      Value<String?>? SerialNumber,
+      Value<String?>? Quantity,
+      Value<String?>? Udf01,
+      Value<String?>? Udf02,
+      Value<String?>? Udf03,
+      Value<String?>? Udf04,
+      Value<String?>? Udf05}) {
+    return ItemMasterDBCompanion(
+      item_id: item_id ?? this.item_id,
+      ItemCode: ItemCode ?? this.ItemCode,
+      ItemName: ItemName ?? this.ItemName,
+      ItemDescription: ItemDescription ?? this.ItemDescription,
+      SerialNumber: SerialNumber ?? this.SerialNumber,
+      Quantity: Quantity ?? this.Quantity,
+      Udf01: Udf01 ?? this.Udf01,
+      Udf02: Udf02 ?? this.Udf02,
+      Udf03: Udf03 ?? this.Udf03,
+      Udf04: Udf04 ?? this.Udf04,
+      Udf05: Udf05 ?? this.Udf05,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (key_id.present) {
-      map['key_id'] = Variable<int>(key_id.value);
+    if (item_id.present) {
+      map['item_id'] = Variable<int>(item_id.value);
     }
-    if (rfid_tag.present) {
-      map['rfid_tag'] = Variable<String>(rfid_tag.value);
+    if (ItemCode.present) {
+      map['item_code'] = Variable<String>(ItemCode.value);
     }
-    if (status.present) {
-      map['status'] = Variable<String>(status.value);
+    if (ItemName.present) {
+      map['item_name'] = Variable<String>(ItemName.value);
     }
-    if (rssi.present) {
-      map['rssi'] = Variable<String>(rssi.value);
+    if (ItemDescription.present) {
+      map['item_description'] = Variable<String>(ItemDescription.value);
     }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
+    if (SerialNumber.present) {
+      map['serial_number'] = Variable<String>(SerialNumber.value);
     }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
+    if (Quantity.present) {
+      map['quantity'] = Variable<String>(Quantity.value);
+    }
+    if (Udf01.present) {
+      map['udf01'] = Variable<String>(Udf01.value);
+    }
+    if (Udf02.present) {
+      map['udf02'] = Variable<String>(Udf02.value);
+    }
+    if (Udf03.present) {
+      map['udf03'] = Variable<String>(Udf03.value);
+    }
+    if (Udf04.present) {
+      map['udf04'] = Variable<String>(Udf04.value);
+    }
+    if (Udf05.present) {
+      map['udf05'] = Variable<String>(Udf05.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('Master_rfidCompanion(')
-          ..write('key_id: $key_id, ')
-          ..write('rfid_tag: $rfid_tag, ')
-          ..write('status: $status, ')
-          ..write('rssi: $rssi, ')
-          ..write('created_at: $created_at, ')
-          ..write('updated_at: $updated_at')
+    return (StringBuffer('ItemMasterDBCompanion(')
+          ..write('item_id: $item_id, ')
+          ..write('ItemCode: $ItemCode, ')
+          ..write('ItemName: $ItemName, ')
+          ..write('ItemDescription: $ItemDescription, ')
+          ..write('SerialNumber: $SerialNumber, ')
+          ..write('Quantity: $Quantity, ')
+          ..write('Udf01: $Udf01, ')
+          ..write('Udf02: $Udf02, ')
+          ..write('Udf03: $Udf03, ')
+          ..write('Udf04: $Udf04, ')
+          ..write('Udf05: $Udf05')
           ..write(')'))
         .toString();
   }
 }
 
-class $Tag_Running_RfidTable extends Tag_Running_Rfid
-    with TableInfo<$Tag_Running_RfidTable, Tag_Running_RfidData> {
+class $LocationMasterDBTable extends LocationMasterDB
+    with TableInfo<$LocationMasterDBTable, LocationMasterDBData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $Tag_Running_RfidTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _key_idMeta = const VerificationMeta('key_id');
+  $LocationMasterDBTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _location_idMeta =
+      const VerificationMeta('location_id');
   @override
-  late final GeneratedColumn<int> key_id = GeneratedColumn<int>(
-      'key_id', aliasedName, false,
+  late final GeneratedColumn<int> location_id = GeneratedColumn<int>(
+      'location_id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _rfid_tagMeta =
-      const VerificationMeta('rfid_tag');
+  static const VerificationMeta _location_codeMeta =
+      const VerificationMeta('location_code');
   @override
-  late final GeneratedColumn<String> rfid_tag = GeneratedColumn<String>(
-      'rfid_tag', aliasedName, true,
+  late final GeneratedColumn<String> location_code = GeneratedColumn<String>(
+      'location_code', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  static const VerificationMeta _location_nameMeta =
+      const VerificationMeta('location_name');
   @override
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-      'status', aliasedName, true,
+  late final GeneratedColumn<String> location_name = GeneratedColumn<String>(
+      'location_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _rssiMeta = const VerificationMeta('rssi');
+  static const VerificationMeta _location_descMeta =
+      const VerificationMeta('location_desc');
   @override
-  late final GeneratedColumn<String> rssi = GeneratedColumn<String>(
-      'rssi', aliasedName, true,
+  late final GeneratedColumn<String> location_desc = GeneratedColumn<String>(
+      'location_desc', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
-  @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
-  @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [key_id, rfid_tag, status, rssi, created_at, updated_at];
+      [location_id, location_code, location_name, location_desc];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'tag_running_rfid';
+  static const String $name = 'location_master_d_b';
   @override
   VerificationContext validateIntegrity(
-      Insertable<Tag_Running_RfidData> instance,
+      Insertable<LocationMasterDBData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('key_id')) {
-      context.handle(_key_idMeta,
-          key_id.isAcceptableOrUnknown(data['key_id']!, _key_idMeta));
-    }
-    if (data.containsKey('rfid_tag')) {
-      context.handle(_rfid_tagMeta,
-          rfid_tag.isAcceptableOrUnknown(data['rfid_tag']!, _rfid_tagMeta));
-    }
-    if (data.containsKey('status')) {
-      context.handle(_statusMeta,
-          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
-    }
-    if (data.containsKey('rssi')) {
+    if (data.containsKey('location_id')) {
       context.handle(
-          _rssiMeta, rssi.isAcceptableOrUnknown(data['rssi']!, _rssiMeta));
+          _location_idMeta,
+          location_id.isAcceptableOrUnknown(
+              data['location_id']!, _location_idMeta));
     }
-    if (data.containsKey('created_at')) {
+    if (data.containsKey('location_code')) {
       context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
+          _location_codeMeta,
+          location_code.isAcceptableOrUnknown(
+              data['location_code']!, _location_codeMeta));
     }
-    if (data.containsKey('updated_at')) {
+    if (data.containsKey('location_name')) {
       context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
+          _location_nameMeta,
+          location_name.isAcceptableOrUnknown(
+              data['location_name']!, _location_nameMeta));
+    }
+    if (data.containsKey('location_desc')) {
+      context.handle(
+          _location_descMeta,
+          location_desc.isAcceptableOrUnknown(
+              data['location_desc']!, _location_descMeta));
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {key_id};
+  Set<GeneratedColumn> get $primaryKey => {location_id};
   @override
-  Tag_Running_RfidData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  LocationMasterDBData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Tag_Running_RfidData(
-      key_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}key_id'])!,
-      rfid_tag: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}rfid_tag']),
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}status']),
-      rssi: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}rssi']),
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
+    return LocationMasterDBData(
+      location_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}location_id'])!,
+      location_code: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_code']),
+      location_name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_name']),
+      location_desc: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_desc']),
     );
   }
 
   @override
-  $Tag_Running_RfidTable createAlias(String alias) {
-    return $Tag_Running_RfidTable(attachedDatabase, alias);
+  $LocationMasterDBTable createAlias(String alias) {
+    return $LocationMasterDBTable(attachedDatabase, alias);
   }
 }
 
-class Tag_Running_RfidData extends DataClass
-    implements Insertable<Tag_Running_RfidData> {
-  final int key_id;
-  final String? rfid_tag;
-  final String? status;
-  final String? rssi;
-  final DateTime? created_at;
-  final DateTime? updated_at;
-  const Tag_Running_RfidData(
-      {required this.key_id,
-      this.rfid_tag,
-      this.status,
-      this.rssi,
-      this.created_at,
-      this.updated_at});
+class LocationMasterDBData extends DataClass
+    implements Insertable<LocationMasterDBData> {
+  final int location_id;
+  final String? location_code;
+  final String? location_name;
+  final String? location_desc;
+  const LocationMasterDBData(
+      {required this.location_id,
+      this.location_code,
+      this.location_name,
+      this.location_desc});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['key_id'] = Variable<int>(key_id);
-    if (!nullToAbsent || rfid_tag != null) {
-      map['rfid_tag'] = Variable<String>(rfid_tag);
+    map['location_id'] = Variable<int>(location_id);
+    if (!nullToAbsent || location_code != null) {
+      map['location_code'] = Variable<String>(location_code);
     }
-    if (!nullToAbsent || status != null) {
-      map['status'] = Variable<String>(status);
+    if (!nullToAbsent || location_name != null) {
+      map['location_name'] = Variable<String>(location_name);
     }
-    if (!nullToAbsent || rssi != null) {
-      map['rssi'] = Variable<String>(rssi);
-    }
-    if (!nullToAbsent || created_at != null) {
-      map['created_at'] = Variable<DateTime>(created_at);
-    }
-    if (!nullToAbsent || updated_at != null) {
-      map['updated_at'] = Variable<DateTime>(updated_at);
+    if (!nullToAbsent || location_desc != null) {
+      map['location_desc'] = Variable<String>(location_desc);
     }
     return map;
   }
 
-  Tag_Running_RfidCompanion toCompanion(bool nullToAbsent) {
-    return Tag_Running_RfidCompanion(
-      key_id: Value(key_id),
-      rfid_tag: rfid_tag == null && nullToAbsent
+  LocationMasterDBCompanion toCompanion(bool nullToAbsent) {
+    return LocationMasterDBCompanion(
+      location_id: Value(location_id),
+      location_code: location_code == null && nullToAbsent
           ? const Value.absent()
-          : Value(rfid_tag),
-      status:
-          status == null && nullToAbsent ? const Value.absent() : Value(status),
-      rssi: rssi == null && nullToAbsent ? const Value.absent() : Value(rssi),
-      created_at: created_at == null && nullToAbsent
+          : Value(location_code),
+      location_name: location_name == null && nullToAbsent
           ? const Value.absent()
-          : Value(created_at),
-      updated_at: updated_at == null && nullToAbsent
+          : Value(location_name),
+      location_desc: location_desc == null && nullToAbsent
           ? const Value.absent()
-          : Value(updated_at),
+          : Value(location_desc),
     );
   }
 
-  factory Tag_Running_RfidData.fromJson(Map<String, dynamic> json,
+  factory LocationMasterDBData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Tag_Running_RfidData(
-      key_id: serializer.fromJson<int>(json['key_id']),
-      rfid_tag: serializer.fromJson<String?>(json['rfid_tag']),
-      status: serializer.fromJson<String?>(json['status']),
-      rssi: serializer.fromJson<String?>(json['rssi']),
-      created_at: serializer.fromJson<DateTime?>(json['created_at']),
-      updated_at: serializer.fromJson<DateTime?>(json['updated_at']),
+    return LocationMasterDBData(
+      location_id: serializer.fromJson<int>(json['location_id']),
+      location_code: serializer.fromJson<String?>(json['location_code']),
+      location_name: serializer.fromJson<String?>(json['location_name']),
+      location_desc: serializer.fromJson<String?>(json['location_desc']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'key_id': serializer.toJson<int>(key_id),
-      'rfid_tag': serializer.toJson<String?>(rfid_tag),
-      'status': serializer.toJson<String?>(status),
-      'rssi': serializer.toJson<String?>(rssi),
-      'created_at': serializer.toJson<DateTime?>(created_at),
-      'updated_at': serializer.toJson<DateTime?>(updated_at),
+      'location_id': serializer.toJson<int>(location_id),
+      'location_code': serializer.toJson<String?>(location_code),
+      'location_name': serializer.toJson<String?>(location_name),
+      'location_desc': serializer.toJson<String?>(location_desc),
     };
   }
 
-  Tag_Running_RfidData copyWith(
-          {int? key_id,
-          Value<String?> rfid_tag = const Value.absent(),
-          Value<String?> status = const Value.absent(),
-          Value<String?> rssi = const Value.absent(),
-          Value<DateTime?> created_at = const Value.absent(),
-          Value<DateTime?> updated_at = const Value.absent()}) =>
-      Tag_Running_RfidData(
-        key_id: key_id ?? this.key_id,
-        rfid_tag: rfid_tag.present ? rfid_tag.value : this.rfid_tag,
-        status: status.present ? status.value : this.status,
-        rssi: rssi.present ? rssi.value : this.rssi,
-        created_at: created_at.present ? created_at.value : this.created_at,
-        updated_at: updated_at.present ? updated_at.value : this.updated_at,
+  LocationMasterDBData copyWith(
+          {int? location_id,
+          Value<String?> location_code = const Value.absent(),
+          Value<String?> location_name = const Value.absent(),
+          Value<String?> location_desc = const Value.absent()}) =>
+      LocationMasterDBData(
+        location_id: location_id ?? this.location_id,
+        location_code:
+            location_code.present ? location_code.value : this.location_code,
+        location_name:
+            location_name.present ? location_name.value : this.location_name,
+        location_desc:
+            location_desc.present ? location_desc.value : this.location_desc,
       );
-  Tag_Running_RfidData copyWithCompanion(Tag_Running_RfidCompanion data) {
-    return Tag_Running_RfidData(
-      key_id: data.key_id.present ? data.key_id.value : this.key_id,
-      rfid_tag: data.rfid_tag.present ? data.rfid_tag.value : this.rfid_tag,
-      status: data.status.present ? data.status.value : this.status,
-      rssi: data.rssi.present ? data.rssi.value : this.rssi,
-      created_at:
-          data.created_at.present ? data.created_at.value : this.created_at,
-      updated_at:
-          data.updated_at.present ? data.updated_at.value : this.updated_at,
+  LocationMasterDBData copyWithCompanion(LocationMasterDBCompanion data) {
+    return LocationMasterDBData(
+      location_id:
+          data.location_id.present ? data.location_id.value : this.location_id,
+      location_code: data.location_code.present
+          ? data.location_code.value
+          : this.location_code,
+      location_name: data.location_name.present
+          ? data.location_name.value
+          : this.location_name,
+      location_desc: data.location_desc.present
+          ? data.location_desc.value
+          : this.location_desc,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('Tag_Running_RfidData(')
-          ..write('key_id: $key_id, ')
-          ..write('rfid_tag: $rfid_tag, ')
-          ..write('status: $status, ')
-          ..write('rssi: $rssi, ')
-          ..write('created_at: $created_at, ')
-          ..write('updated_at: $updated_at')
+    return (StringBuffer('LocationMasterDBData(')
+          ..write('location_id: $location_id, ')
+          ..write('location_code: $location_code, ')
+          ..write('location_name: $location_name, ')
+          ..write('location_desc: $location_desc')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(key_id, rfid_tag, status, rssi, created_at, updated_at);
+      Object.hash(location_id, location_code, location_name, location_desc);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Tag_Running_RfidData &&
-          other.key_id == this.key_id &&
-          other.rfid_tag == this.rfid_tag &&
-          other.status == this.status &&
-          other.rssi == this.rssi &&
-          other.created_at == this.created_at &&
-          other.updated_at == this.updated_at);
+      (other is LocationMasterDBData &&
+          other.location_id == this.location_id &&
+          other.location_code == this.location_code &&
+          other.location_name == this.location_name &&
+          other.location_desc == this.location_desc);
 }
 
-class Tag_Running_RfidCompanion extends UpdateCompanion<Tag_Running_RfidData> {
-  final Value<int> key_id;
-  final Value<String?> rfid_tag;
-  final Value<String?> status;
-  final Value<String?> rssi;
-  final Value<DateTime?> created_at;
-  final Value<DateTime?> updated_at;
-  const Tag_Running_RfidCompanion({
-    this.key_id = const Value.absent(),
-    this.rfid_tag = const Value.absent(),
-    this.status = const Value.absent(),
-    this.rssi = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.updated_at = const Value.absent(),
+class LocationMasterDBCompanion extends UpdateCompanion<LocationMasterDBData> {
+  final Value<int> location_id;
+  final Value<String?> location_code;
+  final Value<String?> location_name;
+  final Value<String?> location_desc;
+  const LocationMasterDBCompanion({
+    this.location_id = const Value.absent(),
+    this.location_code = const Value.absent(),
+    this.location_name = const Value.absent(),
+    this.location_desc = const Value.absent(),
   });
-  Tag_Running_RfidCompanion.insert({
-    this.key_id = const Value.absent(),
-    this.rfid_tag = const Value.absent(),
-    this.status = const Value.absent(),
-    this.rssi = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.updated_at = const Value.absent(),
+  LocationMasterDBCompanion.insert({
+    this.location_id = const Value.absent(),
+    this.location_code = const Value.absent(),
+    this.location_name = const Value.absent(),
+    this.location_desc = const Value.absent(),
   });
-  static Insertable<Tag_Running_RfidData> custom({
-    Expression<int>? key_id,
-    Expression<String>? rfid_tag,
-    Expression<String>? status,
-    Expression<String>? rssi,
-    Expression<DateTime>? created_at,
-    Expression<DateTime>? updated_at,
+  static Insertable<LocationMasterDBData> custom({
+    Expression<int>? location_id,
+    Expression<String>? location_code,
+    Expression<String>? location_name,
+    Expression<String>? location_desc,
   }) {
     return RawValuesInsertable({
-      if (key_id != null) 'key_id': key_id,
-      if (rfid_tag != null) 'rfid_tag': rfid_tag,
-      if (status != null) 'status': status,
-      if (rssi != null) 'rssi': rssi,
-      if (created_at != null) 'created_at': created_at,
-      if (updated_at != null) 'updated_at': updated_at,
+      if (location_id != null) 'location_id': location_id,
+      if (location_code != null) 'location_code': location_code,
+      if (location_name != null) 'location_name': location_name,
+      if (location_desc != null) 'location_desc': location_desc,
     });
   }
 
-  Tag_Running_RfidCompanion copyWith(
-      {Value<int>? key_id,
-      Value<String?>? rfid_tag,
-      Value<String?>? status,
-      Value<String?>? rssi,
-      Value<DateTime?>? created_at,
-      Value<DateTime?>? updated_at}) {
-    return Tag_Running_RfidCompanion(
-      key_id: key_id ?? this.key_id,
-      rfid_tag: rfid_tag ?? this.rfid_tag,
-      status: status ?? this.status,
-      rssi: rssi ?? this.rssi,
-      created_at: created_at ?? this.created_at,
-      updated_at: updated_at ?? this.updated_at,
+  LocationMasterDBCompanion copyWith(
+      {Value<int>? location_id,
+      Value<String?>? location_code,
+      Value<String?>? location_name,
+      Value<String?>? location_desc}) {
+    return LocationMasterDBCompanion(
+      location_id: location_id ?? this.location_id,
+      location_code: location_code ?? this.location_code,
+      location_name: location_name ?? this.location_name,
+      location_desc: location_desc ?? this.location_desc,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (key_id.present) {
-      map['key_id'] = Variable<int>(key_id.value);
+    if (location_id.present) {
+      map['location_id'] = Variable<int>(location_id.value);
     }
-    if (rfid_tag.present) {
-      map['rfid_tag'] = Variable<String>(rfid_tag.value);
+    if (location_code.present) {
+      map['location_code'] = Variable<String>(location_code.value);
     }
-    if (status.present) {
-      map['status'] = Variable<String>(status.value);
+    if (location_name.present) {
+      map['location_name'] = Variable<String>(location_name.value);
     }
-    if (rssi.present) {
-      map['rssi'] = Variable<String>(rssi.value);
-    }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
-    }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
+    if (location_desc.present) {
+      map['location_desc'] = Variable<String>(location_desc.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('Tag_Running_RfidCompanion(')
-          ..write('key_id: $key_id, ')
-          ..write('rfid_tag: $rfid_tag, ')
-          ..write('status: $status, ')
-          ..write('rssi: $rssi, ')
-          ..write('created_at: $created_at, ')
-          ..write('updated_at: $updated_at')
+    return (StringBuffer('LocationMasterDBCompanion(')
+          ..write('location_id: $location_id, ')
+          ..write('location_code: $location_code, ')
+          ..write('location_name: $location_name, ')
+          ..write('location_desc: $location_desc')
           ..write(')'))
         .toString();
   }
 }
 
-class $TempMasterRfidTable extends TempMasterRfid
-    with TableInfo<$TempMasterRfidTable, TempMasterRfidData> {
+class $TransactionsDBTable extends TransactionsDB
+    with TableInfo<$TransactionsDBTable, TransactionsDBData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $TempMasterRfidTable(this.attachedDatabase, [this._alias]);
+  $TransactionsDBTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _key_idMeta = const VerificationMeta('key_id');
   @override
   late final GeneratedColumn<int> key_id = GeneratedColumn<int>(
@@ -710,12 +855,35 @@ class $TempMasterRfidTable extends TempMasterRfid
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _rfid_tagMeta =
-      const VerificationMeta('rfid_tag');
+  static const VerificationMeta _item_idMeta =
+      const VerificationMeta('item_id');
   @override
-  late final GeneratedColumn<String> rfid_tag = GeneratedColumn<String>(
-      'rfid_tag', aliasedName, true,
+  late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
+      'item_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _ItemCodeMeta =
+      const VerificationMeta('ItemCode');
+  @override
+  late final GeneratedColumn<String> ItemCode = GeneratedColumn<String>(
+      'item_code', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _location_idMeta =
+      const VerificationMeta('location_id');
+  @override
+  late final GeneratedColumn<String> location_id = GeneratedColumn<String>(
+      'location_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _location_codeMeta =
+      const VerificationMeta('location_code');
+  @override
+  late final GeneratedColumn<String> location_code = GeneratedColumn<String>(
+      'location_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _qtyMeta = const VerificationMeta('qty');
+  @override
+  late final GeneratedColumn<double> qty = GeneratedColumn<double>(
+      'qty', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
   static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
@@ -726,28 +894,38 @@ class $TempMasterRfidTable extends TempMasterRfid
   late final GeneratedColumn<String> rssi = GeneratedColumn<String>(
       'rssi', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _created_atMeta =
-      const VerificationMeta('created_at');
+  static const VerificationMeta _created_dateMeta =
+      const VerificationMeta('created_date');
   @override
-  late final GeneratedColumn<DateTime> created_at = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, true,
+  late final GeneratedColumn<DateTime> created_date = GeneratedColumn<DateTime>(
+      'created_date', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
-  static const VerificationMeta _updated_atMeta =
-      const VerificationMeta('updated_at');
+  static const VerificationMeta _updated_dateMeta =
+      const VerificationMeta('updated_date');
   @override
-  late final GeneratedColumn<DateTime> updated_at = GeneratedColumn<DateTime>(
-      'updated_at', aliasedName, true,
+  late final GeneratedColumn<DateTime> updated_date = GeneratedColumn<DateTime>(
+      'updated_date', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
-  List<GeneratedColumn> get $columns =>
-      [key_id, rfid_tag, status, rssi, created_at, updated_at];
+  List<GeneratedColumn> get $columns => [
+        key_id,
+        item_id,
+        ItemCode,
+        location_id,
+        location_code,
+        qty,
+        status,
+        rssi,
+        created_date,
+        updated_date
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'temp_master_rfid';
+  static const String $name = 'transactions_d_b';
   @override
-  VerificationContext validateIntegrity(Insertable<TempMasterRfidData> instance,
+  VerificationContext validateIntegrity(Insertable<TransactionsDBData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -755,9 +933,33 @@ class $TempMasterRfidTable extends TempMasterRfid
       context.handle(_key_idMeta,
           key_id.isAcceptableOrUnknown(data['key_id']!, _key_idMeta));
     }
-    if (data.containsKey('rfid_tag')) {
-      context.handle(_rfid_tagMeta,
-          rfid_tag.isAcceptableOrUnknown(data['rfid_tag']!, _rfid_tagMeta));
+    if (data.containsKey('item_id')) {
+      context.handle(_item_idMeta,
+          item_id.isAcceptableOrUnknown(data['item_id']!, _item_idMeta));
+    } else if (isInserting) {
+      context.missing(_item_idMeta);
+    }
+    if (data.containsKey('item_code')) {
+      context.handle(_ItemCodeMeta,
+          ItemCode.isAcceptableOrUnknown(data['item_code']!, _ItemCodeMeta));
+    } else if (isInserting) {
+      context.missing(_ItemCodeMeta);
+    }
+    if (data.containsKey('location_id')) {
+      context.handle(
+          _location_idMeta,
+          location_id.isAcceptableOrUnknown(
+              data['location_id']!, _location_idMeta));
+    }
+    if (data.containsKey('location_code')) {
+      context.handle(
+          _location_codeMeta,
+          location_code.isAcceptableOrUnknown(
+              data['location_code']!, _location_codeMeta));
+    }
+    if (data.containsKey('qty')) {
+      context.handle(
+          _qtyMeta, qty.isAcceptableOrUnknown(data['qty']!, _qtyMeta));
     }
     if (data.containsKey('status')) {
       context.handle(_statusMeta,
@@ -767,17 +969,17 @@ class $TempMasterRfidTable extends TempMasterRfid
       context.handle(
           _rssiMeta, rssi.isAcceptableOrUnknown(data['rssi']!, _rssiMeta));
     }
-    if (data.containsKey('created_at')) {
+    if (data.containsKey('created_date')) {
       context.handle(
-          _created_atMeta,
-          created_at.isAcceptableOrUnknown(
-              data['created_at']!, _created_atMeta));
+          _created_dateMeta,
+          created_date.isAcceptableOrUnknown(
+              data['created_date']!, _created_dateMeta));
     }
-    if (data.containsKey('updated_at')) {
+    if (data.containsKey('updated_date')) {
       context.handle(
-          _updated_atMeta,
-          updated_at.isAcceptableOrUnknown(
-              data['updated_at']!, _updated_atMeta));
+          _updated_dateMeta,
+          updated_date.isAcceptableOrUnknown(
+              data['updated_date']!, _updated_dateMeta));
     }
     return context;
   }
@@ -785,51 +987,75 @@ class $TempMasterRfidTable extends TempMasterRfid
   @override
   Set<GeneratedColumn> get $primaryKey => {key_id};
   @override
-  TempMasterRfidData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  TransactionsDBData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return TempMasterRfidData(
+    return TransactionsDBData(
       key_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}key_id'])!,
-      rfid_tag: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}rfid_tag']),
+      item_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
+      ItemCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}item_code'])!,
+      location_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_id']),
+      location_code: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_code']),
+      qty: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}qty']),
       status: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}status']),
       rssi: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}rssi']),
-      created_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
-      updated_at: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
+      created_date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_date']),
+      updated_date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_date']),
     );
   }
 
   @override
-  $TempMasterRfidTable createAlias(String alias) {
-    return $TempMasterRfidTable(attachedDatabase, alias);
+  $TransactionsDBTable createAlias(String alias) {
+    return $TransactionsDBTable(attachedDatabase, alias);
   }
 }
 
-class TempMasterRfidData extends DataClass
-    implements Insertable<TempMasterRfidData> {
+class TransactionsDBData extends DataClass
+    implements Insertable<TransactionsDBData> {
   final int key_id;
-  final String? rfid_tag;
+  final int item_id;
+  final String ItemCode;
+  final String? location_id;
+  final String? location_code;
+  final double? qty;
   final String? status;
   final String? rssi;
-  final DateTime? created_at;
-  final DateTime? updated_at;
-  const TempMasterRfidData(
+  final DateTime? created_date;
+  final DateTime? updated_date;
+  const TransactionsDBData(
       {required this.key_id,
-      this.rfid_tag,
+      required this.item_id,
+      required this.ItemCode,
+      this.location_id,
+      this.location_code,
+      this.qty,
       this.status,
       this.rssi,
-      this.created_at,
-      this.updated_at});
+      this.created_date,
+      this.updated_date});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['key_id'] = Variable<int>(key_id);
-    if (!nullToAbsent || rfid_tag != null) {
-      map['rfid_tag'] = Variable<String>(rfid_tag);
+    map['item_id'] = Variable<int>(item_id);
+    map['item_code'] = Variable<String>(ItemCode);
+    if (!nullToAbsent || location_id != null) {
+      map['location_id'] = Variable<String>(location_id);
+    }
+    if (!nullToAbsent || location_code != null) {
+      map['location_code'] = Variable<String>(location_code);
+    }
+    if (!nullToAbsent || qty != null) {
+      map['qty'] = Variable<double>(qty);
     }
     if (!nullToAbsent || status != null) {
       map['status'] = Variable<String>(status);
@@ -837,43 +1063,53 @@ class TempMasterRfidData extends DataClass
     if (!nullToAbsent || rssi != null) {
       map['rssi'] = Variable<String>(rssi);
     }
-    if (!nullToAbsent || created_at != null) {
-      map['created_at'] = Variable<DateTime>(created_at);
+    if (!nullToAbsent || created_date != null) {
+      map['created_date'] = Variable<DateTime>(created_date);
     }
-    if (!nullToAbsent || updated_at != null) {
-      map['updated_at'] = Variable<DateTime>(updated_at);
+    if (!nullToAbsent || updated_date != null) {
+      map['updated_date'] = Variable<DateTime>(updated_date);
     }
     return map;
   }
 
-  TempMasterRfidCompanion toCompanion(bool nullToAbsent) {
-    return TempMasterRfidCompanion(
+  TransactionsDBCompanion toCompanion(bool nullToAbsent) {
+    return TransactionsDBCompanion(
       key_id: Value(key_id),
-      rfid_tag: rfid_tag == null && nullToAbsent
+      item_id: Value(item_id),
+      ItemCode: Value(ItemCode),
+      location_id: location_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(rfid_tag),
+          : Value(location_id),
+      location_code: location_code == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location_code),
+      qty: qty == null && nullToAbsent ? const Value.absent() : Value(qty),
       status:
           status == null && nullToAbsent ? const Value.absent() : Value(status),
       rssi: rssi == null && nullToAbsent ? const Value.absent() : Value(rssi),
-      created_at: created_at == null && nullToAbsent
+      created_date: created_date == null && nullToAbsent
           ? const Value.absent()
-          : Value(created_at),
-      updated_at: updated_at == null && nullToAbsent
+          : Value(created_date),
+      updated_date: updated_date == null && nullToAbsent
           ? const Value.absent()
-          : Value(updated_at),
+          : Value(updated_date),
     );
   }
 
-  factory TempMasterRfidData.fromJson(Map<String, dynamic> json,
+  factory TransactionsDBData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TempMasterRfidData(
+    return TransactionsDBData(
       key_id: serializer.fromJson<int>(json['key_id']),
-      rfid_tag: serializer.fromJson<String?>(json['rfid_tag']),
+      item_id: serializer.fromJson<int>(json['item_id']),
+      ItemCode: serializer.fromJson<String>(json['ItemCode']),
+      location_id: serializer.fromJson<String?>(json['location_id']),
+      location_code: serializer.fromJson<String?>(json['location_code']),
+      qty: serializer.fromJson<double?>(json['qty']),
       status: serializer.fromJson<String?>(json['status']),
       rssi: serializer.fromJson<String?>(json['rssi']),
-      created_at: serializer.fromJson<DateTime?>(json['created_at']),
-      updated_at: serializer.fromJson<DateTime?>(json['updated_at']),
+      created_date: serializer.fromJson<DateTime?>(json['created_date']),
+      updated_date: serializer.fromJson<DateTime?>(json['updated_date']),
     );
   }
   @override
@@ -881,125 +1117,186 @@ class TempMasterRfidData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'key_id': serializer.toJson<int>(key_id),
-      'rfid_tag': serializer.toJson<String?>(rfid_tag),
+      'item_id': serializer.toJson<int>(item_id),
+      'ItemCode': serializer.toJson<String>(ItemCode),
+      'location_id': serializer.toJson<String?>(location_id),
+      'location_code': serializer.toJson<String?>(location_code),
+      'qty': serializer.toJson<double?>(qty),
       'status': serializer.toJson<String?>(status),
       'rssi': serializer.toJson<String?>(rssi),
-      'created_at': serializer.toJson<DateTime?>(created_at),
-      'updated_at': serializer.toJson<DateTime?>(updated_at),
+      'created_date': serializer.toJson<DateTime?>(created_date),
+      'updated_date': serializer.toJson<DateTime?>(updated_date),
     };
   }
 
-  TempMasterRfidData copyWith(
+  TransactionsDBData copyWith(
           {int? key_id,
-          Value<String?> rfid_tag = const Value.absent(),
+          int? item_id,
+          String? ItemCode,
+          Value<String?> location_id = const Value.absent(),
+          Value<String?> location_code = const Value.absent(),
+          Value<double?> qty = const Value.absent(),
           Value<String?> status = const Value.absent(),
           Value<String?> rssi = const Value.absent(),
-          Value<DateTime?> created_at = const Value.absent(),
-          Value<DateTime?> updated_at = const Value.absent()}) =>
-      TempMasterRfidData(
+          Value<DateTime?> created_date = const Value.absent(),
+          Value<DateTime?> updated_date = const Value.absent()}) =>
+      TransactionsDBData(
         key_id: key_id ?? this.key_id,
-        rfid_tag: rfid_tag.present ? rfid_tag.value : this.rfid_tag,
+        item_id: item_id ?? this.item_id,
+        ItemCode: ItemCode ?? this.ItemCode,
+        location_id: location_id.present ? location_id.value : this.location_id,
+        location_code:
+            location_code.present ? location_code.value : this.location_code,
+        qty: qty.present ? qty.value : this.qty,
         status: status.present ? status.value : this.status,
         rssi: rssi.present ? rssi.value : this.rssi,
-        created_at: created_at.present ? created_at.value : this.created_at,
-        updated_at: updated_at.present ? updated_at.value : this.updated_at,
+        created_date:
+            created_date.present ? created_date.value : this.created_date,
+        updated_date:
+            updated_date.present ? updated_date.value : this.updated_date,
       );
-  TempMasterRfidData copyWithCompanion(TempMasterRfidCompanion data) {
-    return TempMasterRfidData(
+  TransactionsDBData copyWithCompanion(TransactionsDBCompanion data) {
+    return TransactionsDBData(
       key_id: data.key_id.present ? data.key_id.value : this.key_id,
-      rfid_tag: data.rfid_tag.present ? data.rfid_tag.value : this.rfid_tag,
+      item_id: data.item_id.present ? data.item_id.value : this.item_id,
+      ItemCode: data.ItemCode.present ? data.ItemCode.value : this.ItemCode,
+      location_id:
+          data.location_id.present ? data.location_id.value : this.location_id,
+      location_code: data.location_code.present
+          ? data.location_code.value
+          : this.location_code,
+      qty: data.qty.present ? data.qty.value : this.qty,
       status: data.status.present ? data.status.value : this.status,
       rssi: data.rssi.present ? data.rssi.value : this.rssi,
-      created_at:
-          data.created_at.present ? data.created_at.value : this.created_at,
-      updated_at:
-          data.updated_at.present ? data.updated_at.value : this.updated_at,
+      created_date: data.created_date.present
+          ? data.created_date.value
+          : this.created_date,
+      updated_date: data.updated_date.present
+          ? data.updated_date.value
+          : this.updated_date,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('TempMasterRfidData(')
+    return (StringBuffer('TransactionsDBData(')
           ..write('key_id: $key_id, ')
-          ..write('rfid_tag: $rfid_tag, ')
+          ..write('item_id: $item_id, ')
+          ..write('ItemCode: $ItemCode, ')
+          ..write('location_id: $location_id, ')
+          ..write('location_code: $location_code, ')
+          ..write('qty: $qty, ')
           ..write('status: $status, ')
           ..write('rssi: $rssi, ')
-          ..write('created_at: $created_at, ')
-          ..write('updated_at: $updated_at')
+          ..write('created_date: $created_date, ')
+          ..write('updated_date: $updated_date')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(key_id, rfid_tag, status, rssi, created_at, updated_at);
+  int get hashCode => Object.hash(key_id, item_id, ItemCode, location_id,
+      location_code, qty, status, rssi, created_date, updated_date);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is TempMasterRfidData &&
+      (other is TransactionsDBData &&
           other.key_id == this.key_id &&
-          other.rfid_tag == this.rfid_tag &&
+          other.item_id == this.item_id &&
+          other.ItemCode == this.ItemCode &&
+          other.location_id == this.location_id &&
+          other.location_code == this.location_code &&
+          other.qty == this.qty &&
           other.status == this.status &&
           other.rssi == this.rssi &&
-          other.created_at == this.created_at &&
-          other.updated_at == this.updated_at);
+          other.created_date == this.created_date &&
+          other.updated_date == this.updated_date);
 }
 
-class TempMasterRfidCompanion extends UpdateCompanion<TempMasterRfidData> {
+class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
   final Value<int> key_id;
-  final Value<String?> rfid_tag;
+  final Value<int> item_id;
+  final Value<String> ItemCode;
+  final Value<String?> location_id;
+  final Value<String?> location_code;
+  final Value<double?> qty;
   final Value<String?> status;
   final Value<String?> rssi;
-  final Value<DateTime?> created_at;
-  final Value<DateTime?> updated_at;
-  const TempMasterRfidCompanion({
+  final Value<DateTime?> created_date;
+  final Value<DateTime?> updated_date;
+  const TransactionsDBCompanion({
     this.key_id = const Value.absent(),
-    this.rfid_tag = const Value.absent(),
+    this.item_id = const Value.absent(),
+    this.ItemCode = const Value.absent(),
+    this.location_id = const Value.absent(),
+    this.location_code = const Value.absent(),
+    this.qty = const Value.absent(),
     this.status = const Value.absent(),
     this.rssi = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.updated_at = const Value.absent(),
+    this.created_date = const Value.absent(),
+    this.updated_date = const Value.absent(),
   });
-  TempMasterRfidCompanion.insert({
+  TransactionsDBCompanion.insert({
     this.key_id = const Value.absent(),
-    this.rfid_tag = const Value.absent(),
+    required int item_id,
+    required String ItemCode,
+    this.location_id = const Value.absent(),
+    this.location_code = const Value.absent(),
+    this.qty = const Value.absent(),
     this.status = const Value.absent(),
     this.rssi = const Value.absent(),
-    this.created_at = const Value.absent(),
-    this.updated_at = const Value.absent(),
-  });
-  static Insertable<TempMasterRfidData> custom({
+    this.created_date = const Value.absent(),
+    this.updated_date = const Value.absent(),
+  })  : item_id = Value(item_id),
+        ItemCode = Value(ItemCode);
+  static Insertable<TransactionsDBData> custom({
     Expression<int>? key_id,
-    Expression<String>? rfid_tag,
+    Expression<int>? item_id,
+    Expression<String>? ItemCode,
+    Expression<String>? location_id,
+    Expression<String>? location_code,
+    Expression<double>? qty,
     Expression<String>? status,
     Expression<String>? rssi,
-    Expression<DateTime>? created_at,
-    Expression<DateTime>? updated_at,
+    Expression<DateTime>? created_date,
+    Expression<DateTime>? updated_date,
   }) {
     return RawValuesInsertable({
       if (key_id != null) 'key_id': key_id,
-      if (rfid_tag != null) 'rfid_tag': rfid_tag,
+      if (item_id != null) 'item_id': item_id,
+      if (ItemCode != null) 'item_code': ItemCode,
+      if (location_id != null) 'location_id': location_id,
+      if (location_code != null) 'location_code': location_code,
+      if (qty != null) 'qty': qty,
       if (status != null) 'status': status,
       if (rssi != null) 'rssi': rssi,
-      if (created_at != null) 'created_at': created_at,
-      if (updated_at != null) 'updated_at': updated_at,
+      if (created_date != null) 'created_date': created_date,
+      if (updated_date != null) 'updated_date': updated_date,
     });
   }
 
-  TempMasterRfidCompanion copyWith(
+  TransactionsDBCompanion copyWith(
       {Value<int>? key_id,
-      Value<String?>? rfid_tag,
+      Value<int>? item_id,
+      Value<String>? ItemCode,
+      Value<String?>? location_id,
+      Value<String?>? location_code,
+      Value<double?>? qty,
       Value<String?>? status,
       Value<String?>? rssi,
-      Value<DateTime?>? created_at,
-      Value<DateTime?>? updated_at}) {
-    return TempMasterRfidCompanion(
+      Value<DateTime?>? created_date,
+      Value<DateTime?>? updated_date}) {
+    return TransactionsDBCompanion(
       key_id: key_id ?? this.key_id,
-      rfid_tag: rfid_tag ?? this.rfid_tag,
+      item_id: item_id ?? this.item_id,
+      ItemCode: ItemCode ?? this.ItemCode,
+      location_id: location_id ?? this.location_id,
+      location_code: location_code ?? this.location_code,
+      qty: qty ?? this.qty,
       status: status ?? this.status,
       rssi: rssi ?? this.rssi,
-      created_at: created_at ?? this.created_at,
-      updated_at: updated_at ?? this.updated_at,
+      created_date: created_date ?? this.created_date,
+      updated_date: updated_date ?? this.updated_date,
     );
   }
 
@@ -1009,8 +1306,20 @@ class TempMasterRfidCompanion extends UpdateCompanion<TempMasterRfidData> {
     if (key_id.present) {
       map['key_id'] = Variable<int>(key_id.value);
     }
-    if (rfid_tag.present) {
-      map['rfid_tag'] = Variable<String>(rfid_tag.value);
+    if (item_id.present) {
+      map['item_id'] = Variable<int>(item_id.value);
+    }
+    if (ItemCode.present) {
+      map['item_code'] = Variable<String>(ItemCode.value);
+    }
+    if (location_id.present) {
+      map['location_id'] = Variable<String>(location_id.value);
+    }
+    if (location_code.present) {
+      map['location_code'] = Variable<String>(location_code.value);
+    }
+    if (qty.present) {
+      map['qty'] = Variable<double>(qty.value);
     }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
@@ -1018,285 +1327,443 @@ class TempMasterRfidCompanion extends UpdateCompanion<TempMasterRfidData> {
     if (rssi.present) {
       map['rssi'] = Variable<String>(rssi.value);
     }
-    if (created_at.present) {
-      map['created_at'] = Variable<DateTime>(created_at.value);
+    if (created_date.present) {
+      map['created_date'] = Variable<DateTime>(created_date.value);
     }
-    if (updated_at.present) {
-      map['updated_at'] = Variable<DateTime>(updated_at.value);
+    if (updated_date.present) {
+      map['updated_date'] = Variable<DateTime>(updated_date.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('TempMasterRfidCompanion(')
+    return (StringBuffer('TransactionsDBCompanion(')
           ..write('key_id: $key_id, ')
-          ..write('rfid_tag: $rfid_tag, ')
+          ..write('item_id: $item_id, ')
+          ..write('ItemCode: $ItemCode, ')
+          ..write('location_id: $location_id, ')
+          ..write('location_code: $location_code, ')
+          ..write('qty: $qty, ')
           ..write('status: $status, ')
           ..write('rssi: $rssi, ')
-          ..write('created_at: $created_at, ')
-          ..write('updated_at: $updated_at')
+          ..write('created_date: $created_date, ')
+          ..write('updated_date: $updated_date')
           ..write(')'))
         .toString();
   }
 }
 
-class ViewDetailData extends DataClass {
-  final int key_id;
-  final String? rfid_tag;
-  final String? status;
-  final String? rssi;
-  const ViewDetailData(
-      {required this.key_id, this.rfid_tag, this.status, this.rssi});
-  factory ViewDetailData.fromJson(Map<String, dynamic> json,
+class ViewItemMasterDBData extends DataClass {
+  final int item_id;
+  final String? ItemCode;
+  final String? ItemName;
+  final String? ItemDescription;
+  final String? SerialNumber;
+  final String? Quantity;
+  final String? Udf01;
+  final String? Udf02;
+  final String? Udf03;
+  final String? Udf04;
+  final String? Udf05;
+  const ViewItemMasterDBData(
+      {required this.item_id,
+      this.ItemCode,
+      this.ItemName,
+      this.ItemDescription,
+      this.SerialNumber,
+      this.Quantity,
+      this.Udf01,
+      this.Udf02,
+      this.Udf03,
+      this.Udf04,
+      this.Udf05});
+  factory ViewItemMasterDBData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ViewDetailData(
-      key_id: serializer.fromJson<int>(json['key_id']),
-      rfid_tag: serializer.fromJson<String?>(json['rfid_tag']),
-      status: serializer.fromJson<String?>(json['status']),
-      rssi: serializer.fromJson<String?>(json['rssi']),
+    return ViewItemMasterDBData(
+      item_id: serializer.fromJson<int>(json['item_id']),
+      ItemCode: serializer.fromJson<String?>(json['ItemCode']),
+      ItemName: serializer.fromJson<String?>(json['ItemName']),
+      ItemDescription: serializer.fromJson<String?>(json['ItemDescription']),
+      SerialNumber: serializer.fromJson<String?>(json['SerialNumber']),
+      Quantity: serializer.fromJson<String?>(json['Quantity']),
+      Udf01: serializer.fromJson<String?>(json['Udf01']),
+      Udf02: serializer.fromJson<String?>(json['Udf02']),
+      Udf03: serializer.fromJson<String?>(json['Udf03']),
+      Udf04: serializer.fromJson<String?>(json['Udf04']),
+      Udf05: serializer.fromJson<String?>(json['Udf05']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'key_id': serializer.toJson<int>(key_id),
-      'rfid_tag': serializer.toJson<String?>(rfid_tag),
-      'status': serializer.toJson<String?>(status),
-      'rssi': serializer.toJson<String?>(rssi),
+      'item_id': serializer.toJson<int>(item_id),
+      'ItemCode': serializer.toJson<String?>(ItemCode),
+      'ItemName': serializer.toJson<String?>(ItemName),
+      'ItemDescription': serializer.toJson<String?>(ItemDescription),
+      'SerialNumber': serializer.toJson<String?>(SerialNumber),
+      'Quantity': serializer.toJson<String?>(Quantity),
+      'Udf01': serializer.toJson<String?>(Udf01),
+      'Udf02': serializer.toJson<String?>(Udf02),
+      'Udf03': serializer.toJson<String?>(Udf03),
+      'Udf04': serializer.toJson<String?>(Udf04),
+      'Udf05': serializer.toJson<String?>(Udf05),
     };
   }
 
-  ViewDetailData copyWith(
-          {int? key_id,
-          Value<String?> rfid_tag = const Value.absent(),
-          Value<String?> status = const Value.absent(),
-          Value<String?> rssi = const Value.absent()}) =>
-      ViewDetailData(
-        key_id: key_id ?? this.key_id,
-        rfid_tag: rfid_tag.present ? rfid_tag.value : this.rfid_tag,
-        status: status.present ? status.value : this.status,
-        rssi: rssi.present ? rssi.value : this.rssi,
+  ViewItemMasterDBData copyWith(
+          {int? item_id,
+          Value<String?> ItemCode = const Value.absent(),
+          Value<String?> ItemName = const Value.absent(),
+          Value<String?> ItemDescription = const Value.absent(),
+          Value<String?> SerialNumber = const Value.absent(),
+          Value<String?> Quantity = const Value.absent(),
+          Value<String?> Udf01 = const Value.absent(),
+          Value<String?> Udf02 = const Value.absent(),
+          Value<String?> Udf03 = const Value.absent(),
+          Value<String?> Udf04 = const Value.absent(),
+          Value<String?> Udf05 = const Value.absent()}) =>
+      ViewItemMasterDBData(
+        item_id: item_id ?? this.item_id,
+        ItemCode: ItemCode.present ? ItemCode.value : this.ItemCode,
+        ItemName: ItemName.present ? ItemName.value : this.ItemName,
+        ItemDescription: ItemDescription.present
+            ? ItemDescription.value
+            : this.ItemDescription,
+        SerialNumber:
+            SerialNumber.present ? SerialNumber.value : this.SerialNumber,
+        Quantity: Quantity.present ? Quantity.value : this.Quantity,
+        Udf01: Udf01.present ? Udf01.value : this.Udf01,
+        Udf02: Udf02.present ? Udf02.value : this.Udf02,
+        Udf03: Udf03.present ? Udf03.value : this.Udf03,
+        Udf04: Udf04.present ? Udf04.value : this.Udf04,
+        Udf05: Udf05.present ? Udf05.value : this.Udf05,
       );
   @override
   String toString() {
-    return (StringBuffer('ViewDetailData(')
-          ..write('key_id: $key_id, ')
-          ..write('rfid_tag: $rfid_tag, ')
-          ..write('status: $status, ')
-          ..write('rssi: $rssi')
+    return (StringBuffer('ViewItemMasterDBData(')
+          ..write('item_id: $item_id, ')
+          ..write('ItemCode: $ItemCode, ')
+          ..write('ItemName: $ItemName, ')
+          ..write('ItemDescription: $ItemDescription, ')
+          ..write('SerialNumber: $SerialNumber, ')
+          ..write('Quantity: $Quantity, ')
+          ..write('Udf01: $Udf01, ')
+          ..write('Udf02: $Udf02, ')
+          ..write('Udf03: $Udf03, ')
+          ..write('Udf04: $Udf04, ')
+          ..write('Udf05: $Udf05')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(key_id, rfid_tag, status, rssi);
+  int get hashCode => Object.hash(item_id, ItemCode, ItemName, ItemDescription,
+      SerialNumber, Quantity, Udf01, Udf02, Udf03, Udf04, Udf05);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ViewDetailData &&
-          other.key_id == this.key_id &&
-          other.rfid_tag == this.rfid_tag &&
-          other.status == this.status &&
-          other.rssi == this.rssi);
+      (other is ViewItemMasterDBData &&
+          other.item_id == this.item_id &&
+          other.ItemCode == this.ItemCode &&
+          other.ItemName == this.ItemName &&
+          other.ItemDescription == this.ItemDescription &&
+          other.SerialNumber == this.SerialNumber &&
+          other.Quantity == this.Quantity &&
+          other.Udf01 == this.Udf01 &&
+          other.Udf02 == this.Udf02 &&
+          other.Udf03 == this.Udf03 &&
+          other.Udf04 == this.Udf04 &&
+          other.Udf05 == this.Udf05);
 }
 
-class $ViewDetailView extends ViewInfo<$ViewDetailView, ViewDetailData>
+class $ViewItemMasterDBView
+    extends ViewInfo<$ViewItemMasterDBView, ViewItemMasterDBData>
     implements HasResultSet {
   final String? _alias;
   @override
   final _$AppDb attachedDatabase;
-  $ViewDetailView(this.attachedDatabase, [this._alias]);
-  $Tag_Running_RfidTable get tag =>
-      attachedDatabase.tagRunningRfid.createAlias('t0');
+  $ViewItemMasterDBView(this.attachedDatabase, [this._alias]);
+  $ItemMasterDBTable get itemMasterDB =>
+      attachedDatabase.itemMasterDB.createAlias('t0');
   @override
-  List<GeneratedColumn> get $columns => [key_id, rfid_tag, status, rssi];
-  @override
-  String get aliasedName => _alias ?? entityName;
-  @override
-  String get entityName => 'view_detail';
-  @override
-  Map<SqlDialect, String>? get createViewStatements => null;
-  @override
-  $ViewDetailView get asDslTable => this;
-  @override
-  ViewDetailData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ViewDetailData(
-      key_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}key_id'])!,
-      rfid_tag: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}rfid_tag']),
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}status']),
-      rssi: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}rssi']),
-    );
-  }
-
-  late final GeneratedColumn<int> key_id = GeneratedColumn<int>(
-      'key_id', aliasedName, false,
-      generatedAs: GeneratedAs(tag.key_id, false), type: DriftSqlType.int);
-  late final GeneratedColumn<String> rfid_tag = GeneratedColumn<String>(
-      'rfid_tag', aliasedName, true,
-      generatedAs: GeneratedAs(tag.rfid_tag, false), type: DriftSqlType.string);
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-      'status', aliasedName, true,
-      generatedAs: GeneratedAs(tag.status, false), type: DriftSqlType.string);
-  late final GeneratedColumn<String> rssi = GeneratedColumn<String>(
-      'rssi', aliasedName, true,
-      generatedAs: GeneratedAs(tag.rssi, false), type: DriftSqlType.string);
-  @override
-  $ViewDetailView createAlias(String alias) {
-    return $ViewDetailView(attachedDatabase, alias);
-  }
-
-  @override
-  Query? get query => (attachedDatabase.selectOnly(tag)..addColumns($columns));
-  @override
-  Set<String> get readTables => const {'tag_running_rfid'};
-}
-
-class ViewMasterData extends DataClass {
-  final int key_id;
-  final String? rfid_tag;
-  final String? status;
-  final String? rssi;
-  const ViewMasterData(
-      {required this.key_id, this.rfid_tag, this.status, this.rssi});
-  factory ViewMasterData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ViewMasterData(
-      key_id: serializer.fromJson<int>(json['key_id']),
-      rfid_tag: serializer.fromJson<String?>(json['rfid_tag']),
-      status: serializer.fromJson<String?>(json['status']),
-      rssi: serializer.fromJson<String?>(json['rssi']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'key_id': serializer.toJson<int>(key_id),
-      'rfid_tag': serializer.toJson<String?>(rfid_tag),
-      'status': serializer.toJson<String?>(status),
-      'rssi': serializer.toJson<String?>(rssi),
-    };
-  }
-
-  ViewMasterData copyWith(
-          {int? key_id,
-          Value<String?> rfid_tag = const Value.absent(),
-          Value<String?> status = const Value.absent(),
-          Value<String?> rssi = const Value.absent()}) =>
-      ViewMasterData(
-        key_id: key_id ?? this.key_id,
-        rfid_tag: rfid_tag.present ? rfid_tag.value : this.rfid_tag,
-        status: status.present ? status.value : this.status,
-        rssi: rssi.present ? rssi.value : this.rssi,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('ViewMasterData(')
-          ..write('key_id: $key_id, ')
-          ..write('rfid_tag: $rfid_tag, ')
-          ..write('status: $status, ')
-          ..write('rssi: $rssi')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(key_id, rfid_tag, status, rssi);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is ViewMasterData &&
-          other.key_id == this.key_id &&
-          other.rfid_tag == this.rfid_tag &&
-          other.status == this.status &&
-          other.rssi == this.rssi);
-}
-
-class $ViewMasterView extends ViewInfo<$ViewMasterView, ViewMasterData>
-    implements HasResultSet {
-  final String? _alias;
-  @override
-  final _$AppDb attachedDatabase;
-  $ViewMasterView(this.attachedDatabase, [this._alias]);
-  $Master_rfidTable get master_rfid =>
-      attachedDatabase.masterRfid.createAlias('t0');
-  @override
-  List<GeneratedColumn> get $columns => [key_id, rfid_tag, status, rssi];
+  List<GeneratedColumn> get $columns => [
+        item_id,
+        ItemCode,
+        ItemName,
+        ItemDescription,
+        SerialNumber,
+        Quantity,
+        Udf01,
+        Udf02,
+        Udf03,
+        Udf04,
+        Udf05
+      ];
   @override
   String get aliasedName => _alias ?? entityName;
   @override
-  String get entityName => 'view_master';
+  String get entityName => 'view_item_master_d_b';
   @override
   Map<SqlDialect, String>? get createViewStatements => null;
   @override
-  $ViewMasterView get asDslTable => this;
+  $ViewItemMasterDBView get asDslTable => this;
   @override
-  ViewMasterData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ViewItemMasterDBData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ViewMasterData(
-      key_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}key_id'])!,
-      rfid_tag: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}rfid_tag']),
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}status']),
-      rssi: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}rssi']),
+    return ViewItemMasterDBData(
+      item_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
+      ItemCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}item_code']),
+      ItemName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}item_name']),
+      ItemDescription: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}item_description']),
+      SerialNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}serial_number']),
+      Quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}quantity']),
+      Udf01: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}udf01']),
+      Udf02: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}udf02']),
+      Udf03: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}udf03']),
+      Udf04: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}udf04']),
+      Udf05: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}udf05']),
     );
   }
 
-  late final GeneratedColumn<int> key_id = GeneratedColumn<int>(
-      'key_id', aliasedName, false,
-      generatedAs: GeneratedAs(master_rfid.key_id, false),
+  late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
+      'item_id', aliasedName, false,
+      generatedAs: GeneratedAs(itemMasterDB.item_id, false),
       type: DriftSqlType.int);
-  late final GeneratedColumn<String> rfid_tag = GeneratedColumn<String>(
-      'rfid_tag', aliasedName, true,
-      generatedAs: GeneratedAs(master_rfid.rfid_tag, false),
+  late final GeneratedColumn<String> ItemCode = GeneratedColumn<String>(
+      'item_code', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.ItemCode, false),
       type: DriftSqlType.string);
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-      'status', aliasedName, true,
-      generatedAs: GeneratedAs(master_rfid.status, false),
+  late final GeneratedColumn<String> ItemName = GeneratedColumn<String>(
+      'item_name', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.ItemName, false),
       type: DriftSqlType.string);
-  late final GeneratedColumn<String> rssi = GeneratedColumn<String>(
-      'rssi', aliasedName, true,
-      generatedAs: GeneratedAs(master_rfid.rssi, false),
+  late final GeneratedColumn<String> ItemDescription = GeneratedColumn<String>(
+      'item_description', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.ItemDescription, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> SerialNumber = GeneratedColumn<String>(
+      'serial_number', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.SerialNumber, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> Quantity = GeneratedColumn<String>(
+      'quantity', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.Quantity, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> Udf01 = GeneratedColumn<String>(
+      'udf01', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.Udf01, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> Udf02 = GeneratedColumn<String>(
+      'udf02', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.Udf02, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> Udf03 = GeneratedColumn<String>(
+      'udf03', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.Udf03, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> Udf04 = GeneratedColumn<String>(
+      'udf04', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.Udf04, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> Udf05 = GeneratedColumn<String>(
+      'udf05', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.Udf05, false),
       type: DriftSqlType.string);
   @override
-  $ViewMasterView createAlias(String alias) {
-    return $ViewMasterView(attachedDatabase, alias);
+  $ViewItemMasterDBView createAlias(String alias) {
+    return $ViewItemMasterDBView(attachedDatabase, alias);
   }
 
   @override
   Query? get query =>
-      (attachedDatabase.selectOnly(master_rfid)..addColumns($columns));
+      (attachedDatabase.selectOnly(itemMasterDB)..addColumns($columns));
   @override
-  Set<String> get readTables => const {'master_rfid'};
+  Set<String> get readTables => const {'item_master_d_b'};
 }
 
-class ViewTempMasterData extends DataClass {
-  final int key_id;
-  final String? rfid_tag;
-  final String? status;
-  final String? rssi;
-  const ViewTempMasterData(
-      {required this.key_id, this.rfid_tag, this.status, this.rssi});
-  factory ViewTempMasterData.fromJson(Map<String, dynamic> json,
+class ViewLocationMasterDBData extends DataClass {
+  final int location_id;
+  final String? location_code;
+  final String? location_name;
+  final String? location_desc;
+  const ViewLocationMasterDBData(
+      {required this.location_id,
+      this.location_code,
+      this.location_name,
+      this.location_desc});
+  factory ViewLocationMasterDBData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ViewTempMasterData(
+    return ViewLocationMasterDBData(
+      location_id: serializer.fromJson<int>(json['location_id']),
+      location_code: serializer.fromJson<String?>(json['location_code']),
+      location_name: serializer.fromJson<String?>(json['location_name']),
+      location_desc: serializer.fromJson<String?>(json['location_desc']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'location_id': serializer.toJson<int>(location_id),
+      'location_code': serializer.toJson<String?>(location_code),
+      'location_name': serializer.toJson<String?>(location_name),
+      'location_desc': serializer.toJson<String?>(location_desc),
+    };
+  }
+
+  ViewLocationMasterDBData copyWith(
+          {int? location_id,
+          Value<String?> location_code = const Value.absent(),
+          Value<String?> location_name = const Value.absent(),
+          Value<String?> location_desc = const Value.absent()}) =>
+      ViewLocationMasterDBData(
+        location_id: location_id ?? this.location_id,
+        location_code:
+            location_code.present ? location_code.value : this.location_code,
+        location_name:
+            location_name.present ? location_name.value : this.location_name,
+        location_desc:
+            location_desc.present ? location_desc.value : this.location_desc,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ViewLocationMasterDBData(')
+          ..write('location_id: $location_id, ')
+          ..write('location_code: $location_code, ')
+          ..write('location_name: $location_name, ')
+          ..write('location_desc: $location_desc')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(location_id, location_code, location_name, location_desc);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ViewLocationMasterDBData &&
+          other.location_id == this.location_id &&
+          other.location_code == this.location_code &&
+          other.location_name == this.location_name &&
+          other.location_desc == this.location_desc);
+}
+
+class $ViewLocationMasterDBView
+    extends ViewInfo<$ViewLocationMasterDBView, ViewLocationMasterDBData>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$AppDb attachedDatabase;
+  $ViewLocationMasterDBView(this.attachedDatabase, [this._alias]);
+  $LocationMasterDBTable get localtionMasterDB =>
+      attachedDatabase.locationMasterDB.createAlias('t0');
+  @override
+  List<GeneratedColumn> get $columns =>
+      [location_id, location_code, location_name, location_desc];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'view_location_master_d_b';
+  @override
+  Map<SqlDialect, String>? get createViewStatements => null;
+  @override
+  $ViewLocationMasterDBView get asDslTable => this;
+  @override
+  ViewLocationMasterDBData map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ViewLocationMasterDBData(
+      location_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}location_id'])!,
+      location_code: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_code']),
+      location_name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_name']),
+      location_desc: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_desc']),
+    );
+  }
+
+  late final GeneratedColumn<int> location_id = GeneratedColumn<int>(
+      'location_id', aliasedName, false,
+      generatedAs: GeneratedAs(localtionMasterDB.location_id, false),
+      type: DriftSqlType.int);
+  late final GeneratedColumn<String> location_code = GeneratedColumn<String>(
+      'location_code', aliasedName, true,
+      generatedAs: GeneratedAs(localtionMasterDB.location_code, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> location_name = GeneratedColumn<String>(
+      'location_name', aliasedName, true,
+      generatedAs: GeneratedAs(localtionMasterDB.location_name, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> location_desc = GeneratedColumn<String>(
+      'location_desc', aliasedName, true,
+      generatedAs: GeneratedAs(localtionMasterDB.location_desc, false),
+      type: DriftSqlType.string);
+  @override
+  $ViewLocationMasterDBView createAlias(String alias) {
+    return $ViewLocationMasterDBView(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query =>
+      (attachedDatabase.selectOnly(localtionMasterDB)..addColumns($columns));
+  @override
+  Set<String> get readTables => const {'location_master_d_b'};
+}
+
+class ViewTransactionsDBData extends DataClass {
+  final int key_id;
+  final int item_id;
+  final String ItemCode;
+  final String? location_id;
+  final String? location_code;
+  final double? qty;
+  final String? status;
+  final String? rssi;
+  final DateTime? created_date;
+  final DateTime? updated_date;
+  const ViewTransactionsDBData(
+      {required this.key_id,
+      required this.item_id,
+      required this.ItemCode,
+      this.location_id,
+      this.location_code,
+      this.qty,
+      this.status,
+      this.rssi,
+      this.created_date,
+      this.updated_date});
+  factory ViewTransactionsDBData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ViewTransactionsDBData(
       key_id: serializer.fromJson<int>(json['key_id']),
-      rfid_tag: serializer.fromJson<String?>(json['rfid_tag']),
+      item_id: serializer.fromJson<int>(json['item_id']),
+      ItemCode: serializer.fromJson<String>(json['ItemCode']),
+      location_id: serializer.fromJson<String?>(json['location_id']),
+      location_code: serializer.fromJson<String?>(json['location_code']),
+      qty: serializer.fromJson<double?>(json['qty']),
       status: serializer.fromJson<String?>(json['status']),
       rssi: serializer.fromJson<String?>(json['rssi']),
+      created_date: serializer.fromJson<DateTime?>(json['created_date']),
+      updated_date: serializer.fromJson<DateTime?>(json['updated_date']),
     );
   }
   @override
@@ -1304,272 +1771,436 @@ class ViewTempMasterData extends DataClass {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'key_id': serializer.toJson<int>(key_id),
-      'rfid_tag': serializer.toJson<String?>(rfid_tag),
+      'item_id': serializer.toJson<int>(item_id),
+      'ItemCode': serializer.toJson<String>(ItemCode),
+      'location_id': serializer.toJson<String?>(location_id),
+      'location_code': serializer.toJson<String?>(location_code),
+      'qty': serializer.toJson<double?>(qty),
       'status': serializer.toJson<String?>(status),
       'rssi': serializer.toJson<String?>(rssi),
+      'created_date': serializer.toJson<DateTime?>(created_date),
+      'updated_date': serializer.toJson<DateTime?>(updated_date),
     };
   }
 
-  ViewTempMasterData copyWith(
+  ViewTransactionsDBData copyWith(
           {int? key_id,
-          Value<String?> rfid_tag = const Value.absent(),
+          int? item_id,
+          String? ItemCode,
+          Value<String?> location_id = const Value.absent(),
+          Value<String?> location_code = const Value.absent(),
+          Value<double?> qty = const Value.absent(),
           Value<String?> status = const Value.absent(),
-          Value<String?> rssi = const Value.absent()}) =>
-      ViewTempMasterData(
+          Value<String?> rssi = const Value.absent(),
+          Value<DateTime?> created_date = const Value.absent(),
+          Value<DateTime?> updated_date = const Value.absent()}) =>
+      ViewTransactionsDBData(
         key_id: key_id ?? this.key_id,
-        rfid_tag: rfid_tag.present ? rfid_tag.value : this.rfid_tag,
+        item_id: item_id ?? this.item_id,
+        ItemCode: ItemCode ?? this.ItemCode,
+        location_id: location_id.present ? location_id.value : this.location_id,
+        location_code:
+            location_code.present ? location_code.value : this.location_code,
+        qty: qty.present ? qty.value : this.qty,
         status: status.present ? status.value : this.status,
         rssi: rssi.present ? rssi.value : this.rssi,
+        created_date:
+            created_date.present ? created_date.value : this.created_date,
+        updated_date:
+            updated_date.present ? updated_date.value : this.updated_date,
       );
   @override
   String toString() {
-    return (StringBuffer('ViewTempMasterData(')
+    return (StringBuffer('ViewTransactionsDBData(')
           ..write('key_id: $key_id, ')
-          ..write('rfid_tag: $rfid_tag, ')
+          ..write('item_id: $item_id, ')
+          ..write('ItemCode: $ItemCode, ')
+          ..write('location_id: $location_id, ')
+          ..write('location_code: $location_code, ')
+          ..write('qty: $qty, ')
           ..write('status: $status, ')
-          ..write('rssi: $rssi')
+          ..write('rssi: $rssi, ')
+          ..write('created_date: $created_date, ')
+          ..write('updated_date: $updated_date')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(key_id, rfid_tag, status, rssi);
+  int get hashCode => Object.hash(key_id, item_id, ItemCode, location_id,
+      location_code, qty, status, rssi, created_date, updated_date);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ViewTempMasterData &&
+      (other is ViewTransactionsDBData &&
           other.key_id == this.key_id &&
-          other.rfid_tag == this.rfid_tag &&
+          other.item_id == this.item_id &&
+          other.ItemCode == this.ItemCode &&
+          other.location_id == this.location_id &&
+          other.location_code == this.location_code &&
+          other.qty == this.qty &&
           other.status == this.status &&
-          other.rssi == this.rssi);
+          other.rssi == this.rssi &&
+          other.created_date == this.created_date &&
+          other.updated_date == this.updated_date);
 }
 
-class $ViewTempMasterView
-    extends ViewInfo<$ViewTempMasterView, ViewTempMasterData>
+class $ViewTransactionsDBView
+    extends ViewInfo<$ViewTransactionsDBView, ViewTransactionsDBData>
     implements HasResultSet {
   final String? _alias;
   @override
   final _$AppDb attachedDatabase;
-  $ViewTempMasterView(this.attachedDatabase, [this._alias]);
-  $TempMasterRfidTable get master_rfid =>
-      attachedDatabase.tempMasterRfid.createAlias('t0');
+  $ViewTransactionsDBView(this.attachedDatabase, [this._alias]);
+  $TransactionsDBTable get transactionsDB =>
+      attachedDatabase.transactionsDB.createAlias('t0');
   @override
-  List<GeneratedColumn> get $columns => [key_id, rfid_tag, status, rssi];
+  List<GeneratedColumn> get $columns => [
+        key_id,
+        item_id,
+        ItemCode,
+        location_id,
+        location_code,
+        qty,
+        status,
+        rssi,
+        created_date,
+        updated_date
+      ];
   @override
   String get aliasedName => _alias ?? entityName;
   @override
-  String get entityName => 'view_temp_master';
+  String get entityName => 'view_transactions_d_b';
   @override
   Map<SqlDialect, String>? get createViewStatements => null;
   @override
-  $ViewTempMasterView get asDslTable => this;
+  $ViewTransactionsDBView get asDslTable => this;
   @override
-  ViewTempMasterData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ViewTransactionsDBData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ViewTempMasterData(
+    return ViewTransactionsDBData(
       key_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}key_id'])!,
-      rfid_tag: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}rfid_tag']),
+      item_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
+      ItemCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}item_code'])!,
+      location_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_id']),
+      location_code: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}location_code']),
+      qty: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}qty']),
       status: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}status']),
       rssi: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}rssi']),
+      created_date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_date']),
+      updated_date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_date']),
     );
   }
 
   late final GeneratedColumn<int> key_id = GeneratedColumn<int>(
       'key_id', aliasedName, false,
-      generatedAs: GeneratedAs(master_rfid.key_id, false),
+      generatedAs: GeneratedAs(transactionsDB.key_id, false),
       type: DriftSqlType.int);
-  late final GeneratedColumn<String> rfid_tag = GeneratedColumn<String>(
-      'rfid_tag', aliasedName, true,
-      generatedAs: GeneratedAs(master_rfid.rfid_tag, false),
+  late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
+      'item_id', aliasedName, false,
+      generatedAs: GeneratedAs(transactionsDB.item_id, false),
+      type: DriftSqlType.int);
+  late final GeneratedColumn<String> ItemCode = GeneratedColumn<String>(
+      'item_code', aliasedName, false,
+      generatedAs: GeneratedAs(transactionsDB.ItemCode, false),
       type: DriftSqlType.string);
+  late final GeneratedColumn<String> location_id = GeneratedColumn<String>(
+      'location_id', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.location_id, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> location_code = GeneratedColumn<String>(
+      'location_code', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.location_code, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<double> qty = GeneratedColumn<double>(
+      'qty', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.qty, false),
+      type: DriftSqlType.double);
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
       'status', aliasedName, true,
-      generatedAs: GeneratedAs(master_rfid.status, false),
+      generatedAs: GeneratedAs(transactionsDB.status, false),
       type: DriftSqlType.string);
   late final GeneratedColumn<String> rssi = GeneratedColumn<String>(
       'rssi', aliasedName, true,
-      generatedAs: GeneratedAs(master_rfid.rssi, false),
+      generatedAs: GeneratedAs(transactionsDB.rssi, false),
       type: DriftSqlType.string);
+  late final GeneratedColumn<DateTime> created_date = GeneratedColumn<DateTime>(
+      'created_date', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.created_date, false),
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<DateTime> updated_date = GeneratedColumn<DateTime>(
+      'updated_date', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.updated_date, false),
+      type: DriftSqlType.dateTime);
   @override
-  $ViewTempMasterView createAlias(String alias) {
-    return $ViewTempMasterView(attachedDatabase, alias);
+  $ViewTransactionsDBView createAlias(String alias) {
+    return $ViewTransactionsDBView(attachedDatabase, alias);
   }
 
   @override
   Query? get query =>
-      (attachedDatabase.selectOnly(master_rfid)..addColumns($columns));
+      (attachedDatabase.selectOnly(transactionsDB)..addColumns($columns));
   @override
-  Set<String> get readTables => const {'temp_master_rfid'};
+  Set<String> get readTables => const {'transactions_d_b'};
 }
 
 abstract class _$AppDb extends GeneratedDatabase {
   _$AppDb(QueryExecutor e) : super(e);
   $AppDbManager get managers => $AppDbManager(this);
-  late final $Master_rfidTable masterRfid = $Master_rfidTable(this);
-  late final $Tag_Running_RfidTable tagRunningRfid =
-      $Tag_Running_RfidTable(this);
-  late final $TempMasterRfidTable tempMasterRfid = $TempMasterRfidTable(this);
-  late final $ViewDetailView viewDetail = $ViewDetailView(this);
-  late final $ViewMasterView viewMaster = $ViewMasterView(this);
-  late final $ViewTempMasterView viewTempMaster = $ViewTempMasterView(this);
+  late final $ItemMasterDBTable itemMasterDB = $ItemMasterDBTable(this);
+  late final $LocationMasterDBTable locationMasterDB =
+      $LocationMasterDBTable(this);
+  late final $TransactionsDBTable transactionsDB = $TransactionsDBTable(this);
+  late final $ViewItemMasterDBView viewItemMasterDB =
+      $ViewItemMasterDBView(this);
+  late final $ViewLocationMasterDBView viewLocationMasterDB =
+      $ViewLocationMasterDBView(this);
+  late final $ViewTransactionsDBView viewTransactionsDB =
+      $ViewTransactionsDBView(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-        masterRfid,
-        tagRunningRfid,
-        tempMasterRfid,
-        viewDetail,
-        viewMaster,
-        viewTempMaster
+        itemMasterDB,
+        locationMasterDB,
+        transactionsDB,
+        viewItemMasterDB,
+        viewLocationMasterDB,
+        viewTransactionsDB
       ];
 }
 
-typedef $$Master_rfidTableCreateCompanionBuilder = Master_rfidCompanion
+typedef $$ItemMasterDBTableCreateCompanionBuilder = ItemMasterDBCompanion
     Function({
-  Value<int> key_id,
-  Value<String?> rfid_tag,
-  Value<String?> status,
-  Value<String?> rssi,
-  Value<DateTime?> created_at,
-  Value<DateTime?> updated_at,
+  Value<int> item_id,
+  Value<String?> ItemCode,
+  Value<String?> ItemName,
+  Value<String?> ItemDescription,
+  Value<String?> SerialNumber,
+  Value<String?> Quantity,
+  Value<String?> Udf01,
+  Value<String?> Udf02,
+  Value<String?> Udf03,
+  Value<String?> Udf04,
+  Value<String?> Udf05,
 });
-typedef $$Master_rfidTableUpdateCompanionBuilder = Master_rfidCompanion
+typedef $$ItemMasterDBTableUpdateCompanionBuilder = ItemMasterDBCompanion
     Function({
-  Value<int> key_id,
-  Value<String?> rfid_tag,
-  Value<String?> status,
-  Value<String?> rssi,
-  Value<DateTime?> created_at,
-  Value<DateTime?> updated_at,
+  Value<int> item_id,
+  Value<String?> ItemCode,
+  Value<String?> ItemName,
+  Value<String?> ItemDescription,
+  Value<String?> SerialNumber,
+  Value<String?> Quantity,
+  Value<String?> Udf01,
+  Value<String?> Udf02,
+  Value<String?> Udf03,
+  Value<String?> Udf04,
+  Value<String?> Udf05,
 });
 
-class $$Master_rfidTableFilterComposer
-    extends FilterComposer<_$AppDb, $Master_rfidTable> {
-  $$Master_rfidTableFilterComposer(super.$state);
-  ColumnFilters<int> get key_id => $state.composableBuilder(
-      column: $state.table.key_id,
+class $$ItemMasterDBTableFilterComposer
+    extends FilterComposer<_$AppDb, $ItemMasterDBTable> {
+  $$ItemMasterDBTableFilterComposer(super.$state);
+  ColumnFilters<int> get item_id => $state.composableBuilder(
+      column: $state.table.item_id,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get rfid_tag => $state.composableBuilder(
-      column: $state.table.rfid_tag,
+  ColumnFilters<String> get ItemCode => $state.composableBuilder(
+      column: $state.table.ItemCode,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get status => $state.composableBuilder(
-      column: $state.table.status,
+  ColumnFilters<String> get ItemName => $state.composableBuilder(
+      column: $state.table.ItemName,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get rssi => $state.composableBuilder(
-      column: $state.table.rssi,
+  ColumnFilters<String> get ItemDescription => $state.composableBuilder(
+      column: $state.table.ItemDescription,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<DateTime> get created_at => $state.composableBuilder(
-      column: $state.table.created_at,
+  ColumnFilters<String> get SerialNumber => $state.composableBuilder(
+      column: $state.table.SerialNumber,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<DateTime> get updated_at => $state.composableBuilder(
-      column: $state.table.updated_at,
+  ColumnFilters<String> get Quantity => $state.composableBuilder(
+      column: $state.table.Quantity,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get Udf01 => $state.composableBuilder(
+      column: $state.table.Udf01,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get Udf02 => $state.composableBuilder(
+      column: $state.table.Udf02,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get Udf03 => $state.composableBuilder(
+      column: $state.table.Udf03,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get Udf04 => $state.composableBuilder(
+      column: $state.table.Udf04,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get Udf05 => $state.composableBuilder(
+      column: $state.table.Udf05,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
-class $$Master_rfidTableOrderingComposer
-    extends OrderingComposer<_$AppDb, $Master_rfidTable> {
-  $$Master_rfidTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get key_id => $state.composableBuilder(
-      column: $state.table.key_id,
+class $$ItemMasterDBTableOrderingComposer
+    extends OrderingComposer<_$AppDb, $ItemMasterDBTable> {
+  $$ItemMasterDBTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get item_id => $state.composableBuilder(
+      column: $state.table.item_id,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get rfid_tag => $state.composableBuilder(
-      column: $state.table.rfid_tag,
+  ColumnOrderings<String> get ItemCode => $state.composableBuilder(
+      column: $state.table.ItemCode,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get status => $state.composableBuilder(
-      column: $state.table.status,
+  ColumnOrderings<String> get ItemName => $state.composableBuilder(
+      column: $state.table.ItemName,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get rssi => $state.composableBuilder(
-      column: $state.table.rssi,
+  ColumnOrderings<String> get ItemDescription => $state.composableBuilder(
+      column: $state.table.ItemDescription,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<DateTime> get created_at => $state.composableBuilder(
-      column: $state.table.created_at,
+  ColumnOrderings<String> get SerialNumber => $state.composableBuilder(
+      column: $state.table.SerialNumber,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<DateTime> get updated_at => $state.composableBuilder(
-      column: $state.table.updated_at,
+  ColumnOrderings<String> get Quantity => $state.composableBuilder(
+      column: $state.table.Quantity,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get Udf01 => $state.composableBuilder(
+      column: $state.table.Udf01,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get Udf02 => $state.composableBuilder(
+      column: $state.table.Udf02,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get Udf03 => $state.composableBuilder(
+      column: $state.table.Udf03,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get Udf04 => $state.composableBuilder(
+      column: $state.table.Udf04,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get Udf05 => $state.composableBuilder(
+      column: $state.table.Udf05,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-class $$Master_rfidTableTableManager extends RootTableManager<
+class $$ItemMasterDBTableTableManager extends RootTableManager<
     _$AppDb,
-    $Master_rfidTable,
-    Master_rfidData,
-    $$Master_rfidTableFilterComposer,
-    $$Master_rfidTableOrderingComposer,
-    $$Master_rfidTableCreateCompanionBuilder,
-    $$Master_rfidTableUpdateCompanionBuilder,
+    $ItemMasterDBTable,
+    ItemMasterDBData,
+    $$ItemMasterDBTableFilterComposer,
+    $$ItemMasterDBTableOrderingComposer,
+    $$ItemMasterDBTableCreateCompanionBuilder,
+    $$ItemMasterDBTableUpdateCompanionBuilder,
     (
-      Master_rfidData,
-      BaseReferences<_$AppDb, $Master_rfidTable, Master_rfidData>
+      ItemMasterDBData,
+      BaseReferences<_$AppDb, $ItemMasterDBTable, ItemMasterDBData>
     ),
-    Master_rfidData,
+    ItemMasterDBData,
     PrefetchHooks Function()> {
-  $$Master_rfidTableTableManager(_$AppDb db, $Master_rfidTable table)
+  $$ItemMasterDBTableTableManager(_$AppDb db, $ItemMasterDBTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           filteringComposer:
-              $$Master_rfidTableFilterComposer(ComposerState(db, table)),
+              $$ItemMasterDBTableFilterComposer(ComposerState(db, table)),
           orderingComposer:
-              $$Master_rfidTableOrderingComposer(ComposerState(db, table)),
+              $$ItemMasterDBTableOrderingComposer(ComposerState(db, table)),
           updateCompanionCallback: ({
-            Value<int> key_id = const Value.absent(),
-            Value<String?> rfid_tag = const Value.absent(),
-            Value<String?> status = const Value.absent(),
-            Value<String?> rssi = const Value.absent(),
-            Value<DateTime?> created_at = const Value.absent(),
-            Value<DateTime?> updated_at = const Value.absent(),
+            Value<int> item_id = const Value.absent(),
+            Value<String?> ItemCode = const Value.absent(),
+            Value<String?> ItemName = const Value.absent(),
+            Value<String?> ItemDescription = const Value.absent(),
+            Value<String?> SerialNumber = const Value.absent(),
+            Value<String?> Quantity = const Value.absent(),
+            Value<String?> Udf01 = const Value.absent(),
+            Value<String?> Udf02 = const Value.absent(),
+            Value<String?> Udf03 = const Value.absent(),
+            Value<String?> Udf04 = const Value.absent(),
+            Value<String?> Udf05 = const Value.absent(),
           }) =>
-              Master_rfidCompanion(
-            key_id: key_id,
-            rfid_tag: rfid_tag,
-            status: status,
-            rssi: rssi,
-            created_at: created_at,
-            updated_at: updated_at,
+              ItemMasterDBCompanion(
+            item_id: item_id,
+            ItemCode: ItemCode,
+            ItemName: ItemName,
+            ItemDescription: ItemDescription,
+            SerialNumber: SerialNumber,
+            Quantity: Quantity,
+            Udf01: Udf01,
+            Udf02: Udf02,
+            Udf03: Udf03,
+            Udf04: Udf04,
+            Udf05: Udf05,
           ),
           createCompanionCallback: ({
-            Value<int> key_id = const Value.absent(),
-            Value<String?> rfid_tag = const Value.absent(),
-            Value<String?> status = const Value.absent(),
-            Value<String?> rssi = const Value.absent(),
-            Value<DateTime?> created_at = const Value.absent(),
-            Value<DateTime?> updated_at = const Value.absent(),
+            Value<int> item_id = const Value.absent(),
+            Value<String?> ItemCode = const Value.absent(),
+            Value<String?> ItemName = const Value.absent(),
+            Value<String?> ItemDescription = const Value.absent(),
+            Value<String?> SerialNumber = const Value.absent(),
+            Value<String?> Quantity = const Value.absent(),
+            Value<String?> Udf01 = const Value.absent(),
+            Value<String?> Udf02 = const Value.absent(),
+            Value<String?> Udf03 = const Value.absent(),
+            Value<String?> Udf04 = const Value.absent(),
+            Value<String?> Udf05 = const Value.absent(),
           }) =>
-              Master_rfidCompanion.insert(
-            key_id: key_id,
-            rfid_tag: rfid_tag,
-            status: status,
-            rssi: rssi,
-            created_at: created_at,
-            updated_at: updated_at,
+              ItemMasterDBCompanion.insert(
+            item_id: item_id,
+            ItemCode: ItemCode,
+            ItemName: ItemName,
+            ItemDescription: ItemDescription,
+            SerialNumber: SerialNumber,
+            Quantity: Quantity,
+            Udf01: Udf01,
+            Udf02: Udf02,
+            Udf03: Udf03,
+            Udf04: Udf04,
+            Udf05: Udf05,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -1578,160 +2209,128 @@ class $$Master_rfidTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$Master_rfidTableProcessedTableManager = ProcessedTableManager<
+typedef $$ItemMasterDBTableProcessedTableManager = ProcessedTableManager<
     _$AppDb,
-    $Master_rfidTable,
-    Master_rfidData,
-    $$Master_rfidTableFilterComposer,
-    $$Master_rfidTableOrderingComposer,
-    $$Master_rfidTableCreateCompanionBuilder,
-    $$Master_rfidTableUpdateCompanionBuilder,
+    $ItemMasterDBTable,
+    ItemMasterDBData,
+    $$ItemMasterDBTableFilterComposer,
+    $$ItemMasterDBTableOrderingComposer,
+    $$ItemMasterDBTableCreateCompanionBuilder,
+    $$ItemMasterDBTableUpdateCompanionBuilder,
     (
-      Master_rfidData,
-      BaseReferences<_$AppDb, $Master_rfidTable, Master_rfidData>
+      ItemMasterDBData,
+      BaseReferences<_$AppDb, $ItemMasterDBTable, ItemMasterDBData>
     ),
-    Master_rfidData,
+    ItemMasterDBData,
     PrefetchHooks Function()>;
-typedef $$Tag_Running_RfidTableCreateCompanionBuilder
-    = Tag_Running_RfidCompanion Function({
-  Value<int> key_id,
-  Value<String?> rfid_tag,
-  Value<String?> status,
-  Value<String?> rssi,
-  Value<DateTime?> created_at,
-  Value<DateTime?> updated_at,
+typedef $$LocationMasterDBTableCreateCompanionBuilder
+    = LocationMasterDBCompanion Function({
+  Value<int> location_id,
+  Value<String?> location_code,
+  Value<String?> location_name,
+  Value<String?> location_desc,
 });
-typedef $$Tag_Running_RfidTableUpdateCompanionBuilder
-    = Tag_Running_RfidCompanion Function({
-  Value<int> key_id,
-  Value<String?> rfid_tag,
-  Value<String?> status,
-  Value<String?> rssi,
-  Value<DateTime?> created_at,
-  Value<DateTime?> updated_at,
+typedef $$LocationMasterDBTableUpdateCompanionBuilder
+    = LocationMasterDBCompanion Function({
+  Value<int> location_id,
+  Value<String?> location_code,
+  Value<String?> location_name,
+  Value<String?> location_desc,
 });
 
-class $$Tag_Running_RfidTableFilterComposer
-    extends FilterComposer<_$AppDb, $Tag_Running_RfidTable> {
-  $$Tag_Running_RfidTableFilterComposer(super.$state);
-  ColumnFilters<int> get key_id => $state.composableBuilder(
-      column: $state.table.key_id,
+class $$LocationMasterDBTableFilterComposer
+    extends FilterComposer<_$AppDb, $LocationMasterDBTable> {
+  $$LocationMasterDBTableFilterComposer(super.$state);
+  ColumnFilters<int> get location_id => $state.composableBuilder(
+      column: $state.table.location_id,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get rfid_tag => $state.composableBuilder(
-      column: $state.table.rfid_tag,
+  ColumnFilters<String> get location_code => $state.composableBuilder(
+      column: $state.table.location_code,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get status => $state.composableBuilder(
-      column: $state.table.status,
+  ColumnFilters<String> get location_name => $state.composableBuilder(
+      column: $state.table.location_name,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get rssi => $state.composableBuilder(
-      column: $state.table.rssi,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<DateTime> get created_at => $state.composableBuilder(
-      column: $state.table.created_at,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
-
-  ColumnFilters<DateTime> get updated_at => $state.composableBuilder(
-      column: $state.table.updated_at,
+  ColumnFilters<String> get location_desc => $state.composableBuilder(
+      column: $state.table.location_desc,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
-class $$Tag_Running_RfidTableOrderingComposer
-    extends OrderingComposer<_$AppDb, $Tag_Running_RfidTable> {
-  $$Tag_Running_RfidTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get key_id => $state.composableBuilder(
-      column: $state.table.key_id,
+class $$LocationMasterDBTableOrderingComposer
+    extends OrderingComposer<_$AppDb, $LocationMasterDBTable> {
+  $$LocationMasterDBTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get location_id => $state.composableBuilder(
+      column: $state.table.location_id,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get rfid_tag => $state.composableBuilder(
-      column: $state.table.rfid_tag,
+  ColumnOrderings<String> get location_code => $state.composableBuilder(
+      column: $state.table.location_code,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get status => $state.composableBuilder(
-      column: $state.table.status,
+  ColumnOrderings<String> get location_name => $state.composableBuilder(
+      column: $state.table.location_name,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get rssi => $state.composableBuilder(
-      column: $state.table.rssi,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<DateTime> get created_at => $state.composableBuilder(
-      column: $state.table.created_at,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
-
-  ColumnOrderings<DateTime> get updated_at => $state.composableBuilder(
-      column: $state.table.updated_at,
+  ColumnOrderings<String> get location_desc => $state.composableBuilder(
+      column: $state.table.location_desc,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-class $$Tag_Running_RfidTableTableManager extends RootTableManager<
+class $$LocationMasterDBTableTableManager extends RootTableManager<
     _$AppDb,
-    $Tag_Running_RfidTable,
-    Tag_Running_RfidData,
-    $$Tag_Running_RfidTableFilterComposer,
-    $$Tag_Running_RfidTableOrderingComposer,
-    $$Tag_Running_RfidTableCreateCompanionBuilder,
-    $$Tag_Running_RfidTableUpdateCompanionBuilder,
+    $LocationMasterDBTable,
+    LocationMasterDBData,
+    $$LocationMasterDBTableFilterComposer,
+    $$LocationMasterDBTableOrderingComposer,
+    $$LocationMasterDBTableCreateCompanionBuilder,
+    $$LocationMasterDBTableUpdateCompanionBuilder,
     (
-      Tag_Running_RfidData,
-      BaseReferences<_$AppDb, $Tag_Running_RfidTable, Tag_Running_RfidData>
+      LocationMasterDBData,
+      BaseReferences<_$AppDb, $LocationMasterDBTable, LocationMasterDBData>
     ),
-    Tag_Running_RfidData,
+    LocationMasterDBData,
     PrefetchHooks Function()> {
-  $$Tag_Running_RfidTableTableManager(_$AppDb db, $Tag_Running_RfidTable table)
+  $$LocationMasterDBTableTableManager(_$AppDb db, $LocationMasterDBTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           filteringComposer:
-              $$Tag_Running_RfidTableFilterComposer(ComposerState(db, table)),
+              $$LocationMasterDBTableFilterComposer(ComposerState(db, table)),
           orderingComposer:
-              $$Tag_Running_RfidTableOrderingComposer(ComposerState(db, table)),
+              $$LocationMasterDBTableOrderingComposer(ComposerState(db, table)),
           updateCompanionCallback: ({
-            Value<int> key_id = const Value.absent(),
-            Value<String?> rfid_tag = const Value.absent(),
-            Value<String?> status = const Value.absent(),
-            Value<String?> rssi = const Value.absent(),
-            Value<DateTime?> created_at = const Value.absent(),
-            Value<DateTime?> updated_at = const Value.absent(),
+            Value<int> location_id = const Value.absent(),
+            Value<String?> location_code = const Value.absent(),
+            Value<String?> location_name = const Value.absent(),
+            Value<String?> location_desc = const Value.absent(),
           }) =>
-              Tag_Running_RfidCompanion(
-            key_id: key_id,
-            rfid_tag: rfid_tag,
-            status: status,
-            rssi: rssi,
-            created_at: created_at,
-            updated_at: updated_at,
+              LocationMasterDBCompanion(
+            location_id: location_id,
+            location_code: location_code,
+            location_name: location_name,
+            location_desc: location_desc,
           ),
           createCompanionCallback: ({
-            Value<int> key_id = const Value.absent(),
-            Value<String?> rfid_tag = const Value.absent(),
-            Value<String?> status = const Value.absent(),
-            Value<String?> rssi = const Value.absent(),
-            Value<DateTime?> created_at = const Value.absent(),
-            Value<DateTime?> updated_at = const Value.absent(),
+            Value<int> location_id = const Value.absent(),
+            Value<String?> location_code = const Value.absent(),
+            Value<String?> location_name = const Value.absent(),
+            Value<String?> location_desc = const Value.absent(),
           }) =>
-              Tag_Running_RfidCompanion.insert(
-            key_id: key_id,
-            rfid_tag: rfid_tag,
-            status: status,
-            rssi: rssi,
-            created_at: created_at,
-            updated_at: updated_at,
+              LocationMasterDBCompanion.insert(
+            location_id: location_id,
+            location_code: location_code,
+            location_name: location_name,
+            location_desc: location_desc,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -1740,49 +2339,77 @@ class $$Tag_Running_RfidTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$Tag_Running_RfidTableProcessedTableManager = ProcessedTableManager<
+typedef $$LocationMasterDBTableProcessedTableManager = ProcessedTableManager<
     _$AppDb,
-    $Tag_Running_RfidTable,
-    Tag_Running_RfidData,
-    $$Tag_Running_RfidTableFilterComposer,
-    $$Tag_Running_RfidTableOrderingComposer,
-    $$Tag_Running_RfidTableCreateCompanionBuilder,
-    $$Tag_Running_RfidTableUpdateCompanionBuilder,
+    $LocationMasterDBTable,
+    LocationMasterDBData,
+    $$LocationMasterDBTableFilterComposer,
+    $$LocationMasterDBTableOrderingComposer,
+    $$LocationMasterDBTableCreateCompanionBuilder,
+    $$LocationMasterDBTableUpdateCompanionBuilder,
     (
-      Tag_Running_RfidData,
-      BaseReferences<_$AppDb, $Tag_Running_RfidTable, Tag_Running_RfidData>
+      LocationMasterDBData,
+      BaseReferences<_$AppDb, $LocationMasterDBTable, LocationMasterDBData>
     ),
-    Tag_Running_RfidData,
+    LocationMasterDBData,
     PrefetchHooks Function()>;
-typedef $$TempMasterRfidTableCreateCompanionBuilder = TempMasterRfidCompanion
+typedef $$TransactionsDBTableCreateCompanionBuilder = TransactionsDBCompanion
     Function({
   Value<int> key_id,
-  Value<String?> rfid_tag,
+  required int item_id,
+  required String ItemCode,
+  Value<String?> location_id,
+  Value<String?> location_code,
+  Value<double?> qty,
   Value<String?> status,
   Value<String?> rssi,
-  Value<DateTime?> created_at,
-  Value<DateTime?> updated_at,
+  Value<DateTime?> created_date,
+  Value<DateTime?> updated_date,
 });
-typedef $$TempMasterRfidTableUpdateCompanionBuilder = TempMasterRfidCompanion
+typedef $$TransactionsDBTableUpdateCompanionBuilder = TransactionsDBCompanion
     Function({
   Value<int> key_id,
-  Value<String?> rfid_tag,
+  Value<int> item_id,
+  Value<String> ItemCode,
+  Value<String?> location_id,
+  Value<String?> location_code,
+  Value<double?> qty,
   Value<String?> status,
   Value<String?> rssi,
-  Value<DateTime?> created_at,
-  Value<DateTime?> updated_at,
+  Value<DateTime?> created_date,
+  Value<DateTime?> updated_date,
 });
 
-class $$TempMasterRfidTableFilterComposer
-    extends FilterComposer<_$AppDb, $TempMasterRfidTable> {
-  $$TempMasterRfidTableFilterComposer(super.$state);
+class $$TransactionsDBTableFilterComposer
+    extends FilterComposer<_$AppDb, $TransactionsDBTable> {
+  $$TransactionsDBTableFilterComposer(super.$state);
   ColumnFilters<int> get key_id => $state.composableBuilder(
       column: $state.table.key_id,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get rfid_tag => $state.composableBuilder(
-      column: $state.table.rfid_tag,
+  ColumnFilters<int> get item_id => $state.composableBuilder(
+      column: $state.table.item_id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get ItemCode => $state.composableBuilder(
+      column: $state.table.ItemCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get location_id => $state.composableBuilder(
+      column: $state.table.location_id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get location_code => $state.composableBuilder(
+      column: $state.table.location_code,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get qty => $state.composableBuilder(
+      column: $state.table.qty,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -1796,27 +2423,47 @@ class $$TempMasterRfidTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<DateTime> get created_at => $state.composableBuilder(
-      column: $state.table.created_at,
+  ColumnFilters<DateTime> get created_date => $state.composableBuilder(
+      column: $state.table.created_date,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<DateTime> get updated_at => $state.composableBuilder(
-      column: $state.table.updated_at,
+  ColumnFilters<DateTime> get updated_date => $state.composableBuilder(
+      column: $state.table.updated_date,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
-class $$TempMasterRfidTableOrderingComposer
-    extends OrderingComposer<_$AppDb, $TempMasterRfidTable> {
-  $$TempMasterRfidTableOrderingComposer(super.$state);
+class $$TransactionsDBTableOrderingComposer
+    extends OrderingComposer<_$AppDb, $TransactionsDBTable> {
+  $$TransactionsDBTableOrderingComposer(super.$state);
   ColumnOrderings<int> get key_id => $state.composableBuilder(
       column: $state.table.key_id,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get rfid_tag => $state.composableBuilder(
-      column: $state.table.rfid_tag,
+  ColumnOrderings<int> get item_id => $state.composableBuilder(
+      column: $state.table.item_id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get ItemCode => $state.composableBuilder(
+      column: $state.table.ItemCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get location_id => $state.composableBuilder(
+      column: $state.table.location_id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get location_code => $state.composableBuilder(
+      column: $state.table.location_code,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get qty => $state.composableBuilder(
+      column: $state.table.qty,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -1830,70 +2477,86 @@ class $$TempMasterRfidTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<DateTime> get created_at => $state.composableBuilder(
-      column: $state.table.created_at,
+  ColumnOrderings<DateTime> get created_date => $state.composableBuilder(
+      column: $state.table.created_date,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<DateTime> get updated_at => $state.composableBuilder(
-      column: $state.table.updated_at,
+  ColumnOrderings<DateTime> get updated_date => $state.composableBuilder(
+      column: $state.table.updated_date,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-class $$TempMasterRfidTableTableManager extends RootTableManager<
+class $$TransactionsDBTableTableManager extends RootTableManager<
     _$AppDb,
-    $TempMasterRfidTable,
-    TempMasterRfidData,
-    $$TempMasterRfidTableFilterComposer,
-    $$TempMasterRfidTableOrderingComposer,
-    $$TempMasterRfidTableCreateCompanionBuilder,
-    $$TempMasterRfidTableUpdateCompanionBuilder,
+    $TransactionsDBTable,
+    TransactionsDBData,
+    $$TransactionsDBTableFilterComposer,
+    $$TransactionsDBTableOrderingComposer,
+    $$TransactionsDBTableCreateCompanionBuilder,
+    $$TransactionsDBTableUpdateCompanionBuilder,
     (
-      TempMasterRfidData,
-      BaseReferences<_$AppDb, $TempMasterRfidTable, TempMasterRfidData>
+      TransactionsDBData,
+      BaseReferences<_$AppDb, $TransactionsDBTable, TransactionsDBData>
     ),
-    TempMasterRfidData,
+    TransactionsDBData,
     PrefetchHooks Function()> {
-  $$TempMasterRfidTableTableManager(_$AppDb db, $TempMasterRfidTable table)
+  $$TransactionsDBTableTableManager(_$AppDb db, $TransactionsDBTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           filteringComposer:
-              $$TempMasterRfidTableFilterComposer(ComposerState(db, table)),
+              $$TransactionsDBTableFilterComposer(ComposerState(db, table)),
           orderingComposer:
-              $$TempMasterRfidTableOrderingComposer(ComposerState(db, table)),
+              $$TransactionsDBTableOrderingComposer(ComposerState(db, table)),
           updateCompanionCallback: ({
             Value<int> key_id = const Value.absent(),
-            Value<String?> rfid_tag = const Value.absent(),
+            Value<int> item_id = const Value.absent(),
+            Value<String> ItemCode = const Value.absent(),
+            Value<String?> location_id = const Value.absent(),
+            Value<String?> location_code = const Value.absent(),
+            Value<double?> qty = const Value.absent(),
             Value<String?> status = const Value.absent(),
             Value<String?> rssi = const Value.absent(),
-            Value<DateTime?> created_at = const Value.absent(),
-            Value<DateTime?> updated_at = const Value.absent(),
+            Value<DateTime?> created_date = const Value.absent(),
+            Value<DateTime?> updated_date = const Value.absent(),
           }) =>
-              TempMasterRfidCompanion(
+              TransactionsDBCompanion(
             key_id: key_id,
-            rfid_tag: rfid_tag,
+            item_id: item_id,
+            ItemCode: ItemCode,
+            location_id: location_id,
+            location_code: location_code,
+            qty: qty,
             status: status,
             rssi: rssi,
-            created_at: created_at,
-            updated_at: updated_at,
+            created_date: created_date,
+            updated_date: updated_date,
           ),
           createCompanionCallback: ({
             Value<int> key_id = const Value.absent(),
-            Value<String?> rfid_tag = const Value.absent(),
+            required int item_id,
+            required String ItemCode,
+            Value<String?> location_id = const Value.absent(),
+            Value<String?> location_code = const Value.absent(),
+            Value<double?> qty = const Value.absent(),
             Value<String?> status = const Value.absent(),
             Value<String?> rssi = const Value.absent(),
-            Value<DateTime?> created_at = const Value.absent(),
-            Value<DateTime?> updated_at = const Value.absent(),
+            Value<DateTime?> created_date = const Value.absent(),
+            Value<DateTime?> updated_date = const Value.absent(),
           }) =>
-              TempMasterRfidCompanion.insert(
+              TransactionsDBCompanion.insert(
             key_id: key_id,
-            rfid_tag: rfid_tag,
+            item_id: item_id,
+            ItemCode: ItemCode,
+            location_id: location_id,
+            location_code: location_code,
+            qty: qty,
             status: status,
             rssi: rssi,
-            created_at: created_at,
-            updated_at: updated_at,
+            created_date: created_date,
+            updated_date: updated_date,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -1902,28 +2565,28 @@ class $$TempMasterRfidTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$TempMasterRfidTableProcessedTableManager = ProcessedTableManager<
+typedef $$TransactionsDBTableProcessedTableManager = ProcessedTableManager<
     _$AppDb,
-    $TempMasterRfidTable,
-    TempMasterRfidData,
-    $$TempMasterRfidTableFilterComposer,
-    $$TempMasterRfidTableOrderingComposer,
-    $$TempMasterRfidTableCreateCompanionBuilder,
-    $$TempMasterRfidTableUpdateCompanionBuilder,
+    $TransactionsDBTable,
+    TransactionsDBData,
+    $$TransactionsDBTableFilterComposer,
+    $$TransactionsDBTableOrderingComposer,
+    $$TransactionsDBTableCreateCompanionBuilder,
+    $$TransactionsDBTableUpdateCompanionBuilder,
     (
-      TempMasterRfidData,
-      BaseReferences<_$AppDb, $TempMasterRfidTable, TempMasterRfidData>
+      TransactionsDBData,
+      BaseReferences<_$AppDb, $TransactionsDBTable, TransactionsDBData>
     ),
-    TempMasterRfidData,
+    TransactionsDBData,
     PrefetchHooks Function()>;
 
 class $AppDbManager {
   final _$AppDb _db;
   $AppDbManager(this._db);
-  $$Master_rfidTableTableManager get masterRfid =>
-      $$Master_rfidTableTableManager(_db, _db.masterRfid);
-  $$Tag_Running_RfidTableTableManager get tagRunningRfid =>
-      $$Tag_Running_RfidTableTableManager(_db, _db.tagRunningRfid);
-  $$TempMasterRfidTableTableManager get tempMasterRfid =>
-      $$TempMasterRfidTableTableManager(_db, _db.tempMasterRfid);
+  $$ItemMasterDBTableTableManager get itemMasterDB =>
+      $$ItemMasterDBTableTableManager(_db, _db.itemMasterDB);
+  $$LocationMasterDBTableTableManager get locationMasterDB =>
+      $$LocationMasterDBTableTableManager(_db, _db.locationMasterDB);
+  $$TransactionsDBTableTableManager get transactionsDB =>
+      $$TransactionsDBTableTableManager(_db, _db.transactionsDB);
 }

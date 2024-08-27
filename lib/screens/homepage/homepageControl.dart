@@ -8,20 +8,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:rfid/config/appConstants.dart';
-import 'package:rfid/config/appData.dart';
-import 'package:rfid/database/database.dart';
-import 'package:rfid/main.dart';
-import 'package:rfid/nativefunction/nativeFunction.dart';
-import 'package:rfid/screens/addpage/addRfid_page.dart';
-import 'package:rfid/screens/import_test/import_Test_Screen.dart';
-import 'package:rfid/screens/reportpage/reportScreen.dart';
-import 'package:rfid/screens/scan/scanScreen.dart';
-import 'package:rfid/screens/scan/tableViewScan.dart';
-import 'package:rfid/screens/searchtag/serachtag_Screen.dart';
-import 'package:rfid/screens/settings/setting_Screen.dart';
-
-import '../../blocs/search_rfid/search_rfid_bloc.dart';
+import 'package:countstock_rfid/config/appConstants.dart';
+import 'package:countstock_rfid/config/appData.dart';
+import 'package:countstock_rfid/database/database.dart';
+import 'package:countstock_rfid/main.dart';
+import 'package:countstock_rfid/nativefunction/nativeFunction.dart';
+import 'package:countstock_rfid/screens/addpage/addRfid_page.dart';
+import 'package:countstock_rfid/screens/import_test/import_Test_Screen.dart';
+import 'package:countstock_rfid/screens/reportpage/reportScreen.dart';
+import 'package:countstock_rfid/screens/scan/scanScreen.dart';
+import 'package:countstock_rfid/screens/scan/tableViewScan.dart';
+import 'package:countstock_rfid/screens/searchtag/serachtag_Screen.dart';
+import 'package:countstock_rfid/screens/settings/setting_Screen.dart';
 
 class HomePageControl extends StatefulWidget {
   const HomePageControl({super.key});
@@ -111,12 +109,12 @@ class _HomePageControlState extends State<HomePageControl> {
                                             MaterialStatePropertyAll(
                                                 Colors.redAccent)),
                                     onPressed: () async {
-                                      final item =
-                                          await appDb.search_tag_rfid('');
-                                      context.read<SearchRfidBloc>().add(
-                                          DeleteAllEvent(item
-                                              .map((e) => e.key_id)
-                                              .toList()));
+                                      // final item =
+                                      //     await appDb.search_tag_rfid('');
+                                      // context.read<SearchRfidBloc>().add(
+                                      //     DeleteAllEvent(item
+                                      //         .map((e) => e.key_id)
+                                      //         .toList()));
                                       // itemModel.clear();
 
                                       setState(() {});
@@ -159,7 +157,7 @@ class _HomePageControlState extends State<HomePageControl> {
                   showinfoScan();
                   //scan
                 } else if (_selectedIndex == 2) {
-                  showInfoSearch();
+                  showInfoView();
                   //search
                 } else if (_selectedIndex == 3) {
                   showInfoReport();
@@ -195,7 +193,7 @@ class _HomePageControlState extends State<HomePageControl> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt),
-            label: appLocalizations.search,
+            label: appLocalizations.menu_view,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
@@ -335,7 +333,7 @@ class _HomePageControlState extends State<HomePageControl> {
             ));
   }
 
-  void showInfoSearch() {
+  void showInfoView() {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(

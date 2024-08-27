@@ -7,17 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:rfid/app.dart';
-import 'package:rfid/blocs/scanrfid/models/importRfidCodeModel.dart';
-import 'package:rfid/blocs/scanrfid/models/total_scan_Model.dart';
-import 'package:rfid/blocs/scanrfid/scanrfid_code_bloc.dart';
-import 'package:rfid/config/appConstants.dart';
-import 'package:rfid/config/appData.dart';
-import 'package:rfid/main.dart';
-import 'package:rfid/screens/reportpage/model/import_txt.dart';
-import 'package:rfid/screens/scan/tableViewScan.dart';
+import 'package:countstock_rfid/app.dart';
+import 'package:countstock_rfid/blocs/report/report_bloc.dart';
+
+import 'package:countstock_rfid/config/appConstants.dart';
+import 'package:countstock_rfid/config/appData.dart';
+import 'package:countstock_rfid/database/database.dart';
+import 'package:countstock_rfid/main.dart';
+import 'package:countstock_rfid/screens/reportpage/model/import_txt.dart';
+import 'package:countstock_rfid/screens/reportpage/model/summary_report_model.dart';
+import 'package:countstock_rfid/screens/scan/tableViewScan.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key, this.receiveValue});
@@ -28,10 +28,10 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-  TotalScanModel totalScanModel = TotalScanModel();
+  SumReportModel totalScanModel = SumReportModel();
   final List<ChartData> chartData = [];
 
-  List<ImportRfidCodeModel> _itemImport = [];
+  // List<ImportRfidCodeModel> _itemImport = [];
   bool hasInvalidHeader = false;
   List<DropdownMenuItem<String>> items = ["Master", "Loss", "Found"]
       .map((String value) => DropdownMenuItem<String>(
@@ -42,59 +42,20 @@ class _ReportScreenState extends State<ReportScreen> {
 
   @override
   void initState() {
-    appDb.deleteTagRunningDuplicate().then((value) {
-      BlocProvider.of<ScanrfidCodeBloc>(context).add(
-        GetTotoalScanEvent(),
-      );
-    });
+    BlocProvider.of<ReportBloc>(context).add(
+      GetReportSum(),
+    );
 
     AppData.setPopupInfo("page_report");
     // TODO: implement initState
     super.initState();
   }
 
-  Future<void> _importCSV() async {
-    final FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['txt'],
-    );
-
-    if (result != null) {
-      final String csvPath = result.files.single.path!;
-
-      final String csvString = await File(csvPath).readAsString(encoding: utf8);
-
-      final List<List<dynamic>> csvData = CsvToListConverter().convert(
-          csvString.toString().trim(),
-          fieldDelimiter: '*|*',
-          eol: '\n');
-
-      csvData.forEach((row) {
-        row.forEach((col) {
-          final columData = col.toString().trim();
-          if (columData.isNotEmpty) {
-            ImportRfidCodeModel importModel = ImportRfidCodeModel(
-              rfidTag: columData.replaceAll("|", ""),
-              createDate: DateTime.now(),
-            );
-
-            _itemImport.add(importModel);
-          }
-        });
-      });
-      setState(() {});
-
-      BlocProvider.of<ScanrfidCodeBloc>(context).add(
-        ImportRfidCodeEvent(_itemImport),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
         listeners: [
-          BlocListener<ScanrfidCodeBloc, ScanrfidCodeState>(
+          BlocListener<ReportBloc, ReportState>(
               listener: (context, state) async {
             if (state.status == FetchStatus.fetching) {
               EasyLoading.show(status: 'loading...');
@@ -137,10 +98,9 @@ class _ReportScreenState extends State<ReportScreen> {
             if (state.status == FetchStatus.importFinish) {
               EasyLoading.dismiss();
               chartData.clear();
-              _itemImport.clear();
 
-              BlocProvider.of<ScanrfidCodeBloc>(context).add(
-                GetTotoalScanEvent(),
+              BlocProvider.of<ReportBloc>(context).add(
+                GetReportSum(),
               );
             }
             if (state.status == FetchStatus.failed) {
@@ -149,19 +109,6 @@ class _ReportScreenState extends State<ReportScreen> {
           })
         ],
         child: Scaffold(
-          floatingActionButton: ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(blueColor_master),
-            ),
-            onPressed: () async {
-              _importCSV();
-            },
-            child: Text(
-              appLocalizations.btn_import_data,
-              style: TextStyle(color: whiteColor),
-            ),
-          ),
           body: Column(
             children: [
               chartData.isNotEmpty
@@ -208,6 +155,47 @@ class _ReportScreenState extends State<ReportScreen> {
                         mainAxisSpacing: 10,
                         crossAxisCount: 3,
                         children: <Widget>[
+                          //Import
+                          GestureDetector(
+                            onTap: () =>
+                                itemMasterDB.imporItemMaster().then((value) {
+                              BlocProvider.of<ReportBloc>(context).add(
+                                GetReportSum(),
+                              );
+                            }),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      offset: Offset(
+                                        1.0,
+                                        1.0,
+                                      ),
+                                      blurRadius: 5.0,
+                                      spreadRadius: 1.0,
+                                    ), //BoxShadow
+                                    BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(0.0, 0.0),
+                                      blurRadius: 0.0,
+                                      spreadRadius: 0.0,
+                                    ),
+                                  ],
+                                  color: whiteColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.import_contacts),
+                                  Text("Import\nMaster"),
+                                ],
+                              ),
+                            ),
+                          ),
+                          //Master
                           Container(
                               padding: const EdgeInsets.all(8),
                               decoration: const BoxDecoration(
@@ -241,6 +229,50 @@ class _ReportScreenState extends State<ReportScreen> {
                                 ),
                                 progressColor: blueColor_master,
                               )),
+                          //Location
+                          GestureDetector(
+                            onTap: () =>
+                                locationDB.imporLocationMaster().then((value) {
+                              BlocProvider.of<ReportBloc>(context).add(
+                                GetReportSum(),
+                              );
+                            }),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      offset: Offset(
+                                        1.0,
+                                        1.0,
+                                      ),
+                                      blurRadius: 5.0,
+                                      spreadRadius: 1.0,
+                                    ), //BoxShadow
+                                    BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(0.0, 0.0),
+                                      blurRadius: 0.0,
+                                      spreadRadius: 0.0,
+                                    ),
+                                  ],
+                                  color: whiteColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.import_contacts),
+                                  Text(
+                                    "Import Location",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          //Found
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
@@ -281,6 +313,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               progressColor: pinkColor_found,
                             ),
                           ),
+                          //NotScan
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
@@ -320,6 +353,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               progressColor: pinkPaletteColor1_not_scan,
                             ),
                           ),
+                          //NotFound
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: const BoxDecoration(

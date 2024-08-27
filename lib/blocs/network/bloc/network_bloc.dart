@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:rfid/blocs/network/network_helper.dart';
+import 'package:countstock_rfid/blocs/network/network_helper.dart';
 // import 'package:equatable/equatable.dart';
 
 part 'network_event.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:rfid/main.dart';
+import 'package:countstock_rfid/main.dart';
 
 class SDK_Function {
   static const platform = MethodChannel("com.example/customChannel");

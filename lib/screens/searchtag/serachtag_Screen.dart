@@ -9,13 +9,13 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:rfid/app.dart';
-import 'package:rfid/blocs/search_rfid/models/search_rfid_model.dart';
-import 'package:rfid/blocs/search_rfid/search_rfid_bloc.dart';
-import 'package:rfid/config/appData.dart';
-import 'package:rfid/database/database.dart';
-import 'package:rfid/main.dart';
-import 'package:rfid/nativefunction/nativeFunction.dart';
+import 'package:countstock_rfid/app.dart';
+import 'package:countstock_rfid/blocs/search/search_bloc.dart';
+
+import 'package:countstock_rfid/config/appData.dart';
+import 'package:countstock_rfid/database/database.dart';
+import 'package:countstock_rfid/main.dart';
+import 'package:countstock_rfid/nativefunction/nativeFunction.dart';
 
 class SearchTagsScreen extends StatefulWidget {
   const SearchTagsScreen({super.key});
@@ -30,44 +30,45 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
   String dropdownValue = 'One';
   bool isFilter = false;
   String isFilter_status = "Default";
-  List<Tag_Running_RfidData> itemModel = [];
-  List<Tag_Running_RfidData> temp_itemModel = [];
-  StreamSubscription<SearchRfidState>? _subscription;
+  List<TransactionsDBData> itemModel = [];
+  List<TransactionsDBData> temp_itemModel = [];
+  // StreamSubscription<SearchRfidState>? _subscription;
 
   @override
   void initState() {
-    appDb.deleteTagRunningDuplicate().then((value) {
-      BlocProvider.of<SearchRfidBloc>(context).add(
-        SerachEvent(''),
-      );
-      focusNode.requestFocus();
-      Future.delayed(Duration(milliseconds: 500), () async {
-        SystemChannels.textInput.invokeMethod('TextInput.hide');
-        setState(() {});
-      });
-    });
+    BlocProvider.of<SearchBloc>(context).add(
+      GetSerachEvent(''),
+    );
+    // appDb.deleteTagRunningDuplicate().then((value) {
 
-    _subscribeToBloc();
+    //   focusNode.requestFocus();
+    //   Future.delayed(Duration(milliseconds: 500), () async {
+    //     SystemChannels.textInput.invokeMethod('TextInput.hide');
+    //     setState(() {});
+    //   });
+    // });
+
+    // _subscribeToBloc();
     AppData.setPopupInfo("page_serachtag");
     // TODO: implement initState
     super.initState();
   }
 
-  void _subscribeToBloc() {
-    _subscription = context.read<SearchRfidBloc>().stream.listen((state) {
-      if (state.status == FetchStatus.deleteAllSuccess) {
-        itemModel.clear();
-        temp_itemModel.clear();
-        if (mounted) {
-          setState(() {});
-        }
-      }
-    });
-  }
+  // void _subscribeToBloc() {
+  //   _subscription = context.read<SearchRfidBloc>().stream.listen((state) {
+  //     if (state.status == FetchStatus.deleteAllSuccess) {
+  //       itemModel.clear();
+  //       temp_itemModel.clear();
+  //       if (mounted) {
+  //         setState(() {});
+  //       }
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {
-    _subscription?.cancel();
+    // _subscription?.cancel();
     super.dispose();
   }
 
@@ -92,7 +93,7 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
         var sink = file.openWrite();
         sink.write('tag|Rssi|status\n');
         for (var item in itemModel) {
-          sink.write('${item.rfid_tag}|${item.rssi} dBm|${item.status}\n');
+          sink.write('${item.ItemCode}|${item.rssi} dBm|${item.status}\n');
         }
 
         await sink.close();
@@ -111,8 +112,7 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<SearchRfidBloc, SearchRfidState>(
-            listener: (context, state) async {
+        BlocListener<SearchBloc, SearchState>(listener: (context, state) async {
           if (state.status == FetchStatus.fetching) {}
           if (state.status == FetchStatus.saved) {
             itemModel = state.data!;
@@ -123,53 +123,6 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
         })
       ],
       child: Scaffold(
-        // floatingActionButton: CircleAvatar(
-        //   backgroundColor: Colors.orangeAccent,
-        //   child: IconButton(
-        //       onPressed: () {
-        //         showDialog(
-        //             context: context,
-        //             builder: (context) => AlertDialog(
-        //                   title: Text(appLocalizations.popup_del_title_all),
-        //                   content: Text(appLocalizations.popup_del_sub_all),
-        //                   actions: [
-        //                     TextButton(
-        //                         style: ButtonStyle(
-        //                             backgroundColor:
-        //                                 MaterialStatePropertyAll(Colors.blue)),
-        //                         onPressed: () {
-        //                           Navigator.pop(context);
-        //                         },
-        //                         child: Text(
-        //                           appLocalizations.btn_cancel,
-        //                           style: TextStyle(color: Colors.white),
-        //                         )),
-        //                     TextButton(
-        //                         style: ButtonStyle(
-        //                             backgroundColor: MaterialStatePropertyAll(
-        //                                 Colors.redAccent)),
-        //                         onPressed: () {
-        //                           context.read<SearchRfidBloc>().add(
-        //                               DeleteAllEvent(itemModel
-        //                                   .map((e) => e.key_id)
-        //                                   .toList()));
-        //                           itemModel.clear();
-        //                           setState(() {});
-
-        //                           Navigator.pop(context);
-        //                         },
-        //                         child: Text(
-        //                           appLocalizations.btn_delete,
-        //                           style: TextStyle(color: Colors.white),
-        //                         ))
-        //                   ],
-        //                 ));
-        //       },
-        //       icon: Icon(
-        //         Icons.delete_forever,
-        //         color: Colors.white,
-        //       )),
-        // ),
         body: Padding(
             padding: EdgeInsets.all(8.0),
             child: Column(
@@ -185,9 +138,9 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                     ),
                     onChanged: (value) {
                       if (value.length > 1) {
-                        context.read<SearchRfidBloc>().add(SerachEvent(value));
+                        context.read<SearchBloc>().add(GetSerachEvent(value));
                       } else if (value.length == 0) {
-                        context.read<SearchRfidBloc>().add(SerachEvent(''));
+                        context.read<SearchBloc>().add(GetSerachEvent(''));
                       }
                     },
                   ),
@@ -231,7 +184,7 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                 .toList();
                             isFilter_status = "Not Found";
                           } else if (isFilter_status == "Not Found") {
-                            context.read<SearchRfidBloc>().add(SerachEvent(''));
+                            context.read<SearchBloc>().add(GetSerachEvent(''));
                             isFilter_status = "Default";
                           }
 
@@ -284,9 +237,9 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                     spacing: 1,
                                     onPressed: (BuildContext context) {
-                                      context.read<SearchRfidBloc>().add(
-                                          DeleteRfidEvent(
-                                              itemModel[index].key_id));
+                                      // context.read<SearchRfidBloc>().add(
+                                      //     DeleteRfidEvent(
+                                      //         itemModel[index].key_id));
                                       itemModel.removeAt(index);
 
                                       setState(() {});
@@ -311,7 +264,7 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${appLocalizations.txt_number_tag} : ${itemModel[index].rfid_tag}',
+                                        '${appLocalizations.txt_number_tag} : ${itemModel[index].ItemCode}',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       SizedBox(

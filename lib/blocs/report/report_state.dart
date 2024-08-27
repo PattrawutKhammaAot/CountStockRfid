@@ -1,24 +1,24 @@
-part of 'scanrfid_code_bloc.dart';
+part of 'report_bloc.dart';
 
-class ScanrfidCodeState extends Equatable {
-  final List<Master_rfidData>? data;
+class ReportState extends Equatable {
+  final List<ItemMasterDBData>? data;
   final FetchStatus status;
   final String message;
-  final TotalScanModel? totalScanModel;
+  final SumReportModel? totalScanModel;
 
-  const ScanrfidCodeState(
+  const ReportState(
       {this.data,
       this.status = FetchStatus.init,
       this.message = '',
       this.totalScanModel});
 
-  ScanrfidCodeState copyWith({
-    List<Master_rfidData>? data,
+  ReportState copyWith({
+    List<ItemMasterDBData>? data,
     FetchStatus? status,
     String? message,
-    TotalScanModel? totalScanModel,
+    SumReportModel? totalScanModel,
   }) {
-    return ScanrfidCodeState(
+    return ReportState(
         // dataDocSum: dataDocSum = dataDocSum ?? this.dataDocSum,
         data: data = data ?? this.data,
         status: status = status ?? this.status,
@@ -30,7 +30,4 @@ class ScanrfidCodeState extends Equatable {
   List<Object> get props => [status, message];
 }
 
-class ScanrfidCodeInitial extends ScanrfidCodeState {
-  @override
-  List<Object> get props => [];
-}
+final class ReportInitial extends ReportState {}

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rfid/main.dart';
+import 'package:countstock_rfid/main.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ZincDataSource extends DataGridSource {
@@ -144,16 +144,4 @@ class tempRfidItemList {
   final String? rssi;
 
   List<Object> get props => [status!, rfid_tag!];
-
-  static tempRfidItemList fromJson(dynamic json) {
-    return tempRfidItemList(
-        status: json['Group'],
-        rfid_tag: json['Value_Member'],
-        rssi: json['rssi']);
-  }
-
-  tempRfidItemList.fromMap(Map<String, dynamic> map)
-      : status = map['nameGroup'],
-        rssi = map['rssi'],
-        rfid_tag = map['valueMember'];
 }
