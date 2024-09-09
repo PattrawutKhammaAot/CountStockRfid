@@ -1,15 +1,22 @@
+import 'dart:convert';
+
 import 'package:countstock_rfid/main.dart';
+import 'package:countstock_rfid/screens/settings/model/appsettingModel.dart';
 import 'package:drift/drift.dart';
 import 'package:countstock_rfid/database/database.dart';
 
+import '../screens/scan/model/validateModel.dart';
+import '../screens/scan/tableViewScan.dart';
+
 class TransactionsDB extends Table {
   IntColumn get key_id => integer().autoIncrement()();
-  IntColumn get item_id => integer()(); // not null
-  TextColumn get ItemCode => text()(); //not null
-  TextColumn get location_id => text().nullable()();
-  TextColumn get location_code => text().nullable()();
-  RealColumn get qty => real().nullable()();
-  TextColumn get status => text().nullable()();
+  IntColumn get item_id => integer().nullable()(); // not null
+  TextColumn get count_ItemCode => text()(); //not null
+  TextColumn get count_location_id => text().nullable()();
+  TextColumn get count_location_code => text().nullable()();
+  IntColumn get count_QuantityScan => integer().nullable()();
+  TextColumn get serial_number => text().nullable()();
+  TextColumn get status_item => text().nullable()();
   TextColumn get rssi => text().nullable()();
   DateTimeColumn get created_date => dateTime().nullable()();
   DateTimeColumn get updated_date => dateTime().nullable()();
@@ -22,14 +29,15 @@ abstract class ViewTransactionsDB extends View {
   Query as() => select([
         transactionsDB.key_id,
         transactionsDB.item_id,
-        transactionsDB.ItemCode,
-        transactionsDB.location_id,
-        transactionsDB.location_code,
-        transactionsDB.qty,
-        transactionsDB.status,
+        transactionsDB.count_ItemCode,
+        transactionsDB.count_location_id,
+        transactionsDB.count_location_code,
+        transactionsDB.count_QuantityScan,
+        transactionsDB.status_item,
         transactionsDB.rssi,
         transactionsDB.created_date,
         transactionsDB.updated_date,
+        transactionsDB.serial_number
       ]).from(transactionsDB);
 }
 
@@ -39,50 +47,64 @@ class Transactions {
   bool isValidateItemCode = false;
   Transactions(this.tranDb);
 
-  Future<bool> scanItem(TransactionsDBData data) async {
+  Future<List<GridDataList>> scanItem(TransactionsDBData data) async {
+    List<GridDataList> itemReturn = [];
     try {
-      if (isValidateLocation && isValidateItemCode) {
-        final query = tranDb.select(tranDb.transactionsDB)
-          ..where((tbl) => tbl.ItemCode.equals(data.ItemCode))
-          ..where((tbl) => tbl.location_code.equals(data.location_code!));
-      } else if (isValidateItemCode == false) {
-        return false;
+      final query = tranDb.select(tranDb.transactionsDB)
+        ..where((tbl) => tbl.count_ItemCode.equals(data.count_ItemCode))
+        ..where((tbl) => tbl.count_location_code.equals(data.count_ItemCode!));
+      return itemReturn;
+    } catch (e, s) {
+      return itemReturn;
+    }
+  }
+
+  Future<List<ValidateModel>> getValidate() async {
+    List<ValidateModel> list = [];
+    try {
+      final query = await tranDb.select(tranDb.appSettingDB)
+        ..where((tbl) => tbl.is_active.equals(true));
+
+      final result = await query.get();
+
+      result.removeWhere((qry) => qry.name == 'Item Code');
+
+      if (result.isNotEmpty) {
+        final queryLocation = await appDb.locationMasterDB.select().get();
+
+        final querySerialNumber =
+            await (appDb.select(appDb.itemMasterDB, distinct: true)
+                  ..addColumns([appDb.itemMasterDB.SerialNumber]))
+                .get();
+
+        list = result
+            .map((e) => ValidateModel(
+                  item_id: e.item_id,
+                  name: e.name!,
+                  valueDropdown: e.name == 'Location Code'
+                      ? queryLocation
+                          .map((e) => ListDropdownModel(
+                                location_code: e.location_code!,
+                                location_name: e.location_name!,
+                              ))
+                          .toList()
+                      : querySerialNumber
+                          .where((e) =>
+                              e.SerialNumber != null &&
+                              e.SerialNumber!.isNotEmpty)
+                          .map((e) => ListDropdownModel(
+                                location_code: e.SerialNumber!,
+                                location_name: e.SerialNumber!,
+                              ))
+                          .toList(),
+                  is_validate: e.is_validate,
+                  is_active: e.is_active,
+                ))
+            .toList();
       }
+
+      return list;
     } catch (e, s) {
-      print("$e$s");
-      return false;
-    }
-  }
-
-  Future<List<TransactionsDBData>> searchMaster(String s) async {
-    if (s.isEmpty) {
-      return (tranDb.select(tranDb.transactionsDB)).get();
-    } else {
-      return (tranDb.select(tranDb.transactionsDB)
-            ..where((tbl) => tbl.ItemCode.like('%$s%')))
-          .get();
-    }
-  }
-
-  Future<List<TransactionsDBData>> search(String s) async {
-    if (s.isEmpty) {
-      return (tranDb.select(tranDb.transactionsDB)).get();
-    } else {
-      return (tranDb.select(tranDb.transactionsDB)
-            ..where((tbl) => tbl.ItemCode.like('%$s%')))
-          .get();
-    }
-  }
-
-  Future<int> totalFilter(String s) async {
-    print(s);
-    try {
-      return (tranDb.select(tranDb.transactionsDB)
-            ..where((tbl) => tbl.status.equals(s)))
-          .get()
-          .then((value) => value.length);
-    } catch (e, s) {
-      print("$e$s");
       throw Exception();
     }
   }

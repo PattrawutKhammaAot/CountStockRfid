@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:csv/csv.dart';
 import 'package:drift/drift.dart';
+import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:countstock_rfid/database/database.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ItemMasterDB extends Table {
   IntColumn get item_id => integer().autoIncrement()();
@@ -48,7 +50,7 @@ class ItemMaster {
     try {
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['txt'],
+        allowedExtensions: ['txt', 'csv'],
       );
 
       if (result != null) {
@@ -89,6 +91,97 @@ class ItemMaster {
     }
   }
 
+  Future<void> importFileExcelMaster() async {
+    try {
+      EasyLoading.show(
+          status: "Loading ..", maskType: EasyLoadingMaskType.black);
+      final FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['xlsx', 'xls'],
+      );
+
+      if (result != null) {
+        EasyLoading.show(
+            status: "Loading ..", maskType: EasyLoadingMaskType.black);
+        final String excelPath = result.files.single.path!;
+
+        final bytes = File(excelPath).readAsBytesSync();
+        final excel = Excel.decodeBytes(bytes);
+
+        final List<List<dynamic>> excelData = [];
+
+        for (var table in excel.tables.keys) {
+          final sheet = excel.tables[table];
+          if (sheet != null) {
+            for (var row in sheet.rows) {
+              final List<dynamic> rowData =
+                  row.map((cell) => cell?.value).toList();
+              excelData.add(rowData);
+            }
+          }
+        }
+
+        final List<List<dynamic>> dataWithoutHeader =
+            excelData.skip(1).toList();
+
+        const int chunkSize = 100;
+
+        for (int i = 0; i < dataWithoutHeader.length; i += chunkSize) {
+          final chunk = dataWithoutHeader.skip(i).take(chunkSize).toList();
+          final List<ItemMasterDBCompanion> chunkItems = [];
+
+          for (var row in chunk) {
+            final ItemMasterDBCompanion importModel = ItemMasterDBCompanion(
+              ItemCode: Value(row[0].toString()),
+              ItemName: Value(row[1].toString()),
+              ItemDescription: Value(row[2].toString()),
+              SerialNumber: Value(row[3].toString()),
+              Quantity: Value(row[4].toString()),
+              Udf01: Value(row[5].toString()),
+              Udf02: Value(row[6].toString()),
+              Udf03: Value(row[7].toString()),
+              Udf04: Value(row[8].toString()),
+              Udf05: Value(row[9].toString()),
+            );
+            chunkItems.add(importModel);
+          }
+
+          await insertToSqlPaged(chunkItems);
+
+          final progress = ((i + chunkSize) / dataWithoutHeader.length) * 100;
+          if (progress <= 100) {
+            EasyLoading.showProgress(progress / 100,
+                status: 'Loading ... ${progress.toStringAsFixed(0)}%',
+                maskType: EasyLoadingMaskType.black);
+          }
+        }
+
+        EasyLoading.dismiss();
+      }
+    } catch (e, s) {
+      EasyLoading.showError('Error: $e');
+      print(e);
+      print(s);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> insertToSqlPaged(List<ItemMasterDBCompanion> items,
+      {int pageSize = 100}) async {
+    for (int i = 0; i < items.length; i += pageSize) {
+      final end = (i + pageSize < items.length) ? i + pageSize : items.length;
+      final batch = items.sublist(i, end);
+      await insertBatch(batch);
+    }
+  }
+
+  Future<void> insertBatch(List<ItemMasterDBCompanion> items) async {
+    await _db.batch((batch) {
+      batch.insertAll(_db.itemMasterDB, items);
+    });
+  }
+
   Future<List<ItemMasterDBData>> searchMaster(String s) async {
     if (s.isEmpty) {
       return (_db.select(_db.itemMasterDB)).get();
@@ -107,5 +200,9 @@ class ItemMaster {
       ]); // ใช้ id หรือคอลัมน์อื่นๆ ในตารางเพื่อนับ
     var result = await query.getSingle();
     return result.read(_db.itemMasterDB.item_id.count()) ?? 0;
+  }
+
+  Future<void> deleteItemMaster() async {
+    await (_db.delete(_db.itemMasterDB).go());
   }
 }

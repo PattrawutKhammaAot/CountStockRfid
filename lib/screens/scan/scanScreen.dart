@@ -3,6 +3,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:android_path_provider/android_path_provider.dart';
+import 'package:countstock_rfid/screens/scan/model/validateModel.dart';
+import 'package:countstock_rfid/screens/settings/model/appsettingModel.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -27,45 +30,37 @@ import '../../nativefunction/nativeFunction.dart';
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key, this.onChange, this.receiveValue});
-  final ValueChanged<List<tempRfidItemList>>? onChange;
-  final List<tempRfidItemList>? receiveValue;
+  final ValueChanged<List<GridDataList>>? onChange;
+  final List<GridDataList>? receiveValue;
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
 }
 
 class _ScanScreenState extends State<ScanScreen> {
-  ZincDataSource? zincDataSource;
+  GridDataSource? dataSource;
   List<ItemMasterDBData> itemList = [];
-
-  List<tempRfidItemList> _addTable = [];
+  List<ValidateModel> dropdownList = [];
+  List<GridDataList> _addTable = [];
   FocusNode focusNode = FocusNode();
   FocusNode fakefocusNode = FocusNode();
   TextEditingController _controller = TextEditingController();
+  String selectLocationDropdown = "";
+  String selectSerialDropdown = "";
+
+  bool isLocation = false;
+  bool isSerial = false;
 
   bool isScanning = false;
-  bool isASCII = false;
   bool isHide = true;
 
   @override
   void initState() {
     SDK_Function.init();
-    // BlocProvider.of<ScanrfidCodeBloc>(context).add(
-    //   GetRfidItemListEvent(),
-    // );
 
-    zincDataSource = ZincDataSource(process: []);
-    Future.delayed(Duration(milliseconds: 500), () {
-      SDK_Function.setASCII(true).then((value) {
-        SDK_Function.getASCII().then((value) {
-          isASCII = value;
-          focusNode.requestFocus();
-          fakefocusNode.requestFocus();
-          isHide = false;
-          setState(() {});
-        });
-      });
-    });
+    dataSource = GridDataSource(process: []);
+    transactionDB.getValidate();
+
     AppData.setPopupInfo("page_scan");
     super.initState();
   }
@@ -84,12 +79,16 @@ class _ScanScreenState extends State<ScanScreen> {
             focusNode: focusNode,
             autofocus: true,
             onKeyEvent: (e) async {
-              const customKeyId = 0x110000020b;
               if (e is KeyDownEvent) {
                 if (e.logicalKey.keyId == customKeyId) {
-                  await SDK_Function.scan(true);
-                  isScanning = true;
-                } else {
+                  if (isLocation && selectLocationDropdown.isEmpty) {
+                    EasyLoading.showError("Please select Location");
+                    return;
+                  }
+                  if (isSerial && selectSerialDropdown.isEmpty) {
+                    EasyLoading.showError("Please select Serial Number");
+                    return;
+                  }
                   await SDK_Function.scan(true);
                   isScanning = true;
                 }
@@ -123,241 +122,116 @@ class _ScanScreenState extends State<ScanScreen> {
                 SizedBox(
                   height: 0,
                 ),
-                zincDataSource != null
-                    ? FutureBuilder(
-                        future: SDK_Function.setTagScannedListener((epc, dbm) {
-                          onEventScan(epc.trim(), dbm).then((value) async {
-                            await SDK_Function.playSound();
-                          });
-                          // _addTable.add(tempRfidItemList(
-                          //   rfid_tag: epc,
-                          //   rssi: dbm,
-                          //   status: "Found",
-                          // ));
-                          // setState(() {
-                          //   zincDataSource =
-                          //       ZincDataSource(process: _addTable);
-                          // });
-                        }),
-                        builder: (context, snapshot) {
-                          return Expanded(
-                            flex: 2,
-                            child: SfDataGrid(
-                              onFilterChanged: (details) {
-                                print(details.column);
-                              },
-                              source: zincDataSource!,
-                              headerGridLinesVisibility:
-                                  GridLinesVisibility.both,
-                              gridLinesVisibility: GridLinesVisibility.both,
-                              selectionMode: SelectionMode.multiple,
-                              allowPullToRefresh: true,
-                              allowSorting: true,
-                              allowColumnsResizing: true,
-                              columnWidthMode: ColumnWidthMode.fill,
-                              columns: <GridColumn>[
-                                GridColumn(
-                                    visible: true,
-                                    columnName: 'rfid_tag',
-                                    label: Container(
-                                      color: Colors.white,
-                                      child: Center(
-                                        child: Text(
-                                          appLocalizations.txt_number_tag,
+                FutureBuilder(
+                    future: transactionDB.getValidate(),
+                    builder: (context, snapshot) {
+                      if (snapshot.data == null) {
+                        return SizedBox.shrink();
+                      }
+                      if (snapshot.data!.isNotEmpty) {
+                        dropdownList = snapshot.data!.cast<ValidateModel>();
+                        dropdownList.where((element) {
+                          if (element.name == "Location Code") {
+                            isLocation = element.is_active;
+                          } else if (element.name == "Serial Number") {
+                            isSerial = element.is_active;
+                          }
+                          return true;
+                        }).toList();
+                        return Expanded(
+                          child: ListView.builder(
+                            itemCount: dropdownList.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (dropdownList[index]
+                                      .valueDropdown!
+                                      .isEmpty) {
+                                    EasyLoading.showError("No Data");
+                                  }
+                                },
+                                child: _dropdown(
+                                  prefixIcon: dropdownList[index].is_validate
+                                      ? Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                        )
+                                      : Icon(
+                                          Icons.cancel,
+                                          color: Colors.red,
                                         ),
-                                      ),
-                                    ),
-                                    allowSorting: false),
-                                GridColumn(
-                                    visible: true,
-                                    columnName: 'RSSI',
-                                    label: Container(
-                                      color: Colors.white,
-                                      child: Center(
-                                        child: Text(
-                                          'Rssi',
-                                        ),
-                                      ),
-                                    ),
-                                    allowSorting: true),
-                                GridColumn(
-                                    visible: true,
-                                    columnName: 'Status',
-                                    label: Container(
-                                      color: Colors.white,
-                                      child: Center(
-                                        child: Text(
-                                          appLocalizations.txt_status,
-                                        ),
-                                      ),
-                                    ),
-                                    allowSorting: false),
-                              ],
-                            ),
-                          );
-                        },
-                      )
-                    : SizedBox.fromSize(),
+                                  hintText: dropdownList[index].name,
+                                  items: dropdownList[index]
+                                      .valueDropdown!
+                                      .map((e) => DropdownMenuItem<String>(
+                                            value: e.location_name,
+                                            child: Text(e.location_name),
+                                          ))
+                                      .toList(),
+                                  onChanged: (value) {
+                                    if (dropdownList[index].name ==
+                                        "Location Code") {
+                                      selectLocationDropdown = value!;
+                                    } else {
+                                      selectSerialDropdown = value!;
+                                    }
+                                    setState(() {});
+                                  },
+                                  onSaved: (value) {
+                                    if (dropdownList[index].name ==
+                                        "Location Code") {
+                                      selectLocationDropdown = value!;
+                                    } else {
+                                      selectSerialDropdown = value!;
+                                    }
+                                    setState(() {});
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }
+                      return SizedBox.shrink();
+                    }),
+                _gridData(SDK_Function.setTagScannedListener((epc, dbm) {
+                  onEventScan(epc.trim(), dbm).then((value) async {
+                    await SDK_Function.playSound();
+                  });
+                  // _addTable.add(tempRfidItemList(
+                  //   rfid_tag: epc,
+                  //   rssi: dbm,
+                  //   status: "Found",
+                  // ));
+                  // setState(() {
+                  //   zincDataSource =
+                  //       ZincDataSource(process: _addTable);
+                  // });
+                })),
                 SizedBox(
                   height: 5,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll<Color>(
-                                isScanning
-                                    ? Colors.red
-                                    : Colors.grey.withOpacity(0.5))),
-                        onPressed: () async {
-                          if (!isScanning) {
-                            await SDK_Function.scan(true);
-                            isScanning = true;
-                          } else {
-                            await SDK_Function.scan(false);
-                            isScanning = false;
-                          }
-                          setState(() {});
-                        },
-                        child: Text(
-                            isScanning
-                                ? appLocalizations.btn_stop_scan
-                                : appLocalizations.btn_start_scan,
-                            style: TextStyle(color: Colors.white))),
-                    ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll<Color>(
-                                Colors.orangeAccent)),
-                        onPressed: () async {
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    title: Text(
-                                        appLocalizations.popup_del_title_all),
-                                    content: Text(
-                                        appLocalizations.popup_del_sub_all),
-                                    actions: [
-                                      TextButton(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      Colors.blue)),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            appLocalizations.btn_cancel,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          )),
-                                      TextButton(
-                                          style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStatePropertyAll(
-                                                      Colors.redAccent)),
-                                          onPressed: () {
-                                            _addTable.clear();
-                                            setState(() {
-                                              zincDataSource =
-                                                  ZincDataSource(process: []);
-                                            });
-
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            appLocalizations.btn_delete,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ))
-                                    ],
-                                  ));
-                        },
-                        child: Text(
-                          appLocalizations.btn_clear_all,
-                          style: TextStyle(color: Colors.white),
-                        )),
-                    ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll<Color>(
-                                _addTable.isNotEmpty
-                                    ? Colors.blue
-                                    : Colors.grey.withOpacity(0.5))),
-                        onPressed: () async {
-                          if (_addTable.isNotEmpty) {
-                            await exportDataToTxt();
-                          } else {
-                            EasyLoading.showError(appLocalizations.no_data);
-                          }
-                        },
-                        child: Text(
-                          appLocalizations.btn_export_data,
-                          style: TextStyle(color: Colors.white),
-                        )),
-                  ],
+                _button(
+                  onPressed: () async {
+                    if (isLocation && selectLocationDropdown.isEmpty) {
+                      EasyLoading.showError("Please select Location");
+                      return;
+                    }
+                    if (isSerial && selectSerialDropdown.isEmpty) {
+                      EasyLoading.showError("Please select Serial Number");
+                      return;
+                    }
+                    if (!isScanning) {
+                      await SDK_Function.scan(true);
+                      isScanning = true;
+                    } else {
+                      await SDK_Function.scan(false);
+                      isScanning = false;
+                    }
+                    setState(() {});
+                  },
                 ),
-                zincDataSource != null
-                    ? Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              padding: EdgeInsets.only(left: 10, right: 10),
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.1,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white,
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(
-                                        1.0,
-                                        1.0,
-                                      ),
-                                      blurRadius: 5.0,
-                                      spreadRadius: 2.0,
-                                    ), //BoxShadow
-                                    BoxShadow(
-                                      color: Colors.white,
-                                      offset: Offset(0.0, 0.0),
-                                      blurRadius: 0.0,
-                                      spreadRadius: 0.0,
-                                    ),
-                                  ],
-                                  border: Border.all(
-                                      color: Colors.white, width: 1)),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text(
-                                      "${appLocalizations.txt_total}: ${_addTable.length}"),
-                                  Text(
-                                      "${appLocalizations.txt_found}: ${_addTable.where((element) => element.status == "Found").toList().length}"),
-                                  Text(
-                                      "${appLocalizations.txt_not_found}: ${_addTable.where((element) => element.status != "Found").toList().length}"),
-                                  Row(
-                                    children: <Widget>[
-                                      Text("ASCII"),
-                                      Checkbox(
-                                        value: isASCII,
-                                        onChanged: (value) async {
-                                          await SDK_Function.setASCII(value!);
-                                          setState(() {
-                                            isASCII = value;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    : SizedBox.fromSize(),
+                _summaryScan(),
                 SizedBox(
                   height: 15,
                 ),
@@ -365,120 +239,255 @@ class _ScanScreenState extends State<ScanScreen> {
             )));
   }
 
+  Widget _dropdown(
+      {String? hintText,
+      List<DropdownMenuItem<String>>? items,
+      Function(String?)? onChanged,
+      Function(String?)? onSaved,
+      Widget? prefixIcon}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DropdownButtonFormField2<String>(
+        isExpanded: true,
+        decoration: InputDecoration(
+          prefixIcon: prefixIcon,
+          // Add Horizontal padding using menuItemStyleData.padding so it matches
+          // the menu padding when button's width is not specified.
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          // Add more decoration..
+        ),
+        hint: Text(
+          hintText!,
+          style: TextStyle(fontSize: 14),
+        ),
+        items: items,
+        onChanged: onChanged,
+        onSaved: onSaved,
+        buttonStyleData: const ButtonStyleData(
+          padding: EdgeInsets.only(right: 8),
+        ),
+        iconStyleData: const IconStyleData(
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black45,
+          ),
+          iconSize: 24,
+        ),
+        dropdownStyleData: DropdownStyleData(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+        ),
+      ),
+    );
+  }
+
+  Widget _gridData(Future<String>? future) {
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        return Expanded(
+          flex: 2,
+          child: SfDataGrid(
+            onFilterChanged: (details) {
+              print(details.column);
+            },
+            source: dataSource!,
+            headerGridLinesVisibility: GridLinesVisibility.both,
+            gridLinesVisibility: GridLinesVisibility.both,
+            selectionMode: SelectionMode.multiple,
+            allowPullToRefresh: true,
+            allowSorting: true,
+            allowColumnsResizing: true,
+            columnWidthMode: ColumnWidthMode.fill,
+            columns: <GridColumn>[
+              GridColumn(
+                  visible: true,
+                  columnName: 'rfid_tag',
+                  label: Container(
+                    color: Colors.white,
+                    child: Center(
+                      child: Text(
+                        appLocalizations.txt_number_tag,
+                      ),
+                    ),
+                  ),
+                  allowSorting: false),
+              GridColumn(
+                  visible: true,
+                  columnName: 'RSSI',
+                  label: Container(
+                    color: Colors.white,
+                    child: Center(
+                      child: Text(
+                        'Rssi',
+                      ),
+                    ),
+                  ),
+                  allowSorting: true),
+              GridColumn(
+                  visible: true,
+                  columnName: 'Status',
+                  label: Container(
+                    color: Colors.white,
+                    child: Center(
+                      child: Text(
+                        appLocalizations.txt_status,
+                      ),
+                    ),
+                  ),
+                  allowSorting: false),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _button({void Function()? onPressed}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll<Color>(
+                    isScanning ? Colors.red : Colors.grey.withOpacity(0.5))),
+            onPressed: onPressed,
+            child: Text(
+                isScanning
+                    ? appLocalizations.btn_stop_scan
+                    : appLocalizations.btn_start_scan,
+                style: TextStyle(color: Colors.white))),
+        ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStatePropertyAll<Color>(Colors.orangeAccent)),
+            onPressed: () async {
+              showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        title: Text(appLocalizations.popup_del_title_all),
+                        content: Text(appLocalizations.popup_del_sub_all),
+                        actions: [
+                          TextButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStatePropertyAll(Colors.blue)),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                appLocalizations.btn_cancel,
+                                style: TextStyle(color: Colors.white),
+                              )),
+                          TextButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                      Colors.redAccent)),
+                              onPressed: () {
+                                _addTable.clear();
+                                setState(() {
+                                  dataSource = GridDataSource(process: []);
+                                });
+
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                appLocalizations.btn_delete,
+                                style: TextStyle(color: Colors.white),
+                              ))
+                        ],
+                      ));
+            },
+            child: Text(
+              appLocalizations.btn_clear_all,
+              style: TextStyle(color: Colors.white),
+            )),
+        ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll<Color>(
+                    _addTable.isNotEmpty
+                        ? Colors.blue
+                        : Colors.grey.withOpacity(0.5))),
+            onPressed: () async {
+              if (_addTable.isNotEmpty) {
+                await exportDataToTxt();
+              } else {
+                EasyLoading.showError(appLocalizations.no_data);
+              }
+            },
+            child: Text(
+              appLocalizations.btn_export_data,
+              style: TextStyle(color: Colors.white),
+            )),
+      ],
+    );
+  }
+
+  Widget _summaryScan() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.1,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(
+                      1.0,
+                      1.0,
+                    ),
+                    blurRadius: 5.0,
+                    spreadRadius: 2.0,
+                  ), //BoxShadow
+                  BoxShadow(
+                    color: Colors.white,
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 0.0,
+                    spreadRadius: 0.0,
+                  ),
+                ],
+                border: Border.all(color: Colors.white, width: 1)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("${appLocalizations.txt_total}: ${_addTable.length}"),
+                Text(
+                    "${appLocalizations.txt_found}: ${_addTable.where((element) => element.status == "Found").toList().length}"),
+                Text(
+                    "${appLocalizations.txt_not_found}: ${_addTable.where((element) => element.status != "Found").toList().length}"),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future onEventScan(String _controller, String rssi) async {
     if (_controller.isNotEmpty) {
-      // var result = itemList
-      //     .where((element) =>
-      //         element.ItemCode?.toUpperCase() == _controller.toUpperCase())
-      //     .toList();
-      // // หาเจอ
-      // if (result.isNotEmpty) {
-      //   //หา ใน Listตัวเองว่ามีหรือไม่
-      //   if (_addTable
-      //       .where((element) => element.rfid_tag == _controller)
-      //       .toList()
-      //       .isEmpty) {
-      //     //ถ้าไม่มี
-
-      //     _addTable.add(tempRfidItemList(
-      //       rfid_tag: _controller,
-      //       status: "Found",
-      //       rssi: rssi,
-      //     ));
-      //     BlocProvider.of<ScanrfidCodeBloc>(context).add(
-      //       SendRfidCodeEvent(ScanRfidCodeModel(
-      //           rfidNumber: _controller,
-      //           statusRunning: "Found",
-      //           rssi: rssi,
-      //           updateDate: DateTime.now())),
-      //     );
-      //     widget.onChange!(_addTable);
-      //   } else if (_addTable
-      //       .where((element) => element.rfid_tag == _controller)
-      //       .toList()
-      //       .isNotEmpty) {
-      //     _addTable.removeWhere((element) => element.rfid_tag == _controller);
-      //     _addTable.add(tempRfidItemList(
-      //       rfid_tag: _controller,
-      //       status: "Found",
-      //       rssi: rssi,
-      //     ));
-      //     BlocProvider.of<ScanrfidCodeBloc>(context).add(
-      //       SendRfidCodeEvent(ScanRfidCodeModel(
-      //           rfidNumber: _controller,
-      //           statusRunning: "Found",
-      //           rssi: rssi,
-      //           updateDate: DateTime.now())),
-      //     );
-      //   } else if (_addTable
-      //       .where((element) =>
-      //           element.rfid_tag == _controller &&
-      //           element.status == "Not Found")
-      //       .toList()
-      //       .isNotEmpty) {
-      //     _addTable.removeWhere((element) => element.rfid_tag == _controller);
-      //     _addTable.add(tempRfidItemList(
-      //         rfid_tag: _controller, status: "Found", rssi: rssi));
-      //     BlocProvider.of<ScanrfidCodeBloc>(context).add(
-      //       SendRfidCodeEvent(ScanRfidCodeModel(
-      //           rfidNumber: _controller,
-      //           statusRunning: "Found",
-      //           rssi: rssi,
-      //           updateDate: DateTime.now())),
-      //     );
-      //     widget.onChange!(_addTable);
-      //   }
-      // } else {
-      //   if (_addTable
-      //       .where((element) => element.rfid_tag == _controller)
-      //       .toList()
-      //       .isEmpty) {
-      //     _addTable.add(tempRfidItemList(
-      //         rfid_tag: _controller, status: "Not Found", rssi: rssi));
-      //     BlocProvider.of<ScanrfidCodeBloc>(context).add(
-      //       SendRfidCodeEvent(ScanRfidCodeModel(
-      //           rfidNumber: _controller,
-      //           statusRunning: "Not Found",
-      //           rssi: rssi,
-      //           updateDate: DateTime.now())),
-      //     );
-      //     widget.onChange!(_addTable);
-      //   } else {
-      //     _addTable.removeWhere((element) => element.rfid_tag == _controller);
-      //     _addTable.add(tempRfidItemList(
-      //         rfid_tag: _controller, status: "Not Found", rssi: rssi));
-      //     BlocProvider.of<ScanrfidCodeBloc>(context).add(
-      //       SendRfidCodeEvent(ScanRfidCodeModel(
-      //           rfidNumber: _controller,
-      //           statusRunning: "Not Found",
-      //           rssi: rssi,
-      //           updateDate: DateTime.now())),
-      //     );
-      //   }
-      // }
-
-      setState(() {
-        zincDataSource = ZincDataSource(process: _addTable);
-      });
-      // for (var _rfid in itemList.itemListRfid!) {
-      //   if (_rfid.rfidNumber == _controller.text) {
-
-      //     ScaffoldMessenger.of(context).showSnackBar(
-      //       SnackBar(
-      //         content: Text("Data Found"),
-      //       ),
-      //     );
-      //   } else {
-      //     _addTable.add(ComboBoxModel(
-      //       rfid_tag: _rfid.rfidNumber,
-      //       status: "Not Found",
-      //     ));
-      //     setState(() {
-      //       zincDataSource = ZincDataSource(process: _addTable);
-      //     });
-      //   }
-      // }
+      _addTable = await transactionDB.scanItem(TransactionsDBData(
+          key_id: 0,
+          count_ItemCode: _controller,
+          count_location_code: selectLocationDropdown,
+          serial_number: selectSerialDropdown,
+          rssi: rssi));
     }
+    setState(() {
+      dataSource = GridDataSource(process: _addTable);
+    });
   }
 
   Future<void> exportDataToTxt() async {

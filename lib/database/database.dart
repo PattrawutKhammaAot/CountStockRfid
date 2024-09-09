@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:countstock_rfid/database/appSettingDB.dart';
 import 'package:drift/drift.dart';
 
 // These imports are used to open the database
@@ -29,9 +30,17 @@ part 'database.g.dart';
 
 // this annotation tells drift to prepare a database class that uses both of the
 // tables we just defined. We'll see how to use that database class in a moment.
-@DriftDatabase(
-    tables: [ItemMasterDB, LocationMasterDB, TransactionsDB],
-    views: [ViewItemMasterDB, ViewLocationMasterDB, ViewTransactionsDB])
+@DriftDatabase(tables: [
+  ItemMasterDB,
+  LocationMasterDB,
+  TransactionsDB,
+  AppSettingDB
+], views: [
+  ViewItemMasterDB,
+  ViewLocationMasterDB,
+  ViewTransactionsDB,
+  AppSettingDB
+])
 class AppDb extends _$AppDb {
   // AppDb(super.e);
 

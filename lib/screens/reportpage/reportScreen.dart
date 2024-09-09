@@ -21,7 +21,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key, this.receiveValue});
-  final List<tempRfidItemList>? receiveValue;
+  final List<GridDataList>? receiveValue;
 
   @override
   State<ReportScreen> createState() => _ReportScreenState();

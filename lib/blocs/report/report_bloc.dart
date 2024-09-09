@@ -36,14 +36,11 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
   Future<SumReportModel> getTotalScanFetching() async {
     try {
       var result = await itemMasterDB.totalMaster();
-      var totalLoss = await transDB.totalFilter("Not Found");
-      var totalFound = await transDB.totalFilter("Found");
+      // var totalLoss = await transDB.totalFilter("Not Found");
+      // var totalFound = await transDB.totalFilter("Found");
 
       SumReportModel post = SumReportModel(
-          totalMaster: result,
-          totalLoss: totalLoss,
-          totalFound: totalFound,
-          statusCode: true);
+          totalMaster: result, totalLoss: 0, totalFound: 0, statusCode: true);
       return post;
     } catch (e, s) {
       print("Exception occured: $e StackTrace: $s");

@@ -29,7 +29,7 @@ class HomePageControl extends StatefulWidget {
 }
 
 class _HomePageControlState extends State<HomePageControl> {
-  List<tempRfidItemList> sendValue = [];
+  List<GridDataList> sendValue = [];
   int _selectedIndex = 0;
   List<String> _list = [
     'page_settings',
@@ -52,7 +52,7 @@ class _HomePageControlState extends State<HomePageControl> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-      const AddRfidPage(),
+      // const AddRfidPage(),
       ScanScreen(
         onChange: (value) {
           setState(() {
@@ -109,6 +109,8 @@ class _HomePageControlState extends State<HomePageControl> {
                                             MaterialStatePropertyAll(
                                                 Colors.redAccent)),
                                     onPressed: () async {
+                                      locationDB.deleteLocationMaster();
+                                      itemMasterDB.deleteItemMaster();
                                       // final item =
                                       //     await appDb.search_tag_rfid('');
                                       // context.read<SearchRfidBloc>().add(
@@ -150,22 +152,22 @@ class _HomePageControlState extends State<HomePageControl> {
             padding: const EdgeInsets.only(right: 20),
             child: GestureDetector(
               onTap: () async {
-                if (_selectedIndex == 0) {
-                  showInfoInventory();
-                  // FindInventory
-                } else if (_selectedIndex == 1) {
-                  showinfoScan();
-                  //scan
-                } else if (_selectedIndex == 2) {
-                  showInfoView();
-                  //search
-                } else if (_selectedIndex == 3) {
-                  showInfoReport();
-                  //report
-                } else if (_selectedIndex == 4) {
-                  showInfoSetting();
-                  //settings
-                }
+                // if (_selectedIndex == 0) {
+                //   showInfoInventory();
+                //   // FindInventory
+                // } else if (_selectedIndex == 1) {
+                //   showinfoScan();
+                //   //scan
+                // } else if (_selectedIndex == 2) {
+                //   showInfoView();
+                //   //search
+                // } else if (_selectedIndex == 3) {
+                //   showInfoReport();
+                //   //report
+                // } else if (_selectedIndex == 4) {
+                //   showInfoSetting();
+                //   //settings
+                // }
 
                 // exportTemplate();
               },
@@ -183,10 +185,10 @@ class _HomePageControlState extends State<HomePageControl> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_rounded),
-            label: "${appLocalizations.menu_find_inventory}",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.search_rounded),
+          //   label: "${appLocalizations.menu_find_inventory}",
+          // ),
           BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.piggyBank),
             label: appLocalizations.scan_title,

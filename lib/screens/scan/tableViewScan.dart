@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:countstock_rfid/main.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-class ZincDataSource extends DataGridSource {
-  ZincDataSource({List<tempRfidItemList>? process}) {
+class GridDataSource extends DataGridSource {
+  GridDataSource({List<GridDataList>? process}) {
     try {
       if (process != null) {
         for (var _item in process) {
@@ -136,8 +136,8 @@ class ZincDataSource extends DataGridSource {
   }
 }
 
-class tempRfidItemList {
-  tempRfidItemList({this.rfid_tag, this.status, this.rssi});
+class GridDataList {
+  GridDataList({this.rfid_tag, this.status, this.rssi});
 
   final String? status;
   final String? rfid_tag;

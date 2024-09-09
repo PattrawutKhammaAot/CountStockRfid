@@ -859,35 +859,43 @@ class $TransactionsDBTable extends TransactionsDB
       const VerificationMeta('item_id');
   @override
   late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
-      'item_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _ItemCodeMeta =
-      const VerificationMeta('ItemCode');
+      'item_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _count_ItemCodeMeta =
+      const VerificationMeta('count_ItemCode');
   @override
-  late final GeneratedColumn<String> ItemCode = GeneratedColumn<String>(
-      'item_code', aliasedName, false,
+  late final GeneratedColumn<String> count_ItemCode = GeneratedColumn<String>(
+      'count_item_code', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _location_idMeta =
-      const VerificationMeta('location_id');
+  static const VerificationMeta _count_location_idMeta =
+      const VerificationMeta('count_location_id');
   @override
-  late final GeneratedColumn<String> location_id = GeneratedColumn<String>(
-      'location_id', aliasedName, true,
+  late final GeneratedColumn<String> count_location_id =
+      GeneratedColumn<String>('count_location_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _count_location_codeMeta =
+      const VerificationMeta('count_location_code');
+  @override
+  late final GeneratedColumn<String> count_location_code =
+      GeneratedColumn<String>('count_location_code', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _count_QuantityScanMeta =
+      const VerificationMeta('count_QuantityScan');
+  @override
+  late final GeneratedColumn<int> count_QuantityScan = GeneratedColumn<int>(
+      'count_quantity_scan', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _serial_numberMeta =
+      const VerificationMeta('serial_number');
+  @override
+  late final GeneratedColumn<String> serial_number = GeneratedColumn<String>(
+      'serial_number', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _location_codeMeta =
-      const VerificationMeta('location_code');
+  static const VerificationMeta _status_itemMeta =
+      const VerificationMeta('status_item');
   @override
-  late final GeneratedColumn<String> location_code = GeneratedColumn<String>(
-      'location_code', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _qtyMeta = const VerificationMeta('qty');
-  @override
-  late final GeneratedColumn<double> qty = GeneratedColumn<double>(
-      'qty', aliasedName, true,
-      type: DriftSqlType.double, requiredDuringInsert: false);
-  static const VerificationMeta _statusMeta = const VerificationMeta('status');
-  @override
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-      'status', aliasedName, true,
+  late final GeneratedColumn<String> status_item = GeneratedColumn<String>(
+      'status_item', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _rssiMeta = const VerificationMeta('rssi');
   @override
@@ -910,11 +918,12 @@ class $TransactionsDBTable extends TransactionsDB
   List<GeneratedColumn> get $columns => [
         key_id,
         item_id,
-        ItemCode,
-        location_id,
-        location_code,
-        qty,
-        status,
+        count_ItemCode,
+        count_location_id,
+        count_location_code,
+        count_QuantityScan,
+        serial_number,
+        status_item,
         rssi,
         created_date,
         updated_date
@@ -936,34 +945,44 @@ class $TransactionsDBTable extends TransactionsDB
     if (data.containsKey('item_id')) {
       context.handle(_item_idMeta,
           item_id.isAcceptableOrUnknown(data['item_id']!, _item_idMeta));
+    }
+    if (data.containsKey('count_item_code')) {
+      context.handle(
+          _count_ItemCodeMeta,
+          count_ItemCode.isAcceptableOrUnknown(
+              data['count_item_code']!, _count_ItemCodeMeta));
     } else if (isInserting) {
-      context.missing(_item_idMeta);
+      context.missing(_count_ItemCodeMeta);
     }
-    if (data.containsKey('item_code')) {
-      context.handle(_ItemCodeMeta,
-          ItemCode.isAcceptableOrUnknown(data['item_code']!, _ItemCodeMeta));
-    } else if (isInserting) {
-      context.missing(_ItemCodeMeta);
-    }
-    if (data.containsKey('location_id')) {
+    if (data.containsKey('count_location_id')) {
       context.handle(
-          _location_idMeta,
-          location_id.isAcceptableOrUnknown(
-              data['location_id']!, _location_idMeta));
+          _count_location_idMeta,
+          count_location_id.isAcceptableOrUnknown(
+              data['count_location_id']!, _count_location_idMeta));
     }
-    if (data.containsKey('location_code')) {
+    if (data.containsKey('count_location_code')) {
       context.handle(
-          _location_codeMeta,
-          location_code.isAcceptableOrUnknown(
-              data['location_code']!, _location_codeMeta));
+          _count_location_codeMeta,
+          count_location_code.isAcceptableOrUnknown(
+              data['count_location_code']!, _count_location_codeMeta));
     }
-    if (data.containsKey('qty')) {
+    if (data.containsKey('count_quantity_scan')) {
       context.handle(
-          _qtyMeta, qty.isAcceptableOrUnknown(data['qty']!, _qtyMeta));
+          _count_QuantityScanMeta,
+          count_QuantityScan.isAcceptableOrUnknown(
+              data['count_quantity_scan']!, _count_QuantityScanMeta));
     }
-    if (data.containsKey('status')) {
-      context.handle(_statusMeta,
-          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    if (data.containsKey('serial_number')) {
+      context.handle(
+          _serial_numberMeta,
+          serial_number.isAcceptableOrUnknown(
+              data['serial_number']!, _serial_numberMeta));
+    }
+    if (data.containsKey('status_item')) {
+      context.handle(
+          _status_itemMeta,
+          status_item.isAcceptableOrUnknown(
+              data['status_item']!, _status_itemMeta));
     }
     if (data.containsKey('rssi')) {
       context.handle(
@@ -993,17 +1012,19 @@ class $TransactionsDBTable extends TransactionsDB
       key_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}key_id'])!,
       item_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
-      ItemCode: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}item_code'])!,
-      location_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}location_id']),
-      location_code: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}location_code']),
-      qty: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}qty']),
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id']),
+      count_ItemCode: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}count_item_code'])!,
+      count_location_id: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}count_location_id']),
+      count_location_code: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}count_location_code']),
+      count_QuantityScan: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}count_quantity_scan']),
+      serial_number: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}serial_number']),
+      status_item: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status_item']),
       rssi: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}rssi']),
       created_date: attachedDatabase.typeMapping
@@ -1022,23 +1043,25 @@ class $TransactionsDBTable extends TransactionsDB
 class TransactionsDBData extends DataClass
     implements Insertable<TransactionsDBData> {
   final int key_id;
-  final int item_id;
-  final String ItemCode;
-  final String? location_id;
-  final String? location_code;
-  final double? qty;
-  final String? status;
+  final int? item_id;
+  final String count_ItemCode;
+  final String? count_location_id;
+  final String? count_location_code;
+  final int? count_QuantityScan;
+  final String? serial_number;
+  final String? status_item;
   final String? rssi;
   final DateTime? created_date;
   final DateTime? updated_date;
   const TransactionsDBData(
       {required this.key_id,
-      required this.item_id,
-      required this.ItemCode,
-      this.location_id,
-      this.location_code,
-      this.qty,
-      this.status,
+      this.item_id,
+      required this.count_ItemCode,
+      this.count_location_id,
+      this.count_location_code,
+      this.count_QuantityScan,
+      this.serial_number,
+      this.status_item,
       this.rssi,
       this.created_date,
       this.updated_date});
@@ -1046,19 +1069,24 @@ class TransactionsDBData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['key_id'] = Variable<int>(key_id);
-    map['item_id'] = Variable<int>(item_id);
-    map['item_code'] = Variable<String>(ItemCode);
-    if (!nullToAbsent || location_id != null) {
-      map['location_id'] = Variable<String>(location_id);
+    if (!nullToAbsent || item_id != null) {
+      map['item_id'] = Variable<int>(item_id);
     }
-    if (!nullToAbsent || location_code != null) {
-      map['location_code'] = Variable<String>(location_code);
+    map['count_item_code'] = Variable<String>(count_ItemCode);
+    if (!nullToAbsent || count_location_id != null) {
+      map['count_location_id'] = Variable<String>(count_location_id);
     }
-    if (!nullToAbsent || qty != null) {
-      map['qty'] = Variable<double>(qty);
+    if (!nullToAbsent || count_location_code != null) {
+      map['count_location_code'] = Variable<String>(count_location_code);
     }
-    if (!nullToAbsent || status != null) {
-      map['status'] = Variable<String>(status);
+    if (!nullToAbsent || count_QuantityScan != null) {
+      map['count_quantity_scan'] = Variable<int>(count_QuantityScan);
+    }
+    if (!nullToAbsent || serial_number != null) {
+      map['serial_number'] = Variable<String>(serial_number);
+    }
+    if (!nullToAbsent || status_item != null) {
+      map['status_item'] = Variable<String>(status_item);
     }
     if (!nullToAbsent || rssi != null) {
       map['rssi'] = Variable<String>(rssi);
@@ -1075,17 +1103,25 @@ class TransactionsDBData extends DataClass
   TransactionsDBCompanion toCompanion(bool nullToAbsent) {
     return TransactionsDBCompanion(
       key_id: Value(key_id),
-      item_id: Value(item_id),
-      ItemCode: Value(ItemCode),
-      location_id: location_id == null && nullToAbsent
+      item_id: item_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(location_id),
-      location_code: location_code == null && nullToAbsent
+          : Value(item_id),
+      count_ItemCode: Value(count_ItemCode),
+      count_location_id: count_location_id == null && nullToAbsent
           ? const Value.absent()
-          : Value(location_code),
-      qty: qty == null && nullToAbsent ? const Value.absent() : Value(qty),
-      status:
-          status == null && nullToAbsent ? const Value.absent() : Value(status),
+          : Value(count_location_id),
+      count_location_code: count_location_code == null && nullToAbsent
+          ? const Value.absent()
+          : Value(count_location_code),
+      count_QuantityScan: count_QuantityScan == null && nullToAbsent
+          ? const Value.absent()
+          : Value(count_QuantityScan),
+      serial_number: serial_number == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serial_number),
+      status_item: status_item == null && nullToAbsent
+          ? const Value.absent()
+          : Value(status_item),
       rssi: rssi == null && nullToAbsent ? const Value.absent() : Value(rssi),
       created_date: created_date == null && nullToAbsent
           ? const Value.absent()
@@ -1101,12 +1137,15 @@ class TransactionsDBData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TransactionsDBData(
       key_id: serializer.fromJson<int>(json['key_id']),
-      item_id: serializer.fromJson<int>(json['item_id']),
-      ItemCode: serializer.fromJson<String>(json['ItemCode']),
-      location_id: serializer.fromJson<String?>(json['location_id']),
-      location_code: serializer.fromJson<String?>(json['location_code']),
-      qty: serializer.fromJson<double?>(json['qty']),
-      status: serializer.fromJson<String?>(json['status']),
+      item_id: serializer.fromJson<int?>(json['item_id']),
+      count_ItemCode: serializer.fromJson<String>(json['count_ItemCode']),
+      count_location_id:
+          serializer.fromJson<String?>(json['count_location_id']),
+      count_location_code:
+          serializer.fromJson<String?>(json['count_location_code']),
+      count_QuantityScan: serializer.fromJson<int?>(json['count_QuantityScan']),
+      serial_number: serializer.fromJson<String?>(json['serial_number']),
+      status_item: serializer.fromJson<String?>(json['status_item']),
       rssi: serializer.fromJson<String?>(json['rssi']),
       created_date: serializer.fromJson<DateTime?>(json['created_date']),
       updated_date: serializer.fromJson<DateTime?>(json['updated_date']),
@@ -1117,12 +1156,13 @@ class TransactionsDBData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'key_id': serializer.toJson<int>(key_id),
-      'item_id': serializer.toJson<int>(item_id),
-      'ItemCode': serializer.toJson<String>(ItemCode),
-      'location_id': serializer.toJson<String?>(location_id),
-      'location_code': serializer.toJson<String?>(location_code),
-      'qty': serializer.toJson<double?>(qty),
-      'status': serializer.toJson<String?>(status),
+      'item_id': serializer.toJson<int?>(item_id),
+      'count_ItemCode': serializer.toJson<String>(count_ItemCode),
+      'count_location_id': serializer.toJson<String?>(count_location_id),
+      'count_location_code': serializer.toJson<String?>(count_location_code),
+      'count_QuantityScan': serializer.toJson<int?>(count_QuantityScan),
+      'serial_number': serializer.toJson<String?>(serial_number),
+      'status_item': serializer.toJson<String?>(status_item),
       'rssi': serializer.toJson<String?>(rssi),
       'created_date': serializer.toJson<DateTime?>(created_date),
       'updated_date': serializer.toJson<DateTime?>(updated_date),
@@ -1131,24 +1171,32 @@ class TransactionsDBData extends DataClass
 
   TransactionsDBData copyWith(
           {int? key_id,
-          int? item_id,
-          String? ItemCode,
-          Value<String?> location_id = const Value.absent(),
-          Value<String?> location_code = const Value.absent(),
-          Value<double?> qty = const Value.absent(),
-          Value<String?> status = const Value.absent(),
+          Value<int?> item_id = const Value.absent(),
+          String? count_ItemCode,
+          Value<String?> count_location_id = const Value.absent(),
+          Value<String?> count_location_code = const Value.absent(),
+          Value<int?> count_QuantityScan = const Value.absent(),
+          Value<String?> serial_number = const Value.absent(),
+          Value<String?> status_item = const Value.absent(),
           Value<String?> rssi = const Value.absent(),
           Value<DateTime?> created_date = const Value.absent(),
           Value<DateTime?> updated_date = const Value.absent()}) =>
       TransactionsDBData(
         key_id: key_id ?? this.key_id,
-        item_id: item_id ?? this.item_id,
-        ItemCode: ItemCode ?? this.ItemCode,
-        location_id: location_id.present ? location_id.value : this.location_id,
-        location_code:
-            location_code.present ? location_code.value : this.location_code,
-        qty: qty.present ? qty.value : this.qty,
-        status: status.present ? status.value : this.status,
+        item_id: item_id.present ? item_id.value : this.item_id,
+        count_ItemCode: count_ItemCode ?? this.count_ItemCode,
+        count_location_id: count_location_id.present
+            ? count_location_id.value
+            : this.count_location_id,
+        count_location_code: count_location_code.present
+            ? count_location_code.value
+            : this.count_location_code,
+        count_QuantityScan: count_QuantityScan.present
+            ? count_QuantityScan.value
+            : this.count_QuantityScan,
+        serial_number:
+            serial_number.present ? serial_number.value : this.serial_number,
+        status_item: status_item.present ? status_item.value : this.status_item,
         rssi: rssi.present ? rssi.value : this.rssi,
         created_date:
             created_date.present ? created_date.value : this.created_date,
@@ -1159,14 +1207,23 @@ class TransactionsDBData extends DataClass
     return TransactionsDBData(
       key_id: data.key_id.present ? data.key_id.value : this.key_id,
       item_id: data.item_id.present ? data.item_id.value : this.item_id,
-      ItemCode: data.ItemCode.present ? data.ItemCode.value : this.ItemCode,
-      location_id:
-          data.location_id.present ? data.location_id.value : this.location_id,
-      location_code: data.location_code.present
-          ? data.location_code.value
-          : this.location_code,
-      qty: data.qty.present ? data.qty.value : this.qty,
-      status: data.status.present ? data.status.value : this.status,
+      count_ItemCode: data.count_ItemCode.present
+          ? data.count_ItemCode.value
+          : this.count_ItemCode,
+      count_location_id: data.count_location_id.present
+          ? data.count_location_id.value
+          : this.count_location_id,
+      count_location_code: data.count_location_code.present
+          ? data.count_location_code.value
+          : this.count_location_code,
+      count_QuantityScan: data.count_QuantityScan.present
+          ? data.count_QuantityScan.value
+          : this.count_QuantityScan,
+      serial_number: data.serial_number.present
+          ? data.serial_number.value
+          : this.serial_number,
+      status_item:
+          data.status_item.present ? data.status_item.value : this.status_item,
       rssi: data.rssi.present ? data.rssi.value : this.rssi,
       created_date: data.created_date.present
           ? data.created_date.value
@@ -1182,11 +1239,12 @@ class TransactionsDBData extends DataClass
     return (StringBuffer('TransactionsDBData(')
           ..write('key_id: $key_id, ')
           ..write('item_id: $item_id, ')
-          ..write('ItemCode: $ItemCode, ')
-          ..write('location_id: $location_id, ')
-          ..write('location_code: $location_code, ')
-          ..write('qty: $qty, ')
-          ..write('status: $status, ')
+          ..write('count_ItemCode: $count_ItemCode, ')
+          ..write('count_location_id: $count_location_id, ')
+          ..write('count_location_code: $count_location_code, ')
+          ..write('count_QuantityScan: $count_QuantityScan, ')
+          ..write('serial_number: $serial_number, ')
+          ..write('status_item: $status_item, ')
           ..write('rssi: $rssi, ')
           ..write('created_date: $created_date, ')
           ..write('updated_date: $updated_date')
@@ -1195,19 +1253,30 @@ class TransactionsDBData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(key_id, item_id, ItemCode, location_id,
-      location_code, qty, status, rssi, created_date, updated_date);
+  int get hashCode => Object.hash(
+      key_id,
+      item_id,
+      count_ItemCode,
+      count_location_id,
+      count_location_code,
+      count_QuantityScan,
+      serial_number,
+      status_item,
+      rssi,
+      created_date,
+      updated_date);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TransactionsDBData &&
           other.key_id == this.key_id &&
           other.item_id == this.item_id &&
-          other.ItemCode == this.ItemCode &&
-          other.location_id == this.location_id &&
-          other.location_code == this.location_code &&
-          other.qty == this.qty &&
-          other.status == this.status &&
+          other.count_ItemCode == this.count_ItemCode &&
+          other.count_location_id == this.count_location_id &&
+          other.count_location_code == this.count_location_code &&
+          other.count_QuantityScan == this.count_QuantityScan &&
+          other.serial_number == this.serial_number &&
+          other.status_item == this.status_item &&
           other.rssi == this.rssi &&
           other.created_date == this.created_date &&
           other.updated_date == this.updated_date);
@@ -1215,48 +1284,51 @@ class TransactionsDBData extends DataClass
 
 class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
   final Value<int> key_id;
-  final Value<int> item_id;
-  final Value<String> ItemCode;
-  final Value<String?> location_id;
-  final Value<String?> location_code;
-  final Value<double?> qty;
-  final Value<String?> status;
+  final Value<int?> item_id;
+  final Value<String> count_ItemCode;
+  final Value<String?> count_location_id;
+  final Value<String?> count_location_code;
+  final Value<int?> count_QuantityScan;
+  final Value<String?> serial_number;
+  final Value<String?> status_item;
   final Value<String?> rssi;
   final Value<DateTime?> created_date;
   final Value<DateTime?> updated_date;
   const TransactionsDBCompanion({
     this.key_id = const Value.absent(),
     this.item_id = const Value.absent(),
-    this.ItemCode = const Value.absent(),
-    this.location_id = const Value.absent(),
-    this.location_code = const Value.absent(),
-    this.qty = const Value.absent(),
-    this.status = const Value.absent(),
+    this.count_ItemCode = const Value.absent(),
+    this.count_location_id = const Value.absent(),
+    this.count_location_code = const Value.absent(),
+    this.count_QuantityScan = const Value.absent(),
+    this.serial_number = const Value.absent(),
+    this.status_item = const Value.absent(),
     this.rssi = const Value.absent(),
     this.created_date = const Value.absent(),
     this.updated_date = const Value.absent(),
   });
   TransactionsDBCompanion.insert({
     this.key_id = const Value.absent(),
-    required int item_id,
-    required String ItemCode,
-    this.location_id = const Value.absent(),
-    this.location_code = const Value.absent(),
-    this.qty = const Value.absent(),
-    this.status = const Value.absent(),
+    this.item_id = const Value.absent(),
+    required String count_ItemCode,
+    this.count_location_id = const Value.absent(),
+    this.count_location_code = const Value.absent(),
+    this.count_QuantityScan = const Value.absent(),
+    this.serial_number = const Value.absent(),
+    this.status_item = const Value.absent(),
     this.rssi = const Value.absent(),
     this.created_date = const Value.absent(),
     this.updated_date = const Value.absent(),
-  })  : item_id = Value(item_id),
-        ItemCode = Value(ItemCode);
+  }) : count_ItemCode = Value(count_ItemCode);
   static Insertable<TransactionsDBData> custom({
     Expression<int>? key_id,
     Expression<int>? item_id,
-    Expression<String>? ItemCode,
-    Expression<String>? location_id,
-    Expression<String>? location_code,
-    Expression<double>? qty,
-    Expression<String>? status,
+    Expression<String>? count_ItemCode,
+    Expression<String>? count_location_id,
+    Expression<String>? count_location_code,
+    Expression<int>? count_QuantityScan,
+    Expression<String>? serial_number,
+    Expression<String>? status_item,
     Expression<String>? rssi,
     Expression<DateTime>? created_date,
     Expression<DateTime>? updated_date,
@@ -1264,11 +1336,13 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
     return RawValuesInsertable({
       if (key_id != null) 'key_id': key_id,
       if (item_id != null) 'item_id': item_id,
-      if (ItemCode != null) 'item_code': ItemCode,
-      if (location_id != null) 'location_id': location_id,
-      if (location_code != null) 'location_code': location_code,
-      if (qty != null) 'qty': qty,
-      if (status != null) 'status': status,
+      if (count_ItemCode != null) 'count_item_code': count_ItemCode,
+      if (count_location_id != null) 'count_location_id': count_location_id,
+      if (count_location_code != null)
+        'count_location_code': count_location_code,
+      if (count_QuantityScan != null) 'count_quantity_scan': count_QuantityScan,
+      if (serial_number != null) 'serial_number': serial_number,
+      if (status_item != null) 'status_item': status_item,
       if (rssi != null) 'rssi': rssi,
       if (created_date != null) 'created_date': created_date,
       if (updated_date != null) 'updated_date': updated_date,
@@ -1277,23 +1351,25 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
 
   TransactionsDBCompanion copyWith(
       {Value<int>? key_id,
-      Value<int>? item_id,
-      Value<String>? ItemCode,
-      Value<String?>? location_id,
-      Value<String?>? location_code,
-      Value<double?>? qty,
-      Value<String?>? status,
+      Value<int?>? item_id,
+      Value<String>? count_ItemCode,
+      Value<String?>? count_location_id,
+      Value<String?>? count_location_code,
+      Value<int?>? count_QuantityScan,
+      Value<String?>? serial_number,
+      Value<String?>? status_item,
       Value<String?>? rssi,
       Value<DateTime?>? created_date,
       Value<DateTime?>? updated_date}) {
     return TransactionsDBCompanion(
       key_id: key_id ?? this.key_id,
       item_id: item_id ?? this.item_id,
-      ItemCode: ItemCode ?? this.ItemCode,
-      location_id: location_id ?? this.location_id,
-      location_code: location_code ?? this.location_code,
-      qty: qty ?? this.qty,
-      status: status ?? this.status,
+      count_ItemCode: count_ItemCode ?? this.count_ItemCode,
+      count_location_id: count_location_id ?? this.count_location_id,
+      count_location_code: count_location_code ?? this.count_location_code,
+      count_QuantityScan: count_QuantityScan ?? this.count_QuantityScan,
+      serial_number: serial_number ?? this.serial_number,
+      status_item: status_item ?? this.status_item,
       rssi: rssi ?? this.rssi,
       created_date: created_date ?? this.created_date,
       updated_date: updated_date ?? this.updated_date,
@@ -1309,20 +1385,23 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
     if (item_id.present) {
       map['item_id'] = Variable<int>(item_id.value);
     }
-    if (ItemCode.present) {
-      map['item_code'] = Variable<String>(ItemCode.value);
+    if (count_ItemCode.present) {
+      map['count_item_code'] = Variable<String>(count_ItemCode.value);
     }
-    if (location_id.present) {
-      map['location_id'] = Variable<String>(location_id.value);
+    if (count_location_id.present) {
+      map['count_location_id'] = Variable<String>(count_location_id.value);
     }
-    if (location_code.present) {
-      map['location_code'] = Variable<String>(location_code.value);
+    if (count_location_code.present) {
+      map['count_location_code'] = Variable<String>(count_location_code.value);
     }
-    if (qty.present) {
-      map['qty'] = Variable<double>(qty.value);
+    if (count_QuantityScan.present) {
+      map['count_quantity_scan'] = Variable<int>(count_QuantityScan.value);
     }
-    if (status.present) {
-      map['status'] = Variable<String>(status.value);
+    if (serial_number.present) {
+      map['serial_number'] = Variable<String>(serial_number.value);
+    }
+    if (status_item.present) {
+      map['status_item'] = Variable<String>(status_item.value);
     }
     if (rssi.present) {
       map['rssi'] = Variable<String>(rssi.value);
@@ -1341,14 +1420,286 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
     return (StringBuffer('TransactionsDBCompanion(')
           ..write('key_id: $key_id, ')
           ..write('item_id: $item_id, ')
-          ..write('ItemCode: $ItemCode, ')
-          ..write('location_id: $location_id, ')
-          ..write('location_code: $location_code, ')
-          ..write('qty: $qty, ')
-          ..write('status: $status, ')
+          ..write('count_ItemCode: $count_ItemCode, ')
+          ..write('count_location_id: $count_location_id, ')
+          ..write('count_location_code: $count_location_code, ')
+          ..write('count_QuantityScan: $count_QuantityScan, ')
+          ..write('serial_number: $serial_number, ')
+          ..write('status_item: $status_item, ')
           ..write('rssi: $rssi, ')
           ..write('created_date: $created_date, ')
           ..write('updated_date: $updated_date')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AppSettingDBTable extends AppSettingDB
+    with TableInfo<$AppSettingDBTable, AppSettingDBData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AppSettingDBTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _item_idMeta =
+      const VerificationMeta('item_id');
+  @override
+  late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
+      'item_id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _is_validateMeta =
+      const VerificationMeta('is_validate');
+  @override
+  late final GeneratedColumn<bool> is_validate = GeneratedColumn<bool>(
+      'is_validate', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_validate" IN (0, 1))'));
+  static const VerificationMeta _is_activeMeta =
+      const VerificationMeta('is_active');
+  @override
+  late final GeneratedColumn<bool> is_active = GeneratedColumn<bool>(
+      'is_active', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_active" IN (0, 1))'));
+  @override
+  List<GeneratedColumn> get $columns => [item_id, name, is_validate, is_active];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'app_setting_d_b';
+  @override
+  VerificationContext validateIntegrity(Insertable<AppSettingDBData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('item_id')) {
+      context.handle(_item_idMeta,
+          item_id.isAcceptableOrUnknown(data['item_id']!, _item_idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('is_validate')) {
+      context.handle(
+          _is_validateMeta,
+          is_validate.isAcceptableOrUnknown(
+              data['is_validate']!, _is_validateMeta));
+    } else if (isInserting) {
+      context.missing(_is_validateMeta);
+    }
+    if (data.containsKey('is_active')) {
+      context.handle(_is_activeMeta,
+          is_active.isAcceptableOrUnknown(data['is_active']!, _is_activeMeta));
+    } else if (isInserting) {
+      context.missing(_is_activeMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {item_id};
+  @override
+  AppSettingDBData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AppSettingDBData(
+      item_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      is_validate: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_validate'])!,
+      is_active: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_active'])!,
+    );
+  }
+
+  @override
+  $AppSettingDBTable createAlias(String alias) {
+    return $AppSettingDBTable(attachedDatabase, alias);
+  }
+}
+
+class AppSettingDBData extends DataClass
+    implements Insertable<AppSettingDBData> {
+  final int item_id;
+  final String? name;
+  final bool is_validate;
+  final bool is_active;
+  const AppSettingDBData(
+      {required this.item_id,
+      this.name,
+      required this.is_validate,
+      required this.is_active});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['item_id'] = Variable<int>(item_id);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    map['is_validate'] = Variable<bool>(is_validate);
+    map['is_active'] = Variable<bool>(is_active);
+    return map;
+  }
+
+  AppSettingDBCompanion toCompanion(bool nullToAbsent) {
+    return AppSettingDBCompanion(
+      item_id: Value(item_id),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      is_validate: Value(is_validate),
+      is_active: Value(is_active),
+    );
+  }
+
+  factory AppSettingDBData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AppSettingDBData(
+      item_id: serializer.fromJson<int>(json['item_id']),
+      name: serializer.fromJson<String?>(json['name']),
+      is_validate: serializer.fromJson<bool>(json['is_validate']),
+      is_active: serializer.fromJson<bool>(json['is_active']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'item_id': serializer.toJson<int>(item_id),
+      'name': serializer.toJson<String?>(name),
+      'is_validate': serializer.toJson<bool>(is_validate),
+      'is_active': serializer.toJson<bool>(is_active),
+    };
+  }
+
+  AppSettingDBData copyWith(
+          {int? item_id,
+          Value<String?> name = const Value.absent(),
+          bool? is_validate,
+          bool? is_active}) =>
+      AppSettingDBData(
+        item_id: item_id ?? this.item_id,
+        name: name.present ? name.value : this.name,
+        is_validate: is_validate ?? this.is_validate,
+        is_active: is_active ?? this.is_active,
+      );
+  AppSettingDBData copyWithCompanion(AppSettingDBCompanion data) {
+    return AppSettingDBData(
+      item_id: data.item_id.present ? data.item_id.value : this.item_id,
+      name: data.name.present ? data.name.value : this.name,
+      is_validate:
+          data.is_validate.present ? data.is_validate.value : this.is_validate,
+      is_active: data.is_active.present ? data.is_active.value : this.is_active,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AppSettingDBData(')
+          ..write('item_id: $item_id, ')
+          ..write('name: $name, ')
+          ..write('is_validate: $is_validate, ')
+          ..write('is_active: $is_active')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(item_id, name, is_validate, is_active);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AppSettingDBData &&
+          other.item_id == this.item_id &&
+          other.name == this.name &&
+          other.is_validate == this.is_validate &&
+          other.is_active == this.is_active);
+}
+
+class AppSettingDBCompanion extends UpdateCompanion<AppSettingDBData> {
+  final Value<int> item_id;
+  final Value<String?> name;
+  final Value<bool> is_validate;
+  final Value<bool> is_active;
+  const AppSettingDBCompanion({
+    this.item_id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.is_validate = const Value.absent(),
+    this.is_active = const Value.absent(),
+  });
+  AppSettingDBCompanion.insert({
+    this.item_id = const Value.absent(),
+    this.name = const Value.absent(),
+    required bool is_validate,
+    required bool is_active,
+  })  : is_validate = Value(is_validate),
+        is_active = Value(is_active);
+  static Insertable<AppSettingDBData> custom({
+    Expression<int>? item_id,
+    Expression<String>? name,
+    Expression<bool>? is_validate,
+    Expression<bool>? is_active,
+  }) {
+    return RawValuesInsertable({
+      if (item_id != null) 'item_id': item_id,
+      if (name != null) 'name': name,
+      if (is_validate != null) 'is_validate': is_validate,
+      if (is_active != null) 'is_active': is_active,
+    });
+  }
+
+  AppSettingDBCompanion copyWith(
+      {Value<int>? item_id,
+      Value<String?>? name,
+      Value<bool>? is_validate,
+      Value<bool>? is_active}) {
+    return AppSettingDBCompanion(
+      item_id: item_id ?? this.item_id,
+      name: name ?? this.name,
+      is_validate: is_validate ?? this.is_validate,
+      is_active: is_active ?? this.is_active,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (item_id.present) {
+      map['item_id'] = Variable<int>(item_id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (is_validate.present) {
+      map['is_validate'] = Variable<bool>(is_validate.value);
+    }
+    if (is_active.present) {
+      map['is_active'] = Variable<bool>(is_active.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AppSettingDBCompanion(')
+          ..write('item_id: $item_id, ')
+          ..write('name: $name, ')
+          ..write('is_validate: $is_validate, ')
+          ..write('is_active: $is_active')
           ..write(')'))
         .toString();
   }
@@ -1730,40 +2081,45 @@ class $ViewLocationMasterDBView
 
 class ViewTransactionsDBData extends DataClass {
   final int key_id;
-  final int item_id;
-  final String ItemCode;
-  final String? location_id;
-  final String? location_code;
-  final double? qty;
-  final String? status;
+  final int? item_id;
+  final String count_ItemCode;
+  final String? count_location_id;
+  final String? count_location_code;
+  final int? count_QuantityScan;
+  final String? status_item;
   final String? rssi;
   final DateTime? created_date;
   final DateTime? updated_date;
+  final String? serial_number;
   const ViewTransactionsDBData(
       {required this.key_id,
-      required this.item_id,
-      required this.ItemCode,
-      this.location_id,
-      this.location_code,
-      this.qty,
-      this.status,
+      this.item_id,
+      required this.count_ItemCode,
+      this.count_location_id,
+      this.count_location_code,
+      this.count_QuantityScan,
+      this.status_item,
       this.rssi,
       this.created_date,
-      this.updated_date});
+      this.updated_date,
+      this.serial_number});
   factory ViewTransactionsDBData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ViewTransactionsDBData(
       key_id: serializer.fromJson<int>(json['key_id']),
-      item_id: serializer.fromJson<int>(json['item_id']),
-      ItemCode: serializer.fromJson<String>(json['ItemCode']),
-      location_id: serializer.fromJson<String?>(json['location_id']),
-      location_code: serializer.fromJson<String?>(json['location_code']),
-      qty: serializer.fromJson<double?>(json['qty']),
-      status: serializer.fromJson<String?>(json['status']),
+      item_id: serializer.fromJson<int?>(json['item_id']),
+      count_ItemCode: serializer.fromJson<String>(json['count_ItemCode']),
+      count_location_id:
+          serializer.fromJson<String?>(json['count_location_id']),
+      count_location_code:
+          serializer.fromJson<String?>(json['count_location_code']),
+      count_QuantityScan: serializer.fromJson<int?>(json['count_QuantityScan']),
+      status_item: serializer.fromJson<String?>(json['status_item']),
       rssi: serializer.fromJson<String?>(json['rssi']),
       created_date: serializer.fromJson<DateTime?>(json['created_date']),
       updated_date: serializer.fromJson<DateTime?>(json['updated_date']),
+      serial_number: serializer.fromJson<String?>(json['serial_number']),
     );
   }
   @override
@@ -1771,78 +2127,99 @@ class ViewTransactionsDBData extends DataClass {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'key_id': serializer.toJson<int>(key_id),
-      'item_id': serializer.toJson<int>(item_id),
-      'ItemCode': serializer.toJson<String>(ItemCode),
-      'location_id': serializer.toJson<String?>(location_id),
-      'location_code': serializer.toJson<String?>(location_code),
-      'qty': serializer.toJson<double?>(qty),
-      'status': serializer.toJson<String?>(status),
+      'item_id': serializer.toJson<int?>(item_id),
+      'count_ItemCode': serializer.toJson<String>(count_ItemCode),
+      'count_location_id': serializer.toJson<String?>(count_location_id),
+      'count_location_code': serializer.toJson<String?>(count_location_code),
+      'count_QuantityScan': serializer.toJson<int?>(count_QuantityScan),
+      'status_item': serializer.toJson<String?>(status_item),
       'rssi': serializer.toJson<String?>(rssi),
       'created_date': serializer.toJson<DateTime?>(created_date),
       'updated_date': serializer.toJson<DateTime?>(updated_date),
+      'serial_number': serializer.toJson<String?>(serial_number),
     };
   }
 
   ViewTransactionsDBData copyWith(
           {int? key_id,
-          int? item_id,
-          String? ItemCode,
-          Value<String?> location_id = const Value.absent(),
-          Value<String?> location_code = const Value.absent(),
-          Value<double?> qty = const Value.absent(),
-          Value<String?> status = const Value.absent(),
+          Value<int?> item_id = const Value.absent(),
+          String? count_ItemCode,
+          Value<String?> count_location_id = const Value.absent(),
+          Value<String?> count_location_code = const Value.absent(),
+          Value<int?> count_QuantityScan = const Value.absent(),
+          Value<String?> status_item = const Value.absent(),
           Value<String?> rssi = const Value.absent(),
           Value<DateTime?> created_date = const Value.absent(),
-          Value<DateTime?> updated_date = const Value.absent()}) =>
+          Value<DateTime?> updated_date = const Value.absent(),
+          Value<String?> serial_number = const Value.absent()}) =>
       ViewTransactionsDBData(
         key_id: key_id ?? this.key_id,
-        item_id: item_id ?? this.item_id,
-        ItemCode: ItemCode ?? this.ItemCode,
-        location_id: location_id.present ? location_id.value : this.location_id,
-        location_code:
-            location_code.present ? location_code.value : this.location_code,
-        qty: qty.present ? qty.value : this.qty,
-        status: status.present ? status.value : this.status,
+        item_id: item_id.present ? item_id.value : this.item_id,
+        count_ItemCode: count_ItemCode ?? this.count_ItemCode,
+        count_location_id: count_location_id.present
+            ? count_location_id.value
+            : this.count_location_id,
+        count_location_code: count_location_code.present
+            ? count_location_code.value
+            : this.count_location_code,
+        count_QuantityScan: count_QuantityScan.present
+            ? count_QuantityScan.value
+            : this.count_QuantityScan,
+        status_item: status_item.present ? status_item.value : this.status_item,
         rssi: rssi.present ? rssi.value : this.rssi,
         created_date:
             created_date.present ? created_date.value : this.created_date,
         updated_date:
             updated_date.present ? updated_date.value : this.updated_date,
+        serial_number:
+            serial_number.present ? serial_number.value : this.serial_number,
       );
   @override
   String toString() {
     return (StringBuffer('ViewTransactionsDBData(')
           ..write('key_id: $key_id, ')
           ..write('item_id: $item_id, ')
-          ..write('ItemCode: $ItemCode, ')
-          ..write('location_id: $location_id, ')
-          ..write('location_code: $location_code, ')
-          ..write('qty: $qty, ')
-          ..write('status: $status, ')
+          ..write('count_ItemCode: $count_ItemCode, ')
+          ..write('count_location_id: $count_location_id, ')
+          ..write('count_location_code: $count_location_code, ')
+          ..write('count_QuantityScan: $count_QuantityScan, ')
+          ..write('status_item: $status_item, ')
           ..write('rssi: $rssi, ')
           ..write('created_date: $created_date, ')
-          ..write('updated_date: $updated_date')
+          ..write('updated_date: $updated_date, ')
+          ..write('serial_number: $serial_number')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(key_id, item_id, ItemCode, location_id,
-      location_code, qty, status, rssi, created_date, updated_date);
+  int get hashCode => Object.hash(
+      key_id,
+      item_id,
+      count_ItemCode,
+      count_location_id,
+      count_location_code,
+      count_QuantityScan,
+      status_item,
+      rssi,
+      created_date,
+      updated_date,
+      serial_number);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ViewTransactionsDBData &&
           other.key_id == this.key_id &&
           other.item_id == this.item_id &&
-          other.ItemCode == this.ItemCode &&
-          other.location_id == this.location_id &&
-          other.location_code == this.location_code &&
-          other.qty == this.qty &&
-          other.status == this.status &&
+          other.count_ItemCode == this.count_ItemCode &&
+          other.count_location_id == this.count_location_id &&
+          other.count_location_code == this.count_location_code &&
+          other.count_QuantityScan == this.count_QuantityScan &&
+          other.status_item == this.status_item &&
           other.rssi == this.rssi &&
           other.created_date == this.created_date &&
-          other.updated_date == this.updated_date);
+          other.updated_date == this.updated_date &&
+          other.serial_number == this.serial_number);
 }
 
 class $ViewTransactionsDBView
@@ -1858,14 +2235,15 @@ class $ViewTransactionsDBView
   List<GeneratedColumn> get $columns => [
         key_id,
         item_id,
-        ItemCode,
-        location_id,
-        location_code,
-        qty,
-        status,
+        count_ItemCode,
+        count_location_id,
+        count_location_code,
+        count_QuantityScan,
+        status_item,
         rssi,
         created_date,
-        updated_date
+        updated_date,
+        serial_number
       ];
   @override
   String get aliasedName => _alias ?? entityName;
@@ -1882,23 +2260,25 @@ class $ViewTransactionsDBView
       key_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}key_id'])!,
       item_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
-      ItemCode: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}item_code'])!,
-      location_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}location_id']),
-      location_code: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}location_code']),
-      qty: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}qty']),
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id']),
+      count_ItemCode: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}count_item_code'])!,
+      count_location_id: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}count_location_id']),
+      count_location_code: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}count_location_code']),
+      count_QuantityScan: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}count_quantity_scan']),
+      status_item: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status_item']),
       rssi: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}rssi']),
       created_date: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_date']),
       updated_date: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_date']),
+      serial_number: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}serial_number']),
     );
   }
 
@@ -1907,28 +2287,28 @@ class $ViewTransactionsDBView
       generatedAs: GeneratedAs(transactionsDB.key_id, false),
       type: DriftSqlType.int);
   late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
-      'item_id', aliasedName, false,
+      'item_id', aliasedName, true,
       generatedAs: GeneratedAs(transactionsDB.item_id, false),
       type: DriftSqlType.int);
-  late final GeneratedColumn<String> ItemCode = GeneratedColumn<String>(
-      'item_code', aliasedName, false,
-      generatedAs: GeneratedAs(transactionsDB.ItemCode, false),
+  late final GeneratedColumn<String> count_ItemCode = GeneratedColumn<String>(
+      'count_item_code', aliasedName, false,
+      generatedAs: GeneratedAs(transactionsDB.count_ItemCode, false),
       type: DriftSqlType.string);
-  late final GeneratedColumn<String> location_id = GeneratedColumn<String>(
-      'location_id', aliasedName, true,
-      generatedAs: GeneratedAs(transactionsDB.location_id, false),
-      type: DriftSqlType.string);
-  late final GeneratedColumn<String> location_code = GeneratedColumn<String>(
-      'location_code', aliasedName, true,
-      generatedAs: GeneratedAs(transactionsDB.location_code, false),
-      type: DriftSqlType.string);
-  late final GeneratedColumn<double> qty = GeneratedColumn<double>(
-      'qty', aliasedName, true,
-      generatedAs: GeneratedAs(transactionsDB.qty, false),
-      type: DriftSqlType.double);
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-      'status', aliasedName, true,
-      generatedAs: GeneratedAs(transactionsDB.status, false),
+  late final GeneratedColumn<String> count_location_id =
+      GeneratedColumn<String>('count_location_id', aliasedName, true,
+          generatedAs: GeneratedAs(transactionsDB.count_location_id, false),
+          type: DriftSqlType.string);
+  late final GeneratedColumn<String> count_location_code =
+      GeneratedColumn<String>('count_location_code', aliasedName, true,
+          generatedAs: GeneratedAs(transactionsDB.count_location_code, false),
+          type: DriftSqlType.string);
+  late final GeneratedColumn<int> count_QuantityScan = GeneratedColumn<int>(
+      'count_quantity_scan', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.count_QuantityScan, false),
+      type: DriftSqlType.int);
+  late final GeneratedColumn<String> status_item = GeneratedColumn<String>(
+      'status_item', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.status_item, false),
       type: DriftSqlType.string);
   late final GeneratedColumn<String> rssi = GeneratedColumn<String>(
       'rssi', aliasedName, true,
@@ -1942,6 +2322,10 @@ class $ViewTransactionsDBView
       'updated_date', aliasedName, true,
       generatedAs: GeneratedAs(transactionsDB.updated_date, false),
       type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> serial_number = GeneratedColumn<String>(
+      'serial_number', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.serial_number, false),
+      type: DriftSqlType.string);
   @override
   $ViewTransactionsDBView createAlias(String alias) {
     return $ViewTransactionsDBView(attachedDatabase, alias);
@@ -1961,6 +2345,7 @@ abstract class _$AppDb extends GeneratedDatabase {
   late final $LocationMasterDBTable locationMasterDB =
       $LocationMasterDBTable(this);
   late final $TransactionsDBTable transactionsDB = $TransactionsDBTable(this);
+  late final $AppSettingDBTable appSettingDB = $AppSettingDBTable(this);
   late final $ViewItemMasterDBView viewItemMasterDB =
       $ViewItemMasterDBView(this);
   late final $ViewLocationMasterDBView viewLocationMasterDB =
@@ -1975,6 +2360,7 @@ abstract class _$AppDb extends GeneratedDatabase {
         itemMasterDB,
         locationMasterDB,
         transactionsDB,
+        appSettingDB,
         viewItemMasterDB,
         viewLocationMasterDB,
         viewTransactionsDB
@@ -2356,12 +2742,13 @@ typedef $$LocationMasterDBTableProcessedTableManager = ProcessedTableManager<
 typedef $$TransactionsDBTableCreateCompanionBuilder = TransactionsDBCompanion
     Function({
   Value<int> key_id,
-  required int item_id,
-  required String ItemCode,
-  Value<String?> location_id,
-  Value<String?> location_code,
-  Value<double?> qty,
-  Value<String?> status,
+  Value<int?> item_id,
+  required String count_ItemCode,
+  Value<String?> count_location_id,
+  Value<String?> count_location_code,
+  Value<int?> count_QuantityScan,
+  Value<String?> serial_number,
+  Value<String?> status_item,
   Value<String?> rssi,
   Value<DateTime?> created_date,
   Value<DateTime?> updated_date,
@@ -2369,12 +2756,13 @@ typedef $$TransactionsDBTableCreateCompanionBuilder = TransactionsDBCompanion
 typedef $$TransactionsDBTableUpdateCompanionBuilder = TransactionsDBCompanion
     Function({
   Value<int> key_id,
-  Value<int> item_id,
-  Value<String> ItemCode,
-  Value<String?> location_id,
-  Value<String?> location_code,
-  Value<double?> qty,
-  Value<String?> status,
+  Value<int?> item_id,
+  Value<String> count_ItemCode,
+  Value<String?> count_location_id,
+  Value<String?> count_location_code,
+  Value<int?> count_QuantityScan,
+  Value<String?> serial_number,
+  Value<String?> status_item,
   Value<String?> rssi,
   Value<DateTime?> created_date,
   Value<DateTime?> updated_date,
@@ -2393,28 +2781,33 @@ class $$TransactionsDBTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get ItemCode => $state.composableBuilder(
-      column: $state.table.ItemCode,
+  ColumnFilters<String> get count_ItemCode => $state.composableBuilder(
+      column: $state.table.count_ItemCode,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get location_id => $state.composableBuilder(
-      column: $state.table.location_id,
+  ColumnFilters<String> get count_location_id => $state.composableBuilder(
+      column: $state.table.count_location_id,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get location_code => $state.composableBuilder(
-      column: $state.table.location_code,
+  ColumnFilters<String> get count_location_code => $state.composableBuilder(
+      column: $state.table.count_location_code,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<double> get qty => $state.composableBuilder(
-      column: $state.table.qty,
+  ColumnFilters<int> get count_QuantityScan => $state.composableBuilder(
+      column: $state.table.count_QuantityScan,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get status => $state.composableBuilder(
-      column: $state.table.status,
+  ColumnFilters<String> get serial_number => $state.composableBuilder(
+      column: $state.table.serial_number,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get status_item => $state.composableBuilder(
+      column: $state.table.status_item,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -2447,28 +2840,33 @@ class $$TransactionsDBTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get ItemCode => $state.composableBuilder(
-      column: $state.table.ItemCode,
+  ColumnOrderings<String> get count_ItemCode => $state.composableBuilder(
+      column: $state.table.count_ItemCode,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get location_id => $state.composableBuilder(
-      column: $state.table.location_id,
+  ColumnOrderings<String> get count_location_id => $state.composableBuilder(
+      column: $state.table.count_location_id,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get location_code => $state.composableBuilder(
-      column: $state.table.location_code,
+  ColumnOrderings<String> get count_location_code => $state.composableBuilder(
+      column: $state.table.count_location_code,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<double> get qty => $state.composableBuilder(
-      column: $state.table.qty,
+  ColumnOrderings<int> get count_QuantityScan => $state.composableBuilder(
+      column: $state.table.count_QuantityScan,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get status => $state.composableBuilder(
-      column: $state.table.status,
+  ColumnOrderings<String> get serial_number => $state.composableBuilder(
+      column: $state.table.serial_number,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get status_item => $state.composableBuilder(
+      column: $state.table.status_item,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -2512,12 +2910,13 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
               $$TransactionsDBTableOrderingComposer(ComposerState(db, table)),
           updateCompanionCallback: ({
             Value<int> key_id = const Value.absent(),
-            Value<int> item_id = const Value.absent(),
-            Value<String> ItemCode = const Value.absent(),
-            Value<String?> location_id = const Value.absent(),
-            Value<String?> location_code = const Value.absent(),
-            Value<double?> qty = const Value.absent(),
-            Value<String?> status = const Value.absent(),
+            Value<int?> item_id = const Value.absent(),
+            Value<String> count_ItemCode = const Value.absent(),
+            Value<String?> count_location_id = const Value.absent(),
+            Value<String?> count_location_code = const Value.absent(),
+            Value<int?> count_QuantityScan = const Value.absent(),
+            Value<String?> serial_number = const Value.absent(),
+            Value<String?> status_item = const Value.absent(),
             Value<String?> rssi = const Value.absent(),
             Value<DateTime?> created_date = const Value.absent(),
             Value<DateTime?> updated_date = const Value.absent(),
@@ -2525,23 +2924,25 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
               TransactionsDBCompanion(
             key_id: key_id,
             item_id: item_id,
-            ItemCode: ItemCode,
-            location_id: location_id,
-            location_code: location_code,
-            qty: qty,
-            status: status,
+            count_ItemCode: count_ItemCode,
+            count_location_id: count_location_id,
+            count_location_code: count_location_code,
+            count_QuantityScan: count_QuantityScan,
+            serial_number: serial_number,
+            status_item: status_item,
             rssi: rssi,
             created_date: created_date,
             updated_date: updated_date,
           ),
           createCompanionCallback: ({
             Value<int> key_id = const Value.absent(),
-            required int item_id,
-            required String ItemCode,
-            Value<String?> location_id = const Value.absent(),
-            Value<String?> location_code = const Value.absent(),
-            Value<double?> qty = const Value.absent(),
-            Value<String?> status = const Value.absent(),
+            Value<int?> item_id = const Value.absent(),
+            required String count_ItemCode,
+            Value<String?> count_location_id = const Value.absent(),
+            Value<String?> count_location_code = const Value.absent(),
+            Value<int?> count_QuantityScan = const Value.absent(),
+            Value<String?> serial_number = const Value.absent(),
+            Value<String?> status_item = const Value.absent(),
             Value<String?> rssi = const Value.absent(),
             Value<DateTime?> created_date = const Value.absent(),
             Value<DateTime?> updated_date = const Value.absent(),
@@ -2549,11 +2950,12 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
               TransactionsDBCompanion.insert(
             key_id: key_id,
             item_id: item_id,
-            ItemCode: ItemCode,
-            location_id: location_id,
-            location_code: location_code,
-            qty: qty,
-            status: status,
+            count_ItemCode: count_ItemCode,
+            count_location_id: count_location_id,
+            count_location_code: count_location_code,
+            count_QuantityScan: count_QuantityScan,
+            serial_number: serial_number,
+            status_item: status_item,
             rssi: rssi,
             created_date: created_date,
             updated_date: updated_date,
@@ -2579,6 +2981,136 @@ typedef $$TransactionsDBTableProcessedTableManager = ProcessedTableManager<
     ),
     TransactionsDBData,
     PrefetchHooks Function()>;
+typedef $$AppSettingDBTableCreateCompanionBuilder = AppSettingDBCompanion
+    Function({
+  Value<int> item_id,
+  Value<String?> name,
+  required bool is_validate,
+  required bool is_active,
+});
+typedef $$AppSettingDBTableUpdateCompanionBuilder = AppSettingDBCompanion
+    Function({
+  Value<int> item_id,
+  Value<String?> name,
+  Value<bool> is_validate,
+  Value<bool> is_active,
+});
+
+class $$AppSettingDBTableFilterComposer
+    extends FilterComposer<_$AppDb, $AppSettingDBTable> {
+  $$AppSettingDBTableFilterComposer(super.$state);
+  ColumnFilters<int> get item_id => $state.composableBuilder(
+      column: $state.table.item_id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get is_validate => $state.composableBuilder(
+      column: $state.table.is_validate,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get is_active => $state.composableBuilder(
+      column: $state.table.is_active,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$AppSettingDBTableOrderingComposer
+    extends OrderingComposer<_$AppDb, $AppSettingDBTable> {
+  $$AppSettingDBTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get item_id => $state.composableBuilder(
+      column: $state.table.item_id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get is_validate => $state.composableBuilder(
+      column: $state.table.is_validate,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get is_active => $state.composableBuilder(
+      column: $state.table.is_active,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+class $$AppSettingDBTableTableManager extends RootTableManager<
+    _$AppDb,
+    $AppSettingDBTable,
+    AppSettingDBData,
+    $$AppSettingDBTableFilterComposer,
+    $$AppSettingDBTableOrderingComposer,
+    $$AppSettingDBTableCreateCompanionBuilder,
+    $$AppSettingDBTableUpdateCompanionBuilder,
+    (
+      AppSettingDBData,
+      BaseReferences<_$AppDb, $AppSettingDBTable, AppSettingDBData>
+    ),
+    AppSettingDBData,
+    PrefetchHooks Function()> {
+  $$AppSettingDBTableTableManager(_$AppDb db, $AppSettingDBTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$AppSettingDBTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$AppSettingDBTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<int> item_id = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            Value<bool> is_validate = const Value.absent(),
+            Value<bool> is_active = const Value.absent(),
+          }) =>
+              AppSettingDBCompanion(
+            item_id: item_id,
+            name: name,
+            is_validate: is_validate,
+            is_active: is_active,
+          ),
+          createCompanionCallback: ({
+            Value<int> item_id = const Value.absent(),
+            Value<String?> name = const Value.absent(),
+            required bool is_validate,
+            required bool is_active,
+          }) =>
+              AppSettingDBCompanion.insert(
+            item_id: item_id,
+            name: name,
+            is_validate: is_validate,
+            is_active: is_active,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$AppSettingDBTableProcessedTableManager = ProcessedTableManager<
+    _$AppDb,
+    $AppSettingDBTable,
+    AppSettingDBData,
+    $$AppSettingDBTableFilterComposer,
+    $$AppSettingDBTableOrderingComposer,
+    $$AppSettingDBTableCreateCompanionBuilder,
+    $$AppSettingDBTableUpdateCompanionBuilder,
+    (
+      AppSettingDBData,
+      BaseReferences<_$AppDb, $AppSettingDBTable, AppSettingDBData>
+    ),
+    AppSettingDBData,
+    PrefetchHooks Function()>;
 
 class $AppDbManager {
   final _$AppDb _db;
@@ -2589,4 +3121,6 @@ class $AppDbManager {
       $$LocationMasterDBTableTableManager(_db, _db.locationMasterDB);
   $$TransactionsDBTableTableManager get transactionsDB =>
       $$TransactionsDBTableTableManager(_db, _db.transactionsDB);
+  $$AppSettingDBTableTableManager get appSettingDB =>
+      $$AppSettingDBTableTableManager(_db, _db.appSettingDB);
 }

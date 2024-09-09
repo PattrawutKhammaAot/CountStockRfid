@@ -14,20 +14,20 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<SearchEvent>((event, emit) {
       // TODO: implement event handler
     });
-    on<GetSerachEvent>((event, emit) async {
-      try {
-        emit(state.copyWith(status: FetchStatus.fetching));
-        var result = await transDB.search(event.itemCode);
-        if (result.isNotEmpty) {
-          emit(state.copyWith(status: FetchStatus.saved, data: result));
-        } else {
-          emit(state.copyWith(
-              status: FetchStatus.failed, message: "No data found"));
-        }
-      } catch (e, s) {
-        print("$e$s");
-        emit(state.copyWith(status: FetchStatus.failed, message: e.toString()));
-      }
-    });
+    // on<GetSerachEvent>((event, emit) async {
+    //   try {
+    //     emit(state.copyWith(status: FetchStatus.fetching));
+    //     var result = await transDB.search(event.itemCode);
+    //     if (result.isNotEmpty) {
+    //       emit(state.copyWith(status: FetchStatus.saved, data: result));
+    //     } else {
+    //       emit(state.copyWith(
+    //           status: FetchStatus.failed, message: "No data found"));
+    //     }
+    //   } catch (e, s) {
+    //     print("$e$s");
+    //     emit(state.copyWith(status: FetchStatus.failed, message: e.toString()));
+    //   }
+    // });
   }
 }

@@ -1,8 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:countstock_rfid/config/appData.dart';
 import 'package:countstock_rfid/main.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../app.dart';
 import '../../nativefunction/nativeFunction.dart';
@@ -72,101 +75,223 @@ class _SettingScreenState extends State<SettingScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            SizedBox(
-              height: 10,
+            appSetting(),
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    height: 10,
+                    thickness: 2,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "App Config",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+                Expanded(
+                  child: Divider(
+                    height: 10,
+                    thickness: 2,
+                  ),
+                ),
+              ],
             ),
-            TextFormField(
-              onTap: () => modalSelectLang(currentPower),
-              controller: TextEditingController(
-                  text:
-                      "${appLocalizations.txt_current_lang} : ${appLocalizations.current_lang}"),
-              readOnly: true,
-              decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                      onPressed: () => modalSelectLang(currentPower),
-                      icon: Icon(Icons.language)),
-                  labelText: appLocalizations.txt_select_lang_title,
-                  border: OutlineInputBorder()),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            currentPower != "Error" && currentPower != null
-                ? TextFormField(
-                    onTap: () => modalPickerNumber(currentPower),
-                    controller: TextEditingController(
-                        text: "${appLocalizations.txt_power} : $currentPower"),
-                    readOnly: true,
-                    decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                            onPressed: () => modalPickerNumber(currentPower),
-                            icon: Icon(Icons.settings_applications)),
-                        hintText:
-                            "${appLocalizations.txt_power} : ${currentPower.toString()}",
-                        labelText: appLocalizations.btn_set_power,
-                        border: OutlineInputBorder()),
-                  )
-                : CircularProgressIndicator(),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              onTap: () => modalPickerNumberLength(currentLength),
-              controller: TextEditingController(
-                  text:
-                      "${appLocalizations.txt_length_ASCII} : $currentLength ${appLocalizations.txt_unit}"),
-              readOnly: true,
-              decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                      onPressed: () => modalPickerNumberLength(currentLength),
-                      icon: Icon(Icons.settings)),
-                  hintText: "Length ${currentPower.toString()} digits",
-                  labelText: appLocalizations.btn_set_length_ASCII,
-                  border: OutlineInputBorder()),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: TextEditingController(
-                  text:
-                      "${appLocalizations.txt_scanner} ${isScanHeader != null ? isScanHeader ? appLocalizations.status_scanner_on : appLocalizations.status_scanner_off : appLocalizations.no_data}"),
-              readOnly: true,
-              decoration: InputDecoration(
-                  suffixIcon: isScanHeader != null
-                      ? Switch(
-                          value: isScanHeader,
-                          onChanged: (value) async {
-                            isScanHeader = value;
-                            setState(() {});
-                            if (isScanHeader) {
-                              await SDK_Function.openScanner();
-                            } else {
-                              await SDK_Function.closeScanner();
-                            }
-                          })
-                      : Icon(Icons.error),
-                  labelText: appLocalizations.btn_swtich_scanner,
-                  border: OutlineInputBorder()),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: TextEditingController(
-                  text: "Version : ${_packageInfo.version}"),
-              readOnly: true,
-              decoration: const InputDecoration(
-                  suffixIcon: Icon(Icons.mobile_friendly),
-                  labelText: "Version App",
-                  border: OutlineInputBorder()),
-            ),
-            SizedBox(
-              height: 10,
-            ),
+            Flexible(
+                fit: FlexFit.tight,
+                child: FutureBuilder(
+                  future: appSettingDB.getList(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return SizedBox.fromSize();
+                    }
+                    if (snapshot.data != null) {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return StatefulBuilder(
+                            builder: (context, setState) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: ListTile(
+                                  title: Text(snapshot.data![index].name),
+                                  subtitle: Row(
+                                    children: [
+                                      Text("Validate : "),
+                                      Switch(
+                                        value:
+                                            snapshot.data![index].is_validate,
+                                        onChanged: (value) async {
+                                          if (snapshot.data![index].is_active ==
+                                              true) {
+                                            setState(() {
+                                              snapshot.data![index]
+                                                  .is_validate = value;
+                                            });
+                                            await appSettingDB
+                                                .update(snapshot.data![index]);
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: Column(
+                                    children: [
+                                      ToggleSwitch(
+                                        minWidth: 90.0,
+                                        cornerRadius: 20.0,
+                                        activeBgColor:
+                                            List.filled(1, Colors.green),
+                                        activeFgColor: Colors.white,
+                                        inactiveBgColor: Colors.grey,
+                                        inactiveFgColor: Colors.white,
+                                        changeOnTap: false,
+                                        cancelToggle: (cannelIndex) async {
+                                          if (snapshot.data![index].name
+                                              .contains("Item Code")) {
+                                            return true;
+                                          }
+                                          return false;
+                                        },
+                                        labels: ['Active', 'Inactive'],
+                                        onToggle: (ToggleIndex) async {
+                                          snapshot.data![index].is_active =
+                                              ToggleIndex == 0;
+                                          await appSettingDB
+                                              .update(snapshot.data![index]);
+                                          if (snapshot.data![index].is_active ==
+                                              false) {
+                                            snapshot.data![index].is_validate =
+                                                false;
+                                          }
+
+                                          setState(() {});
+                                        },
+                                        initialLabelIndex:
+                                            snapshot.data![index].is_active
+                                                ? 0
+                                                : 1,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    }
+                    return SizedBox.fromSize();
+                  },
+                )),
           ],
         ),
       ),
+    );
+  }
+
+  Widget appSetting() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Divider(
+                height: 10,
+                thickness: 2,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "App Settings",
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            Expanded(
+              child: Divider(
+                height: 10,
+                thickness: 2,
+              ),
+            ),
+          ],
+        ),
+        TextFormField(
+          onTap: () => modalSelectLang(currentPower),
+          controller: TextEditingController(
+              text:
+                  "${appLocalizations.txt_current_lang} : ${appLocalizations.current_lang}"),
+          readOnly: true,
+          decoration: InputDecoration(
+              suffixIcon: IconButton(
+                  onPressed: () => modalSelectLang(currentPower),
+                  icon: Icon(Icons.language)),
+              labelText: appLocalizations.txt_select_lang_title,
+              border: OutlineInputBorder()),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          onTap: () => modalPickerNumber(currentPower),
+          controller: TextEditingController(
+              text: "${appLocalizations.txt_power} : $currentPower"),
+          readOnly: true,
+          decoration: InputDecoration(
+              suffixIcon: IconButton(
+                  onPressed: () => modalPickerNumber(currentPower),
+                  icon: Icon(Icons.settings_applications)),
+              hintText:
+                  "${appLocalizations.txt_power} : ${currentPower.toString()}",
+              labelText: appLocalizations.btn_set_power,
+              border: OutlineInputBorder()),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          controller: TextEditingController(
+              text:
+                  "${appLocalizations.txt_scanner} ${isScanHeader != null ? isScanHeader ? appLocalizations.status_scanner_on : appLocalizations.status_scanner_off : appLocalizations.no_data}"),
+          readOnly: true,
+          decoration: InputDecoration(
+              suffixIcon: isScanHeader != null
+                  ? Switch(
+                      value: isScanHeader,
+                      onChanged: (value) async {
+                        isScanHeader = value;
+                        setState(() {});
+                        if (isScanHeader) {
+                          await SDK_Function.openScanner();
+                        } else {
+                          await SDK_Function.closeScanner();
+                        }
+                      })
+                  : Icon(Icons.error),
+              labelText: appLocalizations.btn_swtich_scanner,
+              border: OutlineInputBorder()),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          controller:
+              TextEditingController(text: "Version : ${_packageInfo.version}"),
+          readOnly: true,
+          decoration: const InputDecoration(
+              suffixIcon: Icon(Icons.mobile_friendly),
+              labelText: "Version App",
+              border: OutlineInputBorder()),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+      ],
     );
   }
 

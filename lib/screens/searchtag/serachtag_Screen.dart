@@ -72,41 +72,41 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
     super.dispose();
   }
 
-  Future<void> exportDataToTxt() async {
-    try {
-      await Permission.manageExternalStorage.request();
-      if (await Permission.manageExternalStorage.request().isGranted) {
-        var directory = await AndroidPathProvider.downloadsPath;
+  // Future<void> exportDataToTxt() async {
+  //   try {
+  //     await Permission.manageExternalStorage.request();
+  //     if (await Permission.manageExternalStorage.request().isGranted) {
+  //       var directory = await AndroidPathProvider.downloadsPath;
 
-        var selectDirectory = directory;
-        var directoryExists = await Directory(selectDirectory).exists();
-        if (!directoryExists) {
-          await Directory(selectDirectory).create(recursive: true);
-        }
+  //       var selectDirectory = directory;
+  //       var directoryExists = await Directory(selectDirectory).exists();
+  //       if (!directoryExists) {
+  //         await Directory(selectDirectory).create(recursive: true);
+  //       }
 
-        var now = DateTime.now();
-        var formatter = DateFormat('dd_MM_yyyy_HH_mm_ss');
-        var formattedDate = formatter.format(now);
+  //       var now = DateTime.now();
+  //       var formatter = DateFormat('dd_MM_yyyy_HH_mm_ss');
+  //       var formattedDate = formatter.format(now);
 
-        var pathFile = '$selectDirectory/st_rfid_$formattedDate.txt';
-        var file = File(pathFile);
-        var sink = file.openWrite();
-        sink.write('tag|Rssi|status\n');
-        for (var item in itemModel) {
-          sink.write('${item.ItemCode}|${item.rssi} dBm|${item.status}\n');
-        }
+  //       var pathFile = '$selectDirectory/st_rfid_$formattedDate.txt';
+  //       var file = File(pathFile);
+  //       var sink = file.openWrite();
+  //       sink.write('tag|Rssi|status\n');
+  //       for (var item in itemModel) {
+  //         sink.write('${item.ItemCode}|${item.rssi} dBm|${item.status}\n');
+  //       }
 
-        await sink.close();
-        EasyLoading.showSuccess(appLocalizations.txt_export_success);
-        print(pathFile);
-      } else {
-        openAppSettings();
-      }
-      print("object");
-    } catch (e, s) {
-      print("$e$s");
-    }
-  }
+  //       await sink.close();
+  //       EasyLoading.showSuccess(appLocalizations.txt_export_success);
+  //       print(pathFile);
+  //     } else {
+  //       openAppSettings();
+  //     }
+  //     print("object");
+  //   } catch (e, s) {
+  //     print("$e$s");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +154,7 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                 WidgetStatePropertyAll(Colors.blueAccent)),
                         onPressed: () async {
                           if (itemModel.length > 0) {
-                            await exportDataToTxt();
+                            // await exportDataToTxt();
                           } else {
                             EasyLoading.showError(appLocalizations.no_data);
                           }
@@ -172,21 +172,21 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                         ? Colors.redAccent
                                         : Colors.blue)),
                         onPressed: () {
-                          if (isFilter_status == "Default") {
-                            itemModel = temp_itemModel
-                                .where((element) => element.status == "Found")
-                                .toList();
-                            isFilter_status = "Found";
-                          } else if (isFilter_status == "Found") {
-                            itemModel = temp_itemModel
-                                .where(
-                                    (element) => element.status == "Not Found")
-                                .toList();
-                            isFilter_status = "Not Found";
-                          } else if (isFilter_status == "Not Found") {
-                            context.read<SearchBloc>().add(GetSerachEvent(''));
-                            isFilter_status = "Default";
-                          }
+                          // if (isFilter_status == "Default") {
+                          //   itemModel = temp_itemModel
+                          //       .where((element) => element.status == "Found")
+                          //       .toList();
+                          //   isFilter_status = "Found";
+                          // } else if (isFilter_status == "Found") {
+                          //   itemModel = temp_itemModel
+                          //       .where(
+                          //           (element) => element.status == "Not Found")
+                          //       .toList();
+                          //   isFilter_status = "Not Found";
+                          // } else if (isFilter_status == "Not Found") {
+                          //   context.read<SearchBloc>().add(GetSerachEvent(''));
+                          //   isFilter_status = "Default";
+                          // }
 
                           setState(() {});
                         },
@@ -252,7 +252,7 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                 ],
                               ),
                               child: Card(
-                                color: itemModel[index].status == "Found"
+                                color: itemModel[index] == "Found"
                                     ? Colors.green
                                     : Colors.redAccent,
                                 margin: EdgeInsets.all(4),
@@ -264,7 +264,7 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${appLocalizations.txt_number_tag} : ${itemModel[index].ItemCode}',
+                                        '${appLocalizations.txt_number_tag} : ${itemModel[index]}',
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       SizedBox(
@@ -278,10 +278,10 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                               'Rssi : ${itemModel[index].rssi} dBm',
                                               style: TextStyle(
                                                   color: Colors.white)),
-                                          Text(
-                                              '${appLocalizations.txt_status} : ${itemModel[index].status == "Found" ? appLocalizations.txt_found : appLocalizations.txt_not_found}',
-                                              style: TextStyle(
-                                                  color: Colors.white)),
+                                          // Text(
+                                          //     '${appLocalizations.txt_status} : ${itemModel[index].status == "Found" ? appLocalizations.txt_found : appLocalizations.txt_not_found}',
+                                          //     style: TextStyle(
+                                          //         color: Colors.white)),
                                         ],
                                       ),
                                     ],
