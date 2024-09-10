@@ -7,9 +7,13 @@ import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:countstock_rfid/database/database.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:intl/intl.dart';
+
+import '../config/appData.dart';
 
 class ItemMasterDB extends Table {
   IntColumn get item_id => integer().autoIncrement()();
+  TextColumn get Plan => text().nullable()();
   TextColumn get ItemCode => text().nullable()();
   TextColumn get ItemName => text().nullable()();
   TextColumn get ItemDescription => text().nullable()();
@@ -27,6 +31,7 @@ abstract class ViewItemMasterDB extends View {
 
   @override
   Query as() => select([
+        itemMasterDB.Plan,
         itemMasterDB.item_id,
         itemMasterDB.ItemCode,
         itemMasterDB.ItemName,
@@ -54,7 +59,6 @@ class ItemMaster {
       );
 
       if (result != null) {
-        await _db.delete(_db.itemMasterDB).go();
         final String csvPath = result.files.single.path!;
 
         final String csvString =
@@ -64,6 +68,9 @@ class ItemMaster {
             csvString.toString().trim(),
             fieldDelimiter: '|',
             eol: '\n');
+        int importCounter = await AppData().loadCounter();
+        String plan_id =
+            '${DateFormat('yyyyMMdd').format(DateTime.now())}-${importCounter.toString().padLeft(5, '0')}';
 
         // Skip the header row
         final List<List<dynamic>> dataWithoutHeader = csvData.skip(1).toList();
@@ -71,6 +78,7 @@ class ItemMaster {
         dataWithoutHeader.forEach((row) async {
           // Assuming the columns are in the order: ItemCode, ItemName, ItemDescription, SerialNumber, Quantity, Udf01, Udf02, Udf03, Udf04, Udf05
           final ItemMasterDBCompanion importModel = ItemMasterDBCompanion(
+            Plan: Value(plan_id),
             ItemCode: Value(row[0].toString().toUpperCase()),
             ItemName: Value(row[1].toString()),
             ItemDescription: Value(row[2].toString()),
@@ -84,6 +92,8 @@ class ItemMaster {
           );
           _db.into(_db.itemMasterDB).insert(importModel);
         });
+        importCounter++;
+        await AppData().saveCounter(importCounter);
       }
     } catch (e, s) {
       print(e);
@@ -123,15 +133,18 @@ class ItemMaster {
 
         final List<List<dynamic>> dataWithoutHeader =
             excelData.skip(1).toList();
-
+        int importCounter = await AppData().loadCounter();
         const int chunkSize = 100;
 
+        String plan_id =
+            '${DateFormat('yyyyMMdd').format(DateTime.now())}-${importCounter.toString().padLeft(5, '0')}';
         for (int i = 0; i < dataWithoutHeader.length; i += chunkSize) {
           final chunk = dataWithoutHeader.skip(i).take(chunkSize).toList();
           final List<ItemMasterDBCompanion> chunkItems = [];
 
           for (var row in chunk) {
             final ItemMasterDBCompanion importModel = ItemMasterDBCompanion(
+              Plan: Value(plan_id),
               ItemCode: Value(row[0].toString()),
               ItemName: Value(row[1].toString()),
               ItemDescription: Value(row[2].toString()),
@@ -157,6 +170,8 @@ class ItemMaster {
         }
 
         EasyLoading.dismiss();
+        importCounter++;
+        await AppData().saveCounter(importCounter);
       }
     } catch (e, s) {
       EasyLoading.showError('Error: $e');

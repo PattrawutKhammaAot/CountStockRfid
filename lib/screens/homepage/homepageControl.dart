@@ -104,6 +104,7 @@ class _HomePageControlState extends State<HomePageControl> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
+                                    setState(() {});
                                     Navigator.pop(context);
                                   },
                                   child: Text('OK'),

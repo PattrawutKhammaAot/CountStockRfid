@@ -59,4 +59,14 @@ class AppData {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove("username");
   }
+
+  Future<void> saveCounter(int counter) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('import_counter', counter);
+  }
+
+  Future<int> loadCounter() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('import_counter') ?? 1; // Default value if not set
+  }
 }

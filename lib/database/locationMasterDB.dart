@@ -40,7 +40,6 @@ class LocationMaster {
       );
 
       if (result != null) {
-        await _db.delete(_db.locationMasterDB).go();
         final String csvPath = result.files.single.path!;
 
         final String csvString =

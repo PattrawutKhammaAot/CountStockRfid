@@ -19,6 +19,11 @@ class $ItemMasterDBTable extends ItemMasterDB
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _PlanMeta = const VerificationMeta('Plan');
+  @override
+  late final GeneratedColumn<String> Plan = GeneratedColumn<String>(
+      'plan', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _ItemCodeMeta =
       const VerificationMeta('ItemCode');
   @override
@@ -77,6 +82,7 @@ class $ItemMasterDBTable extends ItemMasterDB
   @override
   List<GeneratedColumn> get $columns => [
         item_id,
+        Plan,
         ItemCode,
         ItemName,
         ItemDescription,
@@ -101,6 +107,10 @@ class $ItemMasterDBTable extends ItemMasterDB
     if (data.containsKey('item_id')) {
       context.handle(_item_idMeta,
           item_id.isAcceptableOrUnknown(data['item_id']!, _item_idMeta));
+    }
+    if (data.containsKey('plan')) {
+      context.handle(
+          _PlanMeta, Plan.isAcceptableOrUnknown(data['plan']!, _PlanMeta));
     }
     if (data.containsKey('item_code')) {
       context.handle(_ItemCodeMeta,
@@ -157,6 +167,8 @@ class $ItemMasterDBTable extends ItemMasterDB
     return ItemMasterDBData(
       item_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
+      Plan: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}plan']),
       ItemCode: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}item_code']),
       ItemName: attachedDatabase.typeMapping
@@ -189,6 +201,7 @@ class $ItemMasterDBTable extends ItemMasterDB
 class ItemMasterDBData extends DataClass
     implements Insertable<ItemMasterDBData> {
   final int item_id;
+  final String? Plan;
   final String? ItemCode;
   final String? ItemName;
   final String? ItemDescription;
@@ -201,6 +214,7 @@ class ItemMasterDBData extends DataClass
   final String? Udf05;
   const ItemMasterDBData(
       {required this.item_id,
+      this.Plan,
       this.ItemCode,
       this.ItemName,
       this.ItemDescription,
@@ -215,6 +229,9 @@ class ItemMasterDBData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['item_id'] = Variable<int>(item_id);
+    if (!nullToAbsent || Plan != null) {
+      map['plan'] = Variable<String>(Plan);
+    }
     if (!nullToAbsent || ItemCode != null) {
       map['item_code'] = Variable<String>(ItemCode);
     }
@@ -251,6 +268,7 @@ class ItemMasterDBData extends DataClass
   ItemMasterDBCompanion toCompanion(bool nullToAbsent) {
     return ItemMasterDBCompanion(
       item_id: Value(item_id),
+      Plan: Plan == null && nullToAbsent ? const Value.absent() : Value(Plan),
       ItemCode: ItemCode == null && nullToAbsent
           ? const Value.absent()
           : Value(ItemCode),
@@ -284,6 +302,7 @@ class ItemMasterDBData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ItemMasterDBData(
       item_id: serializer.fromJson<int>(json['item_id']),
+      Plan: serializer.fromJson<String?>(json['Plan']),
       ItemCode: serializer.fromJson<String?>(json['ItemCode']),
       ItemName: serializer.fromJson<String?>(json['ItemName']),
       ItemDescription: serializer.fromJson<String?>(json['ItemDescription']),
@@ -301,6 +320,7 @@ class ItemMasterDBData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'item_id': serializer.toJson<int>(item_id),
+      'Plan': serializer.toJson<String?>(Plan),
       'ItemCode': serializer.toJson<String?>(ItemCode),
       'ItemName': serializer.toJson<String?>(ItemName),
       'ItemDescription': serializer.toJson<String?>(ItemDescription),
@@ -316,6 +336,7 @@ class ItemMasterDBData extends DataClass
 
   ItemMasterDBData copyWith(
           {int? item_id,
+          Value<String?> Plan = const Value.absent(),
           Value<String?> ItemCode = const Value.absent(),
           Value<String?> ItemName = const Value.absent(),
           Value<String?> ItemDescription = const Value.absent(),
@@ -328,6 +349,7 @@ class ItemMasterDBData extends DataClass
           Value<String?> Udf05 = const Value.absent()}) =>
       ItemMasterDBData(
         item_id: item_id ?? this.item_id,
+        Plan: Plan.present ? Plan.value : this.Plan,
         ItemCode: ItemCode.present ? ItemCode.value : this.ItemCode,
         ItemName: ItemName.present ? ItemName.value : this.ItemName,
         ItemDescription: ItemDescription.present
@@ -345,6 +367,7 @@ class ItemMasterDBData extends DataClass
   ItemMasterDBData copyWithCompanion(ItemMasterDBCompanion data) {
     return ItemMasterDBData(
       item_id: data.item_id.present ? data.item_id.value : this.item_id,
+      Plan: data.Plan.present ? data.Plan.value : this.Plan,
       ItemCode: data.ItemCode.present ? data.ItemCode.value : this.ItemCode,
       ItemName: data.ItemName.present ? data.ItemName.value : this.ItemName,
       ItemDescription: data.ItemDescription.present
@@ -366,6 +389,7 @@ class ItemMasterDBData extends DataClass
   String toString() {
     return (StringBuffer('ItemMasterDBData(')
           ..write('item_id: $item_id, ')
+          ..write('Plan: $Plan, ')
           ..write('ItemCode: $ItemCode, ')
           ..write('ItemName: $ItemName, ')
           ..write('ItemDescription: $ItemDescription, ')
@@ -381,13 +405,25 @@ class ItemMasterDBData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(item_id, ItemCode, ItemName, ItemDescription,
-      SerialNumber, Quantity, Udf01, Udf02, Udf03, Udf04, Udf05);
+  int get hashCode => Object.hash(
+      item_id,
+      Plan,
+      ItemCode,
+      ItemName,
+      ItemDescription,
+      SerialNumber,
+      Quantity,
+      Udf01,
+      Udf02,
+      Udf03,
+      Udf04,
+      Udf05);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ItemMasterDBData &&
           other.item_id == this.item_id &&
+          other.Plan == this.Plan &&
           other.ItemCode == this.ItemCode &&
           other.ItemName == this.ItemName &&
           other.ItemDescription == this.ItemDescription &&
@@ -402,6 +438,7 @@ class ItemMasterDBData extends DataClass
 
 class ItemMasterDBCompanion extends UpdateCompanion<ItemMasterDBData> {
   final Value<int> item_id;
+  final Value<String?> Plan;
   final Value<String?> ItemCode;
   final Value<String?> ItemName;
   final Value<String?> ItemDescription;
@@ -414,6 +451,7 @@ class ItemMasterDBCompanion extends UpdateCompanion<ItemMasterDBData> {
   final Value<String?> Udf05;
   const ItemMasterDBCompanion({
     this.item_id = const Value.absent(),
+    this.Plan = const Value.absent(),
     this.ItemCode = const Value.absent(),
     this.ItemName = const Value.absent(),
     this.ItemDescription = const Value.absent(),
@@ -427,6 +465,7 @@ class ItemMasterDBCompanion extends UpdateCompanion<ItemMasterDBData> {
   });
   ItemMasterDBCompanion.insert({
     this.item_id = const Value.absent(),
+    this.Plan = const Value.absent(),
     this.ItemCode = const Value.absent(),
     this.ItemName = const Value.absent(),
     this.ItemDescription = const Value.absent(),
@@ -440,6 +479,7 @@ class ItemMasterDBCompanion extends UpdateCompanion<ItemMasterDBData> {
   });
   static Insertable<ItemMasterDBData> custom({
     Expression<int>? item_id,
+    Expression<String>? Plan,
     Expression<String>? ItemCode,
     Expression<String>? ItemName,
     Expression<String>? ItemDescription,
@@ -453,6 +493,7 @@ class ItemMasterDBCompanion extends UpdateCompanion<ItemMasterDBData> {
   }) {
     return RawValuesInsertable({
       if (item_id != null) 'item_id': item_id,
+      if (Plan != null) 'plan': Plan,
       if (ItemCode != null) 'item_code': ItemCode,
       if (ItemName != null) 'item_name': ItemName,
       if (ItemDescription != null) 'item_description': ItemDescription,
@@ -468,6 +509,7 @@ class ItemMasterDBCompanion extends UpdateCompanion<ItemMasterDBData> {
 
   ItemMasterDBCompanion copyWith(
       {Value<int>? item_id,
+      Value<String?>? Plan,
       Value<String?>? ItemCode,
       Value<String?>? ItemName,
       Value<String?>? ItemDescription,
@@ -480,6 +522,7 @@ class ItemMasterDBCompanion extends UpdateCompanion<ItemMasterDBData> {
       Value<String?>? Udf05}) {
     return ItemMasterDBCompanion(
       item_id: item_id ?? this.item_id,
+      Plan: Plan ?? this.Plan,
       ItemCode: ItemCode ?? this.ItemCode,
       ItemName: ItemName ?? this.ItemName,
       ItemDescription: ItemDescription ?? this.ItemDescription,
@@ -498,6 +541,9 @@ class ItemMasterDBCompanion extends UpdateCompanion<ItemMasterDBData> {
     final map = <String, Expression>{};
     if (item_id.present) {
       map['item_id'] = Variable<int>(item_id.value);
+    }
+    if (Plan.present) {
+      map['plan'] = Variable<String>(Plan.value);
     }
     if (ItemCode.present) {
       map['item_code'] = Variable<String>(ItemCode.value);
@@ -536,6 +582,7 @@ class ItemMasterDBCompanion extends UpdateCompanion<ItemMasterDBData> {
   String toString() {
     return (StringBuffer('ItemMasterDBCompanion(')
           ..write('item_id: $item_id, ')
+          ..write('Plan: $Plan, ')
           ..write('ItemCode: $ItemCode, ')
           ..write('ItemName: $ItemName, ')
           ..write('ItemDescription: $ItemDescription, ')
@@ -1907,6 +1954,7 @@ class AppSettingDBCompanion extends UpdateCompanion<AppSettingDBData> {
 }
 
 class ViewItemMasterDBData extends DataClass {
+  final String? Plan;
   final int item_id;
   final String? ItemCode;
   final String? ItemName;
@@ -1919,7 +1967,8 @@ class ViewItemMasterDBData extends DataClass {
   final String? Udf04;
   final String? Udf05;
   const ViewItemMasterDBData(
-      {required this.item_id,
+      {this.Plan,
+      required this.item_id,
       this.ItemCode,
       this.ItemName,
       this.ItemDescription,
@@ -1934,6 +1983,7 @@ class ViewItemMasterDBData extends DataClass {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ViewItemMasterDBData(
+      Plan: serializer.fromJson<String?>(json['Plan']),
       item_id: serializer.fromJson<int>(json['item_id']),
       ItemCode: serializer.fromJson<String?>(json['ItemCode']),
       ItemName: serializer.fromJson<String?>(json['ItemName']),
@@ -1951,6 +2001,7 @@ class ViewItemMasterDBData extends DataClass {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'Plan': serializer.toJson<String?>(Plan),
       'item_id': serializer.toJson<int>(item_id),
       'ItemCode': serializer.toJson<String?>(ItemCode),
       'ItemName': serializer.toJson<String?>(ItemName),
@@ -1966,7 +2017,8 @@ class ViewItemMasterDBData extends DataClass {
   }
 
   ViewItemMasterDBData copyWith(
-          {int? item_id,
+          {Value<String?> Plan = const Value.absent(),
+          int? item_id,
           Value<String?> ItemCode = const Value.absent(),
           Value<String?> ItemName = const Value.absent(),
           Value<String?> ItemDescription = const Value.absent(),
@@ -1978,6 +2030,7 @@ class ViewItemMasterDBData extends DataClass {
           Value<String?> Udf04 = const Value.absent(),
           Value<String?> Udf05 = const Value.absent()}) =>
       ViewItemMasterDBData(
+        Plan: Plan.present ? Plan.value : this.Plan,
         item_id: item_id ?? this.item_id,
         ItemCode: ItemCode.present ? ItemCode.value : this.ItemCode,
         ItemName: ItemName.present ? ItemName.value : this.ItemName,
@@ -1996,6 +2049,7 @@ class ViewItemMasterDBData extends DataClass {
   @override
   String toString() {
     return (StringBuffer('ViewItemMasterDBData(')
+          ..write('Plan: $Plan, ')
           ..write('item_id: $item_id, ')
           ..write('ItemCode: $ItemCode, ')
           ..write('ItemName: $ItemName, ')
@@ -2012,12 +2066,24 @@ class ViewItemMasterDBData extends DataClass {
   }
 
   @override
-  int get hashCode => Object.hash(item_id, ItemCode, ItemName, ItemDescription,
-      SerialNumber, Quantity, Udf01, Udf02, Udf03, Udf04, Udf05);
+  int get hashCode => Object.hash(
+      Plan,
+      item_id,
+      ItemCode,
+      ItemName,
+      ItemDescription,
+      SerialNumber,
+      Quantity,
+      Udf01,
+      Udf02,
+      Udf03,
+      Udf04,
+      Udf05);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ViewItemMasterDBData &&
+          other.Plan == this.Plan &&
           other.item_id == this.item_id &&
           other.ItemCode == this.ItemCode &&
           other.ItemName == this.ItemName &&
@@ -2042,6 +2108,7 @@ class $ViewItemMasterDBView
       attachedDatabase.itemMasterDB.createAlias('t0');
   @override
   List<GeneratedColumn> get $columns => [
+        Plan,
         item_id,
         ItemCode,
         ItemName,
@@ -2066,6 +2133,8 @@ class $ViewItemMasterDBView
   ViewItemMasterDBData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ViewItemMasterDBData(
+      Plan: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}plan']),
       item_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}item_id'])!,
       ItemCode: attachedDatabase.typeMapping
@@ -2091,6 +2160,10 @@ class $ViewItemMasterDBView
     );
   }
 
+  late final GeneratedColumn<String> Plan = GeneratedColumn<String>(
+      'plan', aliasedName, true,
+      generatedAs: GeneratedAs(itemMasterDB.Plan, false),
+      type: DriftSqlType.string);
   late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
       'item_id', aliasedName, false,
       generatedAs: GeneratedAs(itemMasterDB.item_id, false),
@@ -2282,7 +2355,7 @@ class $ViewLocationMasterDBView
 
 class ViewTransactionsDBData extends DataClass {
   final int key_id;
-  final int? item_id;
+  final bool? is_Validate_SerialNumber;
   final String count_ItemCode;
   final String? count_location_name;
   final String? count_location_code;
@@ -2294,11 +2367,11 @@ class ViewTransactionsDBData extends DataClass {
   final String? serial_number;
   final bool? is_Validate_Location;
   final bool? is_Validate_ItemCode;
-  final bool? is_Validate_SerialNumber;
+  final int? item_id;
   final String? itemDesc;
   const ViewTransactionsDBData(
       {required this.key_id,
-      this.item_id,
+      this.is_Validate_SerialNumber,
       required this.count_ItemCode,
       this.count_location_name,
       this.count_location_code,
@@ -2310,14 +2383,15 @@ class ViewTransactionsDBData extends DataClass {
       this.serial_number,
       this.is_Validate_Location,
       this.is_Validate_ItemCode,
-      this.is_Validate_SerialNumber,
+      this.item_id,
       this.itemDesc});
   factory ViewTransactionsDBData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ViewTransactionsDBData(
       key_id: serializer.fromJson<int>(json['key_id']),
-      item_id: serializer.fromJson<int?>(json['item_id']),
+      is_Validate_SerialNumber:
+          serializer.fromJson<bool?>(json['is_Validate_SerialNumber']),
       count_ItemCode: serializer.fromJson<String>(json['count_ItemCode']),
       count_location_name:
           serializer.fromJson<String?>(json['count_location_name']),
@@ -2333,8 +2407,7 @@ class ViewTransactionsDBData extends DataClass {
           serializer.fromJson<bool?>(json['is_Validate_Location']),
       is_Validate_ItemCode:
           serializer.fromJson<bool?>(json['is_Validate_ItemCode']),
-      is_Validate_SerialNumber:
-          serializer.fromJson<bool?>(json['is_Validate_SerialNumber']),
+      item_id: serializer.fromJson<int?>(json['item_id']),
       itemDesc: serializer.fromJson<String?>(json['itemDesc']),
     );
   }
@@ -2343,7 +2416,8 @@ class ViewTransactionsDBData extends DataClass {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'key_id': serializer.toJson<int>(key_id),
-      'item_id': serializer.toJson<int?>(item_id),
+      'is_Validate_SerialNumber':
+          serializer.toJson<bool?>(is_Validate_SerialNumber),
       'count_ItemCode': serializer.toJson<String>(count_ItemCode),
       'count_location_name': serializer.toJson<String?>(count_location_name),
       'count_location_code': serializer.toJson<String?>(count_location_code),
@@ -2355,15 +2429,14 @@ class ViewTransactionsDBData extends DataClass {
       'serial_number': serializer.toJson<String?>(serial_number),
       'is_Validate_Location': serializer.toJson<bool?>(is_Validate_Location),
       'is_Validate_ItemCode': serializer.toJson<bool?>(is_Validate_ItemCode),
-      'is_Validate_SerialNumber':
-          serializer.toJson<bool?>(is_Validate_SerialNumber),
+      'item_id': serializer.toJson<int?>(item_id),
       'itemDesc': serializer.toJson<String?>(itemDesc),
     };
   }
 
   ViewTransactionsDBData copyWith(
           {int? key_id,
-          Value<int?> item_id = const Value.absent(),
+          Value<bool?> is_Validate_SerialNumber = const Value.absent(),
           String? count_ItemCode,
           Value<String?> count_location_name = const Value.absent(),
           Value<String?> count_location_code = const Value.absent(),
@@ -2375,11 +2448,13 @@ class ViewTransactionsDBData extends DataClass {
           Value<String?> serial_number = const Value.absent(),
           Value<bool?> is_Validate_Location = const Value.absent(),
           Value<bool?> is_Validate_ItemCode = const Value.absent(),
-          Value<bool?> is_Validate_SerialNumber = const Value.absent(),
+          Value<int?> item_id = const Value.absent(),
           Value<String?> itemDesc = const Value.absent()}) =>
       ViewTransactionsDBData(
         key_id: key_id ?? this.key_id,
-        item_id: item_id.present ? item_id.value : this.item_id,
+        is_Validate_SerialNumber: is_Validate_SerialNumber.present
+            ? is_Validate_SerialNumber.value
+            : this.is_Validate_SerialNumber,
         count_ItemCode: count_ItemCode ?? this.count_ItemCode,
         count_location_name: count_location_name.present
             ? count_location_name.value
@@ -2404,16 +2479,14 @@ class ViewTransactionsDBData extends DataClass {
         is_Validate_ItemCode: is_Validate_ItemCode.present
             ? is_Validate_ItemCode.value
             : this.is_Validate_ItemCode,
-        is_Validate_SerialNumber: is_Validate_SerialNumber.present
-            ? is_Validate_SerialNumber.value
-            : this.is_Validate_SerialNumber,
+        item_id: item_id.present ? item_id.value : this.item_id,
         itemDesc: itemDesc.present ? itemDesc.value : this.itemDesc,
       );
   @override
   String toString() {
     return (StringBuffer('ViewTransactionsDBData(')
           ..write('key_id: $key_id, ')
-          ..write('item_id: $item_id, ')
+          ..write('is_Validate_SerialNumber: $is_Validate_SerialNumber, ')
           ..write('count_ItemCode: $count_ItemCode, ')
           ..write('count_location_name: $count_location_name, ')
           ..write('count_location_code: $count_location_code, ')
@@ -2425,7 +2498,7 @@ class ViewTransactionsDBData extends DataClass {
           ..write('serial_number: $serial_number, ')
           ..write('is_Validate_Location: $is_Validate_Location, ')
           ..write('is_Validate_ItemCode: $is_Validate_ItemCode, ')
-          ..write('is_Validate_SerialNumber: $is_Validate_SerialNumber, ')
+          ..write('item_id: $item_id, ')
           ..write('itemDesc: $itemDesc')
           ..write(')'))
         .toString();
@@ -2434,7 +2507,7 @@ class ViewTransactionsDBData extends DataClass {
   @override
   int get hashCode => Object.hash(
       key_id,
-      item_id,
+      is_Validate_SerialNumber,
       count_ItemCode,
       count_location_name,
       count_location_code,
@@ -2446,14 +2519,14 @@ class ViewTransactionsDBData extends DataClass {
       serial_number,
       is_Validate_Location,
       is_Validate_ItemCode,
-      is_Validate_SerialNumber,
+      item_id,
       itemDesc);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ViewTransactionsDBData &&
           other.key_id == this.key_id &&
-          other.item_id == this.item_id &&
+          other.is_Validate_SerialNumber == this.is_Validate_SerialNumber &&
           other.count_ItemCode == this.count_ItemCode &&
           other.count_location_name == this.count_location_name &&
           other.count_location_code == this.count_location_code &&
@@ -2465,7 +2538,7 @@ class ViewTransactionsDBData extends DataClass {
           other.serial_number == this.serial_number &&
           other.is_Validate_Location == this.is_Validate_Location &&
           other.is_Validate_ItemCode == this.is_Validate_ItemCode &&
-          other.is_Validate_SerialNumber == this.is_Validate_SerialNumber &&
+          other.item_id == this.item_id &&
           other.itemDesc == this.itemDesc);
 }
 
@@ -2481,7 +2554,7 @@ class $ViewTransactionsDBView
   @override
   List<GeneratedColumn> get $columns => [
         key_id,
-        item_id,
+        is_Validate_SerialNumber,
         count_ItemCode,
         count_location_name,
         count_location_code,
@@ -2493,7 +2566,7 @@ class $ViewTransactionsDBView
         serial_number,
         is_Validate_Location,
         is_Validate_ItemCode,
-        is_Validate_SerialNumber,
+        item_id,
         itemDesc
       ];
   @override
@@ -2510,8 +2583,9 @@ class $ViewTransactionsDBView
     return ViewTransactionsDBData(
       key_id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}key_id'])!,
-      item_id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}item_id']),
+      is_Validate_SerialNumber: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}is_validate_serial_number']),
       count_ItemCode: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}count_item_code'])!,
       count_location_name: attachedDatabase.typeMapping.read(
@@ -2534,9 +2608,8 @@ class $ViewTransactionsDBView
           DriftSqlType.bool, data['${effectivePrefix}is_validate_location']),
       is_Validate_ItemCode: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}is_validate_item_code']),
-      is_Validate_SerialNumber: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool,
-          data['${effectivePrefix}is_validate_serial_number']),
+      item_id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}item_id']),
       itemDesc: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}item_desc']),
     );
@@ -2546,10 +2619,13 @@ class $ViewTransactionsDBView
       'key_id', aliasedName, false,
       generatedAs: GeneratedAs(transactionsDB.key_id, false),
       type: DriftSqlType.int);
-  late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
-      'item_id', aliasedName, true,
-      generatedAs: GeneratedAs(transactionsDB.item_id, false),
-      type: DriftSqlType.int);
+  late final GeneratedColumn<bool> is_Validate_SerialNumber =
+      GeneratedColumn<bool>('is_validate_serial_number', aliasedName, true,
+          generatedAs:
+              GeneratedAs(transactionsDB.is_Validate_SerialNumber, false),
+          type: DriftSqlType.bool,
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'CHECK ("is_validate_serial_number" IN (0, 1))'));
   late final GeneratedColumn<String> count_ItemCode = GeneratedColumn<String>(
       'count_item_code', aliasedName, false,
       generatedAs: GeneratedAs(transactionsDB.count_ItemCode, false),
@@ -2598,13 +2674,10 @@ class $ViewTransactionsDBView
       type: DriftSqlType.bool,
       defaultConstraints: GeneratedColumn.constraintIsAlways(
           'CHECK ("is_validate_item_code" IN (0, 1))'));
-  late final GeneratedColumn<bool> is_Validate_SerialNumber =
-      GeneratedColumn<bool>('is_validate_serial_number', aliasedName, true,
-          generatedAs:
-              GeneratedAs(transactionsDB.is_Validate_SerialNumber, false),
-          type: DriftSqlType.bool,
-          defaultConstraints: GeneratedColumn.constraintIsAlways(
-              'CHECK ("is_validate_serial_number" IN (0, 1))'));
+  late final GeneratedColumn<int> item_id = GeneratedColumn<int>(
+      'item_id', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.item_id, false),
+      type: DriftSqlType.int);
   late final GeneratedColumn<String> itemDesc = GeneratedColumn<String>(
       'item_desc', aliasedName, true,
       generatedAs: GeneratedAs(transactionsDB.itemDesc, false),
@@ -2653,6 +2726,7 @@ abstract class _$AppDb extends GeneratedDatabase {
 typedef $$ItemMasterDBTableCreateCompanionBuilder = ItemMasterDBCompanion
     Function({
   Value<int> item_id,
+  Value<String?> Plan,
   Value<String?> ItemCode,
   Value<String?> ItemName,
   Value<String?> ItemDescription,
@@ -2667,6 +2741,7 @@ typedef $$ItemMasterDBTableCreateCompanionBuilder = ItemMasterDBCompanion
 typedef $$ItemMasterDBTableUpdateCompanionBuilder = ItemMasterDBCompanion
     Function({
   Value<int> item_id,
+  Value<String?> Plan,
   Value<String?> ItemCode,
   Value<String?> ItemName,
   Value<String?> ItemDescription,
@@ -2684,6 +2759,11 @@ class $$ItemMasterDBTableFilterComposer
   $$ItemMasterDBTableFilterComposer(super.$state);
   ColumnFilters<int> get item_id => $state.composableBuilder(
       column: $state.table.item_id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get Plan => $state.composableBuilder(
+      column: $state.table.Plan,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -2743,6 +2823,11 @@ class $$ItemMasterDBTableOrderingComposer
   $$ItemMasterDBTableOrderingComposer(super.$state);
   ColumnOrderings<int> get item_id => $state.composableBuilder(
       column: $state.table.item_id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get Plan => $state.composableBuilder(
+      column: $state.table.Plan,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -2821,6 +2906,7 @@ class $$ItemMasterDBTableTableManager extends RootTableManager<
               $$ItemMasterDBTableOrderingComposer(ComposerState(db, table)),
           updateCompanionCallback: ({
             Value<int> item_id = const Value.absent(),
+            Value<String?> Plan = const Value.absent(),
             Value<String?> ItemCode = const Value.absent(),
             Value<String?> ItemName = const Value.absent(),
             Value<String?> ItemDescription = const Value.absent(),
@@ -2834,6 +2920,7 @@ class $$ItemMasterDBTableTableManager extends RootTableManager<
           }) =>
               ItemMasterDBCompanion(
             item_id: item_id,
+            Plan: Plan,
             ItemCode: ItemCode,
             ItemName: ItemName,
             ItemDescription: ItemDescription,
@@ -2847,6 +2934,7 @@ class $$ItemMasterDBTableTableManager extends RootTableManager<
           ),
           createCompanionCallback: ({
             Value<int> item_id = const Value.absent(),
+            Value<String?> Plan = const Value.absent(),
             Value<String?> ItemCode = const Value.absent(),
             Value<String?> ItemName = const Value.absent(),
             Value<String?> ItemDescription = const Value.absent(),
@@ -2860,6 +2948,7 @@ class $$ItemMasterDBTableTableManager extends RootTableManager<
           }) =>
               ItemMasterDBCompanion.insert(
             item_id: item_id,
+            Plan: Plan,
             ItemCode: ItemCode,
             ItemName: ItemName,
             ItemDescription: ItemDescription,
