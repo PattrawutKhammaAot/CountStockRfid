@@ -149,6 +149,7 @@ class _AppViewState extends State<AppView> {
       }
       setState(() {});
     });
+
     super.initState();
   }
 

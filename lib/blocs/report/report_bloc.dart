@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:countstock_rfid/database/reportDB.dart';
 import 'package:equatable/equatable.dart';
 import 'package:countstock_rfid/app.dart';
 import 'package:countstock_rfid/database/database.dart';
@@ -35,12 +36,19 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
 
   Future<SumReportModel> getTotalScanFetching() async {
     try {
-      var result = await itemMasterDB.totalMaster();
+      var import = await ReportDB().getItemMaster();
+      var location = await ReportDB().getLocationMaster();
+      var scannedItemsCount = await ReportDB().getItemScanned();
+      var notScannedItemsCount = await ReportDB().getItemNotScan();
       // var totalLoss = await transDB.totalFilter("Not Found");
       // var totalFound = await transDB.totalFilter("Found");
 
       SumReportModel post = SumReportModel(
-          totalMaster: result, totalLoss: 0, totalFound: 0, statusCode: true);
+          importMaster: import,
+          location: location,
+          scanned: scannedItemsCount,
+          notScanned: notScannedItemsCount,
+          statusCode: true);
       return post;
     } catch (e, s) {
       print("Exception occured: $e StackTrace: $s");

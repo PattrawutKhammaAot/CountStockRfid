@@ -70,115 +70,179 @@ class _HomePageControlState extends State<HomePageControl> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[700],
-        title: GestureDetector(
-          onTap: () {
-            final db = appDb; //This should be a singleton
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => DriftDbViewer(db)));
-          },
-          child: const Text(
-            'RFID APP',
-            style: TextStyle(color: whiteColor),
-          ),
-        ),
-        actions: [
-          _selectedIndex == 2
-              ? IconButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              title: Text(appLocalizations.popup_del_title_all),
-                              content: Text(appLocalizations.popup_del_sub_all),
-                              actions: [
-                                TextButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.blue)),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      appLocalizations.btn_cancel,
-                                      style: TextStyle(color: Colors.white),
-                                    )),
-                                TextButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.redAccent)),
-                                    onPressed: () async {
-                                      locationDB.deleteLocationMaster();
-                                      itemMasterDB.deleteItemMaster();
-                                      // final item =
-                                      //     await appDb.search_tag_rfid('');
-                                      // context.read<SearchRfidBloc>().add(
-                                      //     DeleteAllEvent(item
-                                      //         .map((e) => e.key_id)
-                                      //         .toList()));
-                                      // itemModel.clear();
-
-                                      setState(() {});
-
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      appLocalizations.btn_delete,
-                                      style: TextStyle(color: Colors.white),
-                                    ))
-                              ],
-                            ));
-                  },
-                  icon: Icon(
-                    Icons.delete_forever,
-                    color: Colors.white,
-                  ))
-              : SizedBox.fromSize(),
-          _selectedIndex == 1 || _selectedIndex == 3
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: GestureDetector(
-                      onTap: () async {
-                        await exportTemplate();
-                      },
-                      child: FaIcon(
-                        FontAwesomeIcons.fileExport,
-                        color: whiteColor,
-                      )),
-                )
-              : SizedBox.fromSize(),
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: GestureDetector(
-              onTap: () async {
-                // if (_selectedIndex == 0) {
-                //   showInfoInventory();
-                //   // FindInventory
-                // } else if (_selectedIndex == 1) {
-                //   showinfoScan();
-                //   //scan
-                // } else if (_selectedIndex == 2) {
-                //   showInfoView();
-                //   //search
-                // } else if (_selectedIndex == 3) {
-                //   showInfoReport();
-                //   //report
-                // } else if (_selectedIndex == 4) {
-                //   showInfoSetting();
-                //   //settings
-                // }
-
-                // exportTemplate();
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              onTap: () {
+                final db = appDb; //This should be a singleton
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => DriftDbViewer(db)));
               },
-              child: Icon(
-                Icons.info,
-                color: whiteColor,
-                size: 30,
+              child: const Text(
+                'RFID APP',
+                style: TextStyle(color: whiteColor),
               ),
             ),
-          ),
-        ],
+            _selectedIndex == 0
+                ? GestureDetector(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Please enter username'),
+                              content: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Username',
+                                  border: OutlineInputBorder(),
+                                ),
+                                onChanged: (value) {
+                                  AppData.setUsername(value);
+                                },
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('OK'),
+                                )
+                              ],
+                            );
+                          });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Icon(Icons.person, color: whiteColor),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            FutureBuilder(
+                                future: AppData.getUsername(),
+                                builder: (context, data) {
+                                  return Text(
+                                    'User: ${data.data ?? "Unknown"}',
+                                    style: TextStyle(
+                                        color: whiteColor, fontSize: 14),
+                                  );
+                                }),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox.fromSize(),
+          ],
+        ),
+        // actions: [
+        //   _selectedIndex == 2
+        //       ? IconButton(
+        //           onPressed: () {
+        //             showDialog(
+        //                 context: context,
+        //                 builder: (context) => AlertDialog(
+        //                       title: Text(appLocalizations.popup_del_title_all),
+        //                       content: Text(appLocalizations.popup_del_sub_all),
+        //                       actions: [
+        //                         TextButton(
+        //                             style: ButtonStyle(
+        //                                 backgroundColor:
+        //                                     MaterialStatePropertyAll(
+        //                                         Colors.blue)),
+        //                             onPressed: () {
+        //                               Navigator.pop(context);
+        //                             },
+        //                             child: Text(
+        //                               appLocalizations.btn_cancel,
+        //                               style: TextStyle(color: Colors.white),
+        //                             )),
+        //                         TextButton(
+        //                             style: ButtonStyle(
+        //                                 backgroundColor:
+        //                                     MaterialStatePropertyAll(
+        //                                         Colors.redAccent)),
+        //                             onPressed: () async {
+        //                               locationDB.deleteLocationMaster();
+        //                               itemMasterDB.deleteItemMaster();
+        //                               // final item =
+        //                               //     await appDb.search_tag_rfid('');
+        //                               // context.read<SearchRfidBloc>().add(
+        //                               //     DeleteAllEvent(item
+        //                               //         .map((e) => e.key_id)
+        //                               //         .toList()));
+        //                               // itemModel.clear();
+
+        //                               setState(() {});
+
+        //                               Navigator.pop(context);
+        //                             },
+        //                             child: Text(
+        //                               appLocalizations.btn_delete,
+        //                               style: TextStyle(color: Colors.white),
+        //                             ))
+        //                       ],
+        //                     ));
+        //           },
+        //           icon: Icon(
+        //             Icons.delete_forever,
+        //             color: Colors.white,
+        //           ))
+        //       : SizedBox.fromSize(),
+        //   _selectedIndex == 1 || _selectedIndex == 3
+        //       ? Padding(
+        //           padding: const EdgeInsets.only(right: 20),
+        //           child: GestureDetector(
+        //               onTap: () async {
+        //                 await exportTemplate();
+        //               },
+        //               child: FaIcon(
+        //                 FontAwesomeIcons.fileExport,
+        //                 color: whiteColor,
+        //               )),
+        //         )
+        //       : SizedBox.fromSize(),
+        //   Padding(
+        //     padding: const EdgeInsets.only(right: 20),
+        //     child: GestureDetector(
+        //       onTap: () async {
+        //         // if (_selectedIndex == 0) {
+        //         //   showInfoInventory();
+        //         //   // FindInventory
+        //         // } else if (_selectedIndex == 1) {
+        //         //   showinfoScan();
+        //         //   //scan
+        //         // } else if (_selectedIndex == 2) {
+        //         //   showInfoView();
+        //         //   //search
+        //         // } else if (_selectedIndex == 3) {
+        //         //   showInfoReport();
+        //         //   //report
+        //         // } else if (_selectedIndex == 4) {
+        //         //   showInfoSetting();
+        //         //   //settings
+        //         // }
+
+        //         // exportTemplate();
+        //       },
+        //       child: Icon(
+        //         Icons.info,
+        //         color: whiteColor,
+        //         size: 30,
+        //       ),
+        //     ),
+        //   ),
+        // ],
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

@@ -77,6 +77,22 @@
      "txt_menu_title":"Menu",
      "txt_Initializing":"Initializing RFID...",
      "txt_Initialized":"RFID Initialized",
-     "txt_set_power_success":"Set Power Success : "
+     "txt_set_power_success":"Set Power Success : ",
+     "txt_scanned":"Scanned",
+     "txt_location_master":"Location",
+     "btn_import_location":"Import Location",
+     "btn_import_Item":"Import Master",
+     "settings_txt_location_code":"Location Code",
+     "settings_txt_item_code":"Item Code",
+     "settings_txt_serial_number":"Serial Number",
+     "settings_txt_validate":"Validate",
+     "settings_btn_Active":"Active",
+     "settings_btn_Inactive":"Inactive",
+     "settings_btn_clear_transaction_All":"Clear All Data",
+     "settings_txt_clear_title_warning":"Warning !!!",
+    "settings_txt_delete_data":"Delete Data",
+     "settings_txt_clear_content":"Are you sure you want to delete all data?",
+     "success":"Success !"
+
 
 }

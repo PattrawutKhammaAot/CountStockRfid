@@ -1,4 +1,4 @@
-class ValidateModel {
+class dropdownModel {
   int item_id;
   String name;
   List<ListDropdownModel>? valueDropdown;
@@ -6,7 +6,7 @@ class ValidateModel {
   bool is_validate;
   bool is_active;
 
-  ValidateModel({
+  dropdownModel({
     required this.item_id,
     required this.name,
     required this.is_validate,

@@ -17,7 +17,7 @@
     "scan_title":"สแกน",
     "btn_scan":"สแกน",
     "txt_total":"ทั้งหมด",
-    "txt_found":"พบ",
+    "txt_found":"สแกนแล้ว",
     "txt_not_found":"ไม่พบ",
     "txt_not_scan":"ไม่ได้สแกน",
     "btn_set_power":"ตั้งค่าระยะการยิง",
@@ -71,7 +71,24 @@
     "txt_serach_field":"ช่อง ค้นหา",
     "txt_select":"เลือก",
     "txt_menu_title":"เมนู",
-         "txt_Initializing":"กำลังเชื่อมต่อ RFID ...",
-     "txt_Initialized":"เชื่อมต่อ RFID สำเร็จ",
-      "txt_set_power_success":"ตั้งค่าพลังงานสำเร็จ : "
+    "txt_Initializing":"กำลังเชื่อมต่อ RFID ...",
+    "txt_Initialized":"เชื่อมต่อ RFID สำเร็จ",
+    "txt_set_power_success":"ตั้งค่าพลังงานสำเร็จ : ",
+    "txt_scanned":"สแกนแล้ว",
+    "txt_location_master":"โลเคชั่น",
+    "btn_import_location":"นำเข้า โลเคชั่น",
+    "btn_import_Item":"นำเข้า มาสเตอร์",
+    "settings_txt_location_code":"โลเคชั่น",
+    "settings_txt_item_code":"ไอเทม",
+    "settings_txt_serial_number":"ซีเรียล",
+    "settings_txt_validate":"ตรวจสอบ",
+    "settings_btn_Active":"ใช้งาน",
+    "settings_btn_Inactive":"ไม่ใช้งาน",
+    "settings_btn_clear_transaction_All":"ลบข้อมูลทั้งหมด",
+    "settings_txt_clear_title_warning":"แจ้งเตือน !!!",
+    "settings_txt_delete_data":"การลบข้อมูล",
+    "settings_txt_clear_content":"คุณแน่ใจใช่ไหมที่ต้องการลบข้อมูลทั้งหมด",
+    "success":"สำเร็จ !"
+
+
 }

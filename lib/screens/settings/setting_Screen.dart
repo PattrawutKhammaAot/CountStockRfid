@@ -19,7 +19,7 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   dynamic currentPower;
-  dynamic currentLength;
+
   dynamic isScanHeader;
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -45,10 +45,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
         setState(() {});
       });
-      SDK_Function.getLengthASCII().then((value) {
-        currentLength = value;
-        setState(() {});
-      });
+
       SDK_Function.checkScanner().then((value) {
         isScanHeader = value;
         setState(() {});
@@ -75,30 +72,10 @@ class _SettingScreenState extends State<SettingScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            appSetting(),
-            Row(
-              children: [
-                Expanded(
-                  child: Divider(
-                    height: 10,
-                    thickness: 2,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "App Config",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-                Expanded(
-                  child: Divider(
-                    height: 10,
-                    thickness: 2,
-                  ),
-                ),
-              ],
+            SizedBox(
+              height: 15,
             ),
+            appSetting(),
             Flexible(
                 fit: FlexFit.tight,
                 child: FutureBuilder(
@@ -122,7 +99,8 @@ class _SettingScreenState extends State<SettingScreen> {
                                   title: Text(snapshot.data![index].name),
                                   subtitle: Row(
                                     children: [
-                                      Text("Validate : "),
+                                      Text(
+                                          "${appLocalizations.settings_txt_validate} : "),
                                       Switch(
                                         value:
                                             snapshot.data![index].is_validate,
@@ -158,7 +136,10 @@ class _SettingScreenState extends State<SettingScreen> {
                                           }
                                           return false;
                                         },
-                                        labels: ['Active', 'Inactive'],
+                                        labels: [
+                                          '${appLocalizations.settings_btn_Active}',
+                                          '${appLocalizations.settings_btn_Inactive}'
+                                        ],
                                         onToggle: (ToggleIndex) async {
                                           snapshot.data![index].is_active =
                                               ToggleIndex == 0;
@@ -198,29 +179,6 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget appSetting() {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Divider(
-                height: 10,
-                thickness: 2,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                "App Settings",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            Expanded(
-              child: Divider(
-                height: 10,
-                thickness: 2,
-              ),
-            ),
-          ],
-        ),
         TextFormField(
           onTap: () => modalSelectLang(currentPower),
           controller: TextEditingController(
@@ -286,6 +244,43 @@ class _SettingScreenState extends State<SettingScreen> {
           decoration: const InputDecoration(
               suffixIcon: Icon(Icons.mobile_friendly),
               labelText: "Version App",
+              border: OutlineInputBorder()),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title:
+                        Text(appLocalizations.settings_txt_clear_title_warning),
+                    content: Text(appLocalizations.settings_txt_clear_content),
+                    actions: [
+                      TextButton(
+                          onPressed: () async {
+                            await appSettingDB.deleteAll();
+                            EasyLoading.showSuccess(appLocalizations.success);
+                            Navigator.pop(context);
+                          },
+                          child: Text(appLocalizations.btn_delete)),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(appLocalizations.btn_cancel)),
+                    ],
+                  );
+                });
+          },
+          controller: TextEditingController(
+              text: "${appLocalizations.settings_btn_clear_transaction_All} "),
+          readOnly: true,
+          decoration: InputDecoration(
+              suffixIcon: Icon(Icons.delete_forever),
+              labelText: appLocalizations.settings_txt_delete_data,
               border: OutlineInputBorder()),
         ),
         SizedBox(
@@ -419,60 +414,60 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  void modalPickerNumberLength(dynamic length) {
-    // Mock data
-    List<int> numbers = List<int>.generate(33, (i) => i + 1);
+  // void modalPickerNumberLength(dynamic length) {
+  //   // Mock data
+  //   List<int> numbers = List<int>.generate(33, (i) => i + 1);
 
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 10, width: double.infinity),
-              Center(
-                  child: Text(
-                appLocalizations.txt_select_digits,
-                style: TextStyle(fontSize: 20),
-              )),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "${appLocalizations.txt_current_digits} : $length",
-                style: TextStyle(fontSize: 18),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 8, left: 8),
-                child: Divider(
-                  color: Colors.black,
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: numbers.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(
-                          '${appLocalizations.txt_digits} : ${numbers[index]}'),
-                      onTap: () async {
-                        var result =
-                            await SDK_Function.setLengthASCII(numbers[index]);
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Container(
+  //         child: Column(
+  //           children: <Widget>[
+  //             const SizedBox(height: 10, width: double.infinity),
+  //             Center(
+  //                 child: Text(
+  //               appLocalizations.txt_select_digits,
+  //               style: TextStyle(fontSize: 20),
+  //             )),
+  //             SizedBox(
+  //               height: 10,
+  //             ),
+  //             Text(
+  //               "${appLocalizations.txt_current_digits} : $length",
+  //               style: TextStyle(fontSize: 18),
+  //             ),
+  //             Padding(
+  //               padding: const EdgeInsets.only(right: 8, left: 8),
+  //               child: Divider(
+  //                 color: Colors.black,
+  //               ),
+  //             ),
+  //             Expanded(
+  //               child: ListView.builder(
+  //                 physics: BouncingScrollPhysics(),
+  //                 itemCount: numbers.length,
+  //                 itemBuilder: (context, index) {
+  //                   return ListTile(
+  //                     title: Text(
+  //                         '${appLocalizations.txt_digits} : ${numbers[index]}'),
+  //                     onTap: () async {
+  //                       var result =
+  //                           await SDK_Function.setLengthASCII(numbers[index]);
 
-                        currentLength = numbers[index];
-                        setState(() {});
-                        EasyLoading.showSuccess(result);
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  //                       currentLength = numbers[index];
+  //                       setState(() {});
+  //                       EasyLoading.showSuccess(result);
+  //                       Navigator.pop(context);
+  //                     },
+  //                   );
+  //                 },
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

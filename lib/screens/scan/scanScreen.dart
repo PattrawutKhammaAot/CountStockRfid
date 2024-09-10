@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:android_path_provider/android_path_provider.dart';
-import 'package:countstock_rfid/screens/scan/model/validateModel.dart';
+import 'package:countstock_rfid/screens/scan/model/dropdownModel.dart';
 import 'package:countstock_rfid/screens/settings/model/appsettingModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -40,12 +42,13 @@ class ScanScreen extends StatefulWidget {
 class _ScanScreenState extends State<ScanScreen> {
   GridDataSource? dataSource;
   List<ItemMasterDBData> itemList = [];
-  List<ValidateModel> dropdownList = [];
+  List<dropdownModel> dropdownList = [];
   List<GridDataList> _addTable = [];
   FocusNode focusNode = FocusNode();
   FocusNode fakefocusNode = FocusNode();
   TextEditingController _controller = TextEditingController();
   String selectLocationDropdown = "";
+  String locationCode = "";
   String selectSerialDropdown = "";
 
   bool isLocation = false;
@@ -129,7 +132,7 @@ class _ScanScreenState extends State<ScanScreen> {
                         return SizedBox.shrink();
                       }
                       if (snapshot.data!.isNotEmpty) {
-                        dropdownList = snapshot.data!.cast<ValidateModel>();
+                        dropdownList = snapshot.data!.cast<dropdownModel>();
                         dropdownList.where((element) {
                           if (element.name == "Location Code") {
                             isLocation = element.is_active;
@@ -171,6 +174,15 @@ class _ScanScreenState extends State<ScanScreen> {
                                   onChanged: (value) {
                                     if (dropdownList[index].name ==
                                         "Location Code") {
+                                      locationCode = dropdownList[index]
+                                          .valueDropdown!
+                                          .where((element) =>
+                                              element.location_name == value)
+                                          .first
+                                          .location_code;
+                                      if (kDebugMode) {
+                                        print(locationCode);
+                                      }
                                       selectLocationDropdown = value!;
                                     } else {
                                       selectSerialDropdown = value!;
@@ -195,9 +207,7 @@ class _ScanScreenState extends State<ScanScreen> {
                       return SizedBox.shrink();
                     }),
                 _gridData(SDK_Function.setTagScannedListener((epc, dbm) {
-                  onEventScan(epc.trim(), dbm).then((value) async {
-                    await SDK_Function.playSound();
-                  });
+                  onEventScan(epc.trim(), dbm).then((value) async {});
                   // _addTable.add(tempRfidItemList(
                   //   rfid_tag: epc,
                   //   rssi: dbm,
@@ -211,27 +221,27 @@ class _ScanScreenState extends State<ScanScreen> {
                 SizedBox(
                   height: 5,
                 ),
-                _button(
+                _btnAndDetail(
                   onPressed: () async {
-                    if (isLocation && selectLocationDropdown.isEmpty) {
-                      EasyLoading.showError("Please select Location");
-                      return;
-                    }
-                    if (isSerial && selectSerialDropdown.isEmpty) {
-                      EasyLoading.showError("Please select Serial Number");
-                      return;
-                    }
-                    if (!isScanning) {
-                      await SDK_Function.scan(true);
-                      isScanning = true;
-                    } else {
-                      await SDK_Function.scan(false);
-                      isScanning = false;
-                    }
+                    onEventScan(_controller.text, "0").then((value) async {});
+                    // if (isLocation && selectLocationDropdown.isEmpty) {
+                    //   EasyLoading.showError("Please select Location");
+                    //   return;
+                    // }
+                    // if (isSerial && selectSerialDropdown.isEmpty) {
+                    //   EasyLoading.showError("Please select Serial Number");
+                    //   return;
+                    // }
+                    // if (!isScanning) {
+                    //   await SDK_Function.scan(true);
+                    //   isScanning = true;
+                    // } else {
+                    //   await SDK_Function.scan(false);
+                    //   isScanning = false;
+                    // }
                     setState(() {});
                   },
                 ),
-                _summaryScan(),
                 SizedBox(
                   height: 15,
                 ),
@@ -350,87 +360,7 @@ class _ScanScreenState extends State<ScanScreen> {
     );
   }
 
-  Widget _button({void Function()? onPressed}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton(
-            style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>(
-                    isScanning ? Colors.red : Colors.grey.withOpacity(0.5))),
-            onPressed: onPressed,
-            child: Text(
-                isScanning
-                    ? appLocalizations.btn_stop_scan
-                    : appLocalizations.btn_start_scan,
-                style: TextStyle(color: Colors.white))),
-        ElevatedButton(
-            style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll<Color>(Colors.orangeAccent)),
-            onPressed: () async {
-              showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: Text(appLocalizations.popup_del_title_all),
-                        content: Text(appLocalizations.popup_del_sub_all),
-                        actions: [
-                          TextButton(
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStatePropertyAll(Colors.blue)),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                appLocalizations.btn_cancel,
-                                style: TextStyle(color: Colors.white),
-                              )),
-                          TextButton(
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(
-                                      Colors.redAccent)),
-                              onPressed: () {
-                                _addTable.clear();
-                                setState(() {
-                                  dataSource = GridDataSource(process: []);
-                                });
-
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                appLocalizations.btn_delete,
-                                style: TextStyle(color: Colors.white),
-                              ))
-                        ],
-                      ));
-            },
-            child: Text(
-              appLocalizations.btn_clear_all,
-              style: TextStyle(color: Colors.white),
-            )),
-        ElevatedButton(
-            style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>(
-                    _addTable.isNotEmpty
-                        ? Colors.blue
-                        : Colors.grey.withOpacity(0.5))),
-            onPressed: () async {
-              if (_addTable.isNotEmpty) {
-                await exportDataToTxt();
-              } else {
-                EasyLoading.showError(appLocalizations.no_data);
-              }
-            },
-            child: Text(
-              appLocalizations.btn_export_data,
-              style: TextStyle(color: Colors.white),
-            )),
-      ],
-    );
-  }
-
-  Widget _summaryScan() {
+  Widget _btnAndDetail({void Function()? onPressed}) {
     return Column(
       children: [
         Padding(
@@ -463,11 +393,73 @@ class _ScanScreenState extends State<ScanScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll<Color>(
+                            isScanning
+                                ? Colors.red
+                                : Colors.grey.withOpacity(0.5))),
+                    onPressed: onPressed,
+                    child: Text(
+                        isScanning
+                            ? appLocalizations.btn_stop_scan
+                            : appLocalizations.btn_start_scan,
+                        style: TextStyle(color: Colors.white))),
                 Text("${appLocalizations.txt_total}: ${_addTable.length}"),
-                Text(
-                    "${appLocalizations.txt_found}: ${_addTable.where((element) => element.status == "Found").toList().length}"),
-                Text(
-                    "${appLocalizations.txt_not_found}: ${_addTable.where((element) => element.status != "Found").toList().length}"),
+                ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll<Color>(
+                            Colors.orangeAccent)),
+                    onPressed: () async {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title:
+                                    Text(appLocalizations.popup_del_title_all),
+                                content:
+                                    Text(appLocalizations.popup_del_sub_all),
+                                actions: [
+                                  TextButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Colors.blue)),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        appLocalizations.btn_cancel,
+                                        style: TextStyle(color: Colors.white),
+                                      )),
+                                  TextButton(
+                                      style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Colors.redAccent)),
+                                      onPressed: () {
+                                        _addTable.clear();
+                                        setState(() {
+                                          dataSource =
+                                              GridDataSource(process: []);
+                                        });
+
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        appLocalizations.btn_delete,
+                                        style: TextStyle(color: Colors.white),
+                                      ))
+                                ],
+                              ));
+                    },
+                    child: Text(
+                      appLocalizations.btn_clear_all,
+                      style: TextStyle(color: Colors.white),
+                    ))
+                // Text(
+                //     "${appLocalizations.txt_found}: ${_addTable.where((element) => element.status == "Found").toList().length}"),
+                // Text(
+                //     "${appLocalizations.txt_not_found}: ${_addTable.where((element) => element.status != "Found").toList().length}"),
               ],
             ),
           ),
@@ -477,13 +469,17 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   Future onEventScan(String _controller, String rssi) async {
-    if (_controller.isNotEmpty) {
-      _addTable = await transactionDB.scanItem(TransactionsDBData(
-          key_id: 0,
-          count_ItemCode: _controller,
-          count_location_code: selectLocationDropdown,
-          serial_number: selectSerialDropdown,
-          rssi: rssi));
+    if (!_controller.isNotEmpty) {
+      final itemReturn = await transactionDB.scanItem(TransactionsDBData(
+        key_id: 0,
+        count_ItemCode: "i00004".toUpperCase(),
+        count_location_code: locationCode,
+        serial_number: selectSerialDropdown,
+        count_location_name: selectLocationDropdown,
+        rssi: "${Random().nextInt(100)}",
+      ));
+
+      _addTable.add(itemReturn);
     }
     setState(() {
       dataSource = GridDataSource(process: _addTable);

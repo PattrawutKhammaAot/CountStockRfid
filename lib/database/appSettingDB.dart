@@ -2,6 +2,7 @@ import 'package:countstock_rfid/database/database.dart';
 import 'package:countstock_rfid/main.dart';
 import 'package:drift/drift.dart';
 
+import '../config/appData.dart';
 import '../screens/settings/model/appsettingModel.dart';
 
 class AppSettingDB extends Table {
@@ -58,6 +59,20 @@ class AppSetting {
         .toList();
   }
 
+  Future<List<AppsettingModel>> getValidate() async {
+    final query = appDb.select(appDb.appSettingDB)
+      ..where((tbl) => tbl.is_validate.equals(true));
+    final result = await query.get();
+    return result
+        .map((e) => AppsettingModel(
+              item_id: e.item_id,
+              name: e.name!,
+              is_validate: e.is_validate,
+              is_active: e.is_active,
+            ))
+        .toList();
+  }
+
   Future<void> update(AppsettingModel data) async {
     await appDb.update(appDb.appSettingDB).replace(AppSettingDBData(
           item_id: data.item_id,
@@ -65,5 +80,12 @@ class AppSetting {
           is_validate: data.is_active ? data.is_validate : false,
           is_active: data.is_active,
         ));
+  }
+
+  Future<void> deleteAll() async {
+    await appDb.delete(appDb.transactionsDB).go();
+    await appDb.delete(appDb.itemMasterDB).go();
+    await appDb.delete(appDb.locationMasterDB).go();
+    await AppData.clearUsername();
   }
 }

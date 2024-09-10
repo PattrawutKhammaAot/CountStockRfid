@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:android_path_provider/android_path_provider.dart';
+import 'package:countstock_rfid/database/exportDB.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +38,7 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
   @override
   void initState() {
     BlocProvider.of<SearchBloc>(context).add(
-      GetSerachEvent(''),
+      GetListEvent(''),
     );
     // appDb.deleteTagRunningDuplicate().then((value) {
 
@@ -114,7 +115,7 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
       listeners: [
         BlocListener<SearchBloc, SearchState>(listener: (context, state) async {
           if (state.status == FetchStatus.fetching) {}
-          if (state.status == FetchStatus.saved) {
+          if (state.status == FetchStatus.success) {
             itemModel = state.data!;
             temp_itemModel = state.data!;
 
@@ -134,13 +135,13 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                     focusNode: focusNode,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: appLocalizations.search,
+                      hintText: appLocalizations.menu_search,
                     ),
                     onChanged: (value) {
                       if (value.length > 1) {
-                        context.read<SearchBloc>().add(GetSerachEvent(value));
+                        context.read<SearchBloc>().add(GetListEvent(value));
                       } else if (value.length == 0) {
-                        context.read<SearchBloc>().add(GetSerachEvent(''));
+                        context.read<SearchBloc>().add(GetListEvent(''));
                       }
                     },
                   ),
@@ -154,7 +155,7 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                 WidgetStatePropertyAll(Colors.blueAccent)),
                         onPressed: () async {
                           if (itemModel.length > 0) {
-                            // await exportDataToTxt();
+                            await ExportDB.exportChoice(context);
                           } else {
                             EasyLoading.showError(appLocalizations.no_data);
                           }
@@ -163,37 +164,37 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                           appLocalizations.btn_export_data,
                           style: TextStyle(color: Colors.white),
                         )),
-                    ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(
-                                isFilter_status == "Found"
-                                    ? Colors.green
-                                    : isFilter_status == "Not Found"
-                                        ? Colors.redAccent
-                                        : Colors.blue)),
-                        onPressed: () {
-                          // if (isFilter_status == "Default") {
-                          //   itemModel = temp_itemModel
-                          //       .where((element) => element.status == "Found")
-                          //       .toList();
-                          //   isFilter_status = "Found";
-                          // } else if (isFilter_status == "Found") {
-                          //   itemModel = temp_itemModel
-                          //       .where(
-                          //           (element) => element.status == "Not Found")
-                          //       .toList();
-                          //   isFilter_status = "Not Found";
-                          // } else if (isFilter_status == "Not Found") {
-                          //   context.read<SearchBloc>().add(GetSerachEvent(''));
-                          //   isFilter_status = "Default";
-                          // }
+                    // ElevatedButton(
+                    //     style: ButtonStyle(
+                    //         backgroundColor: MaterialStatePropertyAll(
+                    //             isFilter_status == "Found"
+                    //                 ? Colors.green
+                    //                 : isFilter_status == "Not Found"
+                    //                     ? Colors.redAccent
+                    //                     : Colors.blue)),
+                    //     onPressed: () {
+                    //       // if (isFilter_status == "Default") {
+                    //       //   itemModel = temp_itemModel
+                    //       //       .where((element) => element.status == "Found")
+                    //       //       .toList();
+                    //       //   isFilter_status = "Found";
+                    //       // } else if (isFilter_status == "Found") {
+                    //       //   itemModel = temp_itemModel
+                    //       //       .where(
+                    //       //           (element) => element.status == "Not Found")
+                    //       //       .toList();
+                    //       //   isFilter_status = "Not Found";
+                    //       // } else if (isFilter_status == "Not Found") {
+                    //       //   context.read<SearchBloc>().add(GetSerachEvent(''));
+                    //       //   isFilter_status = "Default";
+                    //       // }
 
-                          setState(() {});
-                        },
-                        child: Text(
-                          "${isFilter_status == "Default" ? "${appLocalizations.btn_status_select}" : isFilter_status == "Not Found" ? "${appLocalizations.btn_status_not_found}" : "${appLocalizations.btn_status_found}"}",
-                          style: TextStyle(color: Colors.white),
-                        )),
+                    //       setState(() {});
+                    //     },
+                    //     child: Text(
+                    //       "${isFilter_status == "Default" ? "${appLocalizations.btn_status_select}" : isFilter_status == "Not Found" ? "${appLocalizations.btn_status_not_found}" : "${appLocalizations.btn_status_found}"}",
+                    //       style: TextStyle(color: Colors.white),
+                    //     )),
                     IconButton(
                         onPressed: () {
                           isFilter = !isFilter;
@@ -237,9 +238,9 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                     spacing: 1,
                                     onPressed: (BuildContext context) {
-                                      // context.read<SearchRfidBloc>().add(
-                                      //     DeleteRfidEvent(
-                                      //         itemModel[index].key_id));
+                                      context.read<SearchBloc>().add(
+                                          DeleteByIDEvent(
+                                              itemModel[index].key_id));
                                       itemModel.removeAt(index);
 
                                       setState(() {});
@@ -252,40 +253,120 @@ class _SearchTagsScreenState extends State<SearchTagsScreen> {
                                 ],
                               ),
                               child: Card(
-                                color: itemModel[index] == "Found"
-                                    ? Colors.green
-                                    : Colors.redAccent,
-                                margin: EdgeInsets.all(4),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '${appLocalizations.txt_number_tag} : ${itemModel[index]}',
-                                        style: TextStyle(color: Colors.white),
+                                color: Colors.white,
+                                shadowColor: Colors.black,
+                                elevation: 10,
+                                margin: EdgeInsets.all(8),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: 170,
+                                      padding: EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                          color: Colors.blue[700],
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              bottomRight:
+                                                  Radius.circular(10))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 4),
+                                        child: Text(
+                                          'Item Code : ${itemModel[index].count_ItemCode}',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                       ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                              'Rssi : ${itemModel[index].rssi} dBm',
-                                              style: TextStyle(
-                                                  color: Colors.white)),
-                                          // Text(
-                                          //     '${appLocalizations.txt_status} : ${itemModel[index].status == "Found" ? appLocalizations.txt_found : appLocalizations.txt_not_found}',
-                                          //     style: TextStyle(
-                                          //         color: Colors.white)),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                  'Rssi : ${itemModel[index].rssi} dBm',
+                                                  style: TextStyle(
+                                                      color: Colors.black)),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  'Desc : ${itemModel[index].itemDesc == "" ? " - " : itemModel[index].itemDesc}',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                  'Loc : ${itemModel[index].count_location_name == "" ? " - " : itemModel[index].count_location_name}',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  'SN : ${itemModel[index].serial_number == "" ? " - " : itemModel[index].serial_number}',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 30,
+                                          )
                                         ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0.2,
+                                      right: 0.2,
+                                      child: Container(
+                                        padding: EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                            color: Colors.deepOrange,
+                                            borderRadius: BorderRadius.only(
+                                              bottomRight: Radius.circular(10),
+                                              topLeft: Radius.circular(10),
+                                            )),
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 4),
+                                          child: Center(
+                                            child: Text(
+                                              ' ${itemModel[index].count_QuantityScan ?? "0"} QTY ',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             );

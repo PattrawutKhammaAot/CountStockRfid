@@ -40,4 +40,23 @@ class AppData {
     // return value;
     return prefs.getString("popupInfo");
   }
+
+  static setUsername(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(value);
+    // await storage.write(key: "ApiUrl", value: value);
+    await prefs.setString("username", value);
+  }
+
+  static Future<dynamic> getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String? value = await storage.read(key: "ApiUrl");
+    // return value;
+    return prefs.getString("username");
+  }
+
+  static Future<dynamic> clearUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove("username");
+  }
 }

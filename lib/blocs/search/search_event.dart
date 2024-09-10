@@ -7,10 +7,18 @@ class SearchEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetSerachEvent extends SearchEvent {
-  const GetSerachEvent(this.itemCode);
+class GetListEvent extends SearchEvent {
+  const GetListEvent(this.itemCode);
   final String itemCode;
 
   @override
   List<Object> get props => [itemCode];
+}
+
+class DeleteByIDEvent extends SearchEvent {
+  const DeleteByIDEvent(this.id);
+  final int id;
+
+  @override
+  List<Object> get props => [id];
 }

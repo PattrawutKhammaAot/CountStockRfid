@@ -14,4 +14,12 @@ class AppsettingModel {
     required this.is_active,
     this.valueDropdown,
   });
+  Map<String, dynamic> toJson() {
+    return {
+      'item_id': item_id,
+      'name': name,
+      'is_validate': is_validate,
+      'is_active': is_active,
+    };
+  }
 }

@@ -67,22 +67,22 @@ class _ReportScreenState extends State<ReportScreen> {
 
                 chartData.add(ChartData(
                     appLocalizations.txt_master,
-                    double.parse(totalScanModel.totalMaster.toString()),
+                    double.parse(totalScanModel.importMaster.toString()),
                     blueColor_master));
                 chartData.add(ChartData(
-                    appLocalizations.txt_not_found,
-                    double.parse(totalScanModel.totalLoss.toString()),
+                    appLocalizations.txt_location_master,
+                    double.parse(totalScanModel.location.toString()),
                     pinkPaletteColor_not_found));
                 chartData.add(ChartData(
-                    appLocalizations.txt_found,
-                    double.parse(totalScanModel.totalFound.toString()),
+                    appLocalizations.txt_scanned,
+                    double.parse(totalScanModel.scanned.toString()),
                     pinkColor_found));
 
                 chartData.add(ChartData(
                     appLocalizations.txt_not_scan,
-                    double.parse((totalScanModel.totalMaster! -
-                            totalScanModel.totalFound!)
-                        .toString()),
+                    double.parse(
+                        (totalScanModel.importMaster! - totalScanModel.scanned!)
+                            .toString()),
                     pinkPaletteColor1_not_scan));
 
                 setState(() {});
@@ -146,7 +146,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
               ),
 
-              totalScanModel.totalMaster != null
+              totalScanModel.importMaster != null
                   ? Expanded(
                       child: GridView.count(
                         primary: false,
@@ -189,8 +189,12 @@ class _ReportScreenState extends State<ReportScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.import_contacts),
-                                  Text("Import\nMaster"),
+                                  Icon(
+                                    Icons.file_download,
+                                    color: Colors.blue[700],
+                                    size: 70,
+                                  ),
+                                  Text(appLocalizations.btn_import_Item),
                                 ],
                               ),
                             ),
@@ -224,11 +228,53 @@ class _ReportScreenState extends State<ReportScreen> {
                                 lineWidth: 8.0,
                                 percent: 1.0,
                                 center: new Text(
-                                  "${appLocalizations.txt_master} \n ${totalScanModel.totalMaster} EA",
+                                  "${appLocalizations.txt_master} \n ${totalScanModel.importMaster} EA",
                                   textAlign: TextAlign.center,
                                 ),
                                 progressColor: blueColor_master,
                               )),
+
+                          //Found
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(
+                                      1.0,
+                                      1.0,
+                                    ),
+                                    blurRadius: 5.0,
+                                    spreadRadius: 1.0,
+                                  ), //BoxShadow
+                                  BoxShadow(
+                                    color: Colors.white,
+                                    offset: Offset(0.0, 0.0),
+                                    blurRadius: 0.0,
+                                    spreadRadius: 0.0,
+                                  ),
+                                ],
+                                color: whiteColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            child: CircularPercentIndicator(
+                              radius: 45.0,
+                              lineWidth: 8.0,
+                              percent: totalScanModel.importMaster != 0 &&
+                                      totalScanModel.scanned != 0 &&
+                                      totalScanModel.scanned! <
+                                          totalScanModel.importMaster!
+                                  ? totalScanModel.scanned! /
+                                      totalScanModel.importMaster!
+                                  : 1,
+                              center: new Text(
+                                "${appLocalizations.txt_scanned}  \n ${totalScanModel.scanned != 0 && totalScanModel.importMaster != 0 ? ((totalScanModel.scanned! / totalScanModel.importMaster!) * 100).toInt() : ""}% \n ${totalScanModel.scanned} EA",
+                                textAlign: TextAlign.center,
+                              ),
+                              progressColor: pinkColor_found,
+                            ),
+                          ),
                           //Location
                           GestureDetector(
                             onTap: () =>
@@ -263,94 +309,17 @@ class _ReportScreenState extends State<ReportScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.import_contacts),
+                                  Icon(
+                                    Icons.file_open_rounded,
+                                    color: Colors.blue[700],
+                                    size: 50,
+                                  ),
                                   Text(
-                                    "Import Location",
+                                    appLocalizations.btn_import_location,
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                          //Found
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(
-                                      1.0,
-                                      1.0,
-                                    ),
-                                    blurRadius: 5.0,
-                                    spreadRadius: 1.0,
-                                  ), //BoxShadow
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    offset: Offset(0.0, 0.0),
-                                    blurRadius: 0.0,
-                                    spreadRadius: 0.0,
-                                  ),
-                                ],
-                                color: whiteColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12))),
-                            child: CircularPercentIndicator(
-                              radius: 45.0,
-                              lineWidth: 8.0,
-                              percent: totalScanModel.totalMaster != 0 &&
-                                      totalScanModel.totalFound != 0 &&
-                                      totalScanModel.totalFound! <
-                                          totalScanModel.totalMaster!
-                                  ? totalScanModel.totalFound! /
-                                      totalScanModel.totalMaster!
-                                  : 1,
-                              center: new Text(
-                                "${appLocalizations.txt_found}  \n ${totalScanModel.totalFound != 0 && totalScanModel.totalMaster != 0 ? ((totalScanModel.totalFound! / totalScanModel.totalMaster!) * 100).toInt() : ""}% \n ${totalScanModel.totalFound} EA",
-                                textAlign: TextAlign.center,
-                              ),
-                              progressColor: pinkColor_found,
-                            ),
-                          ),
-                          //NotScan
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(
-                                      1.0,
-                                      1.0,
-                                    ),
-                                    blurRadius: 5.0,
-                                    spreadRadius: 1.0,
-                                  ), //BoxShadow
-                                  BoxShadow(
-                                    color: Colors.white,
-                                    offset: Offset(0.0, 0.0),
-                                    blurRadius: 0.0,
-                                    spreadRadius: 0.0,
-                                  ),
-                                ],
-                                color: whiteColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12))),
-                            child: CircularPercentIndicator(
-                              radius: 45.0,
-                              lineWidth: 8.0,
-                              percent: totalScanModel.totalMaster != 0 &&
-                                      totalScanModel.totalFound != 0
-                                  ? (totalScanModel.totalMaster! -
-                                          totalScanModel.totalFound!) /
-                                      totalScanModel.totalMaster!
-                                  : 1,
-                              center: new Text(
-                                "${appLocalizations.txt_not_scan}  \n ${totalScanModel.totalMaster != 0 && totalScanModel.totalFound != 0 ? (((totalScanModel.totalMaster! - totalScanModel.totalFound!) / totalScanModel.totalMaster!) * 100).toInt() : ""}% \n ${totalScanModel.totalMaster != 0 ? (totalScanModel.totalMaster! - totalScanModel.totalFound!) : "0"} EA",
-                                textAlign: TextAlign.center,
-                              ),
-                              progressColor: pinkPaletteColor1_not_scan,
                             ),
                           ),
                           //NotFound
@@ -380,24 +349,58 @@ class _ReportScreenState extends State<ReportScreen> {
                             child: CircularPercentIndicator(
                               radius: 45.0,
                               lineWidth: 8.0,
-                              percent: totalScanModel.totalLoss != null
-                                  ? totalScanModel.totalLoss! >
-                                          totalScanModel.totalMaster!
-                                      ? 1.0
-                                      : totalScanModel.totalLoss! /
-                                          totalScanModel.totalMaster!
-                                  : 0.0,
-                              center: totalScanModel.totalLoss! >
-                                      totalScanModel.totalMaster!
+                              percent:
+                                  totalScanModel.location != null ? 1.0 : 0.0,
+                              center: totalScanModel.location! >
+                                      totalScanModel.importMaster!
                                   ? Text(
-                                      "${appLocalizations.txt_not_found} \n ${totalScanModel.totalLoss!} EA",
+                                      "${appLocalizations.txt_location_master} \n ${totalScanModel.location!} EA",
                                       textAlign: TextAlign.center,
                                     )
                                   : Text(
-                                      "${appLocalizations.txt_not_found} \n ${totalScanModel.totalLoss != 0 && totalScanModel.totalMaster != 0 ? ((totalScanModel.totalLoss! / totalScanModel.totalMaster!) * 100).toInt() : "No data"}% \n ${totalScanModel.totalLoss} EA",
+                                      "${appLocalizations.txt_location_master} \n ${totalScanModel.location != 0 && totalScanModel.importMaster != 0 ? "100" : "No data"}% \n ${totalScanModel.location} EA",
                                       textAlign: TextAlign.center,
                                     ),
                               progressColor: pinkPaletteColor_not_found,
+                            ),
+                          ),
+                          //NotScan
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(
+                                      1.0,
+                                      1.0,
+                                    ),
+                                    blurRadius: 5.0,
+                                    spreadRadius: 1.0,
+                                  ), //BoxShadow
+                                  BoxShadow(
+                                    color: Colors.white,
+                                    offset: Offset(0.0, 0.0),
+                                    blurRadius: 0.0,
+                                    spreadRadius: 0.0,
+                                  ),
+                                ],
+                                color: whiteColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            child: CircularPercentIndicator(
+                              radius: 45.0,
+                              lineWidth: 8.0,
+                              percent: totalScanModel.importMaster != 0 &&
+                                      totalScanModel.notScanned != 0
+                                  ? totalScanModel.notScanned! /
+                                      totalScanModel.importMaster!
+                                  : 1,
+                              center: new Text(
+                                "${appLocalizations.txt_not_scan}  \n ${totalScanModel.importMaster != 0 && totalScanModel.notScanned != 0 ? (((totalScanModel.notScanned! / totalScanModel.importMaster!)) * 100).toInt() : ""}% \n ${totalScanModel.importMaster != 0 ? totalScanModel.notScanned : "0"} EA",
+                                textAlign: TextAlign.center,
+                              ),
+                              progressColor: pinkPaletteColor1_not_scan,
                             ),
                           ),
                         ],

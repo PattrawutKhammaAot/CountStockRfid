@@ -71,7 +71,7 @@ class ItemMaster {
         dataWithoutHeader.forEach((row) async {
           // Assuming the columns are in the order: ItemCode, ItemName, ItemDescription, SerialNumber, Quantity, Udf01, Udf02, Udf03, Udf04, Udf05
           final ItemMasterDBCompanion importModel = ItemMasterDBCompanion(
-            ItemCode: Value(row[0].toString()),
+            ItemCode: Value(row[0].toString().toUpperCase()),
             ItemName: Value(row[1].toString()),
             ItemDescription: Value(row[2].toString()),
             SerialNumber: Value(row[3].toString()),
@@ -192,17 +192,24 @@ class ItemMaster {
     }
   }
 
-  Future<int> totalMaster() async {
-    // สร้าง query ที่นับจำนวนแถวทั้งหมดในตาราง masterRfid
-    var query = _db.selectOnly(_db.itemMasterDB)
-      ..addColumns([
-        _db.itemMasterDB.item_id.count()
-      ]); // ใช้ id หรือคอลัมน์อื่นๆ ในตารางเพื่อนับ
-    var result = await query.getSingle();
-    return result.read(_db.itemMasterDB.item_id.count()) ?? 0;
-  }
+  // Future<int> totalMaster() async {
+  //   // สร้าง query ที่นับจำนวนแถวทั้งหมดในตาราง masterRfid
+  //   var query = _db.selectOnly(_db.itemMasterDB)
+  //     ..addColumns([
+  //       _db.itemMasterDB.item_id.count()
+  //     ]); // ใช้ id หรือคอลัมน์อื่นๆ ในตารางเพื่อนับ
+  //   var result = await query.getSingle();
+  //   return result.read(_db.itemMasterDB.item_id.count()) ?? 0;
+  // }
 
   Future<void> deleteItemMaster() async {
     await (_db.delete(_db.itemMasterDB).go());
+  }
+
+  Future<String> getQtyPlan(String itemCode) async {
+    final ItemMasterDBData item = await (_db.select(_db.itemMasterDB)
+          ..where((tbl) => tbl.ItemCode.equals(itemCode.toUpperCase())))
+        .getSingle();
+    return item.Quantity!;
   }
 }

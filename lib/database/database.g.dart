@@ -867,11 +867,17 @@ class $TransactionsDBTable extends TransactionsDB
   late final GeneratedColumn<String> count_ItemCode = GeneratedColumn<String>(
       'count_item_code', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _count_location_idMeta =
-      const VerificationMeta('count_location_id');
+  static const VerificationMeta _itemDescMeta =
+      const VerificationMeta('itemDesc');
   @override
-  late final GeneratedColumn<String> count_location_id =
-      GeneratedColumn<String>('count_location_id', aliasedName, true,
+  late final GeneratedColumn<String> itemDesc = GeneratedColumn<String>(
+      'item_desc', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _count_location_nameMeta =
+      const VerificationMeta('count_location_name');
+  @override
+  late final GeneratedColumn<String> count_location_name =
+      GeneratedColumn<String>('count_location_name', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _count_location_codeMeta =
       const VerificationMeta('count_location_code');
@@ -902,6 +908,34 @@ class $TransactionsDBTable extends TransactionsDB
   late final GeneratedColumn<String> rssi = GeneratedColumn<String>(
       'rssi', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _is_Validate_LocationMeta =
+      const VerificationMeta('is_Validate_Location');
+  @override
+  late final GeneratedColumn<bool> is_Validate_Location = GeneratedColumn<bool>(
+      'is_validate_location', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_validate_location" IN (0, 1))'));
+  static const VerificationMeta _is_Validate_ItemCodeMeta =
+      const VerificationMeta('is_Validate_ItemCode');
+  @override
+  late final GeneratedColumn<bool> is_Validate_ItemCode = GeneratedColumn<bool>(
+      'is_validate_item_code', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_validate_item_code" IN (0, 1))'));
+  static const VerificationMeta _is_Validate_SerialNumberMeta =
+      const VerificationMeta('is_Validate_SerialNumber');
+  @override
+  late final GeneratedColumn<bool> is_Validate_SerialNumber =
+      GeneratedColumn<bool>(
+          'is_validate_serial_number', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'CHECK ("is_validate_serial_number" IN (0, 1))'));
   static const VerificationMeta _created_dateMeta =
       const VerificationMeta('created_date');
   @override
@@ -919,12 +953,16 @@ class $TransactionsDBTable extends TransactionsDB
         key_id,
         item_id,
         count_ItemCode,
-        count_location_id,
+        itemDesc,
+        count_location_name,
         count_location_code,
         count_QuantityScan,
         serial_number,
         status_item,
         rssi,
+        is_Validate_Location,
+        is_Validate_ItemCode,
+        is_Validate_SerialNumber,
         created_date,
         updated_date
       ];
@@ -954,11 +992,15 @@ class $TransactionsDBTable extends TransactionsDB
     } else if (isInserting) {
       context.missing(_count_ItemCodeMeta);
     }
-    if (data.containsKey('count_location_id')) {
+    if (data.containsKey('item_desc')) {
+      context.handle(_itemDescMeta,
+          itemDesc.isAcceptableOrUnknown(data['item_desc']!, _itemDescMeta));
+    }
+    if (data.containsKey('count_location_name')) {
       context.handle(
-          _count_location_idMeta,
-          count_location_id.isAcceptableOrUnknown(
-              data['count_location_id']!, _count_location_idMeta));
+          _count_location_nameMeta,
+          count_location_name.isAcceptableOrUnknown(
+              data['count_location_name']!, _count_location_nameMeta));
     }
     if (data.containsKey('count_location_code')) {
       context.handle(
@@ -988,6 +1030,25 @@ class $TransactionsDBTable extends TransactionsDB
       context.handle(
           _rssiMeta, rssi.isAcceptableOrUnknown(data['rssi']!, _rssiMeta));
     }
+    if (data.containsKey('is_validate_location')) {
+      context.handle(
+          _is_Validate_LocationMeta,
+          is_Validate_Location.isAcceptableOrUnknown(
+              data['is_validate_location']!, _is_Validate_LocationMeta));
+    }
+    if (data.containsKey('is_validate_item_code')) {
+      context.handle(
+          _is_Validate_ItemCodeMeta,
+          is_Validate_ItemCode.isAcceptableOrUnknown(
+              data['is_validate_item_code']!, _is_Validate_ItemCodeMeta));
+    }
+    if (data.containsKey('is_validate_serial_number')) {
+      context.handle(
+          _is_Validate_SerialNumberMeta,
+          is_Validate_SerialNumber.isAcceptableOrUnknown(
+              data['is_validate_serial_number']!,
+              _is_Validate_SerialNumberMeta));
+    }
     if (data.containsKey('created_date')) {
       context.handle(
           _created_dateMeta,
@@ -1015,8 +1076,10 @@ class $TransactionsDBTable extends TransactionsDB
           .read(DriftSqlType.int, data['${effectivePrefix}item_id']),
       count_ItemCode: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}count_item_code'])!,
-      count_location_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}count_location_id']),
+      itemDesc: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}item_desc']),
+      count_location_name: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}count_location_name']),
       count_location_code: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}count_location_code']),
       count_QuantityScan: attachedDatabase.typeMapping.read(
@@ -1027,6 +1090,13 @@ class $TransactionsDBTable extends TransactionsDB
           .read(DriftSqlType.string, data['${effectivePrefix}status_item']),
       rssi: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}rssi']),
+      is_Validate_Location: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}is_validate_location']),
+      is_Validate_ItemCode: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}is_validate_item_code']),
+      is_Validate_SerialNumber: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}is_validate_serial_number']),
       created_date: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_date']),
       updated_date: attachedDatabase.typeMapping
@@ -1045,24 +1115,32 @@ class TransactionsDBData extends DataClass
   final int key_id;
   final int? item_id;
   final String count_ItemCode;
-  final String? count_location_id;
+  final String? itemDesc;
+  final String? count_location_name;
   final String? count_location_code;
   final int? count_QuantityScan;
   final String? serial_number;
   final String? status_item;
   final String? rssi;
+  final bool? is_Validate_Location;
+  final bool? is_Validate_ItemCode;
+  final bool? is_Validate_SerialNumber;
   final DateTime? created_date;
   final DateTime? updated_date;
   const TransactionsDBData(
       {required this.key_id,
       this.item_id,
       required this.count_ItemCode,
-      this.count_location_id,
+      this.itemDesc,
+      this.count_location_name,
       this.count_location_code,
       this.count_QuantityScan,
       this.serial_number,
       this.status_item,
       this.rssi,
+      this.is_Validate_Location,
+      this.is_Validate_ItemCode,
+      this.is_Validate_SerialNumber,
       this.created_date,
       this.updated_date});
   @override
@@ -1073,8 +1151,11 @@ class TransactionsDBData extends DataClass
       map['item_id'] = Variable<int>(item_id);
     }
     map['count_item_code'] = Variable<String>(count_ItemCode);
-    if (!nullToAbsent || count_location_id != null) {
-      map['count_location_id'] = Variable<String>(count_location_id);
+    if (!nullToAbsent || itemDesc != null) {
+      map['item_desc'] = Variable<String>(itemDesc);
+    }
+    if (!nullToAbsent || count_location_name != null) {
+      map['count_location_name'] = Variable<String>(count_location_name);
     }
     if (!nullToAbsent || count_location_code != null) {
       map['count_location_code'] = Variable<String>(count_location_code);
@@ -1090,6 +1171,16 @@ class TransactionsDBData extends DataClass
     }
     if (!nullToAbsent || rssi != null) {
       map['rssi'] = Variable<String>(rssi);
+    }
+    if (!nullToAbsent || is_Validate_Location != null) {
+      map['is_validate_location'] = Variable<bool>(is_Validate_Location);
+    }
+    if (!nullToAbsent || is_Validate_ItemCode != null) {
+      map['is_validate_item_code'] = Variable<bool>(is_Validate_ItemCode);
+    }
+    if (!nullToAbsent || is_Validate_SerialNumber != null) {
+      map['is_validate_serial_number'] =
+          Variable<bool>(is_Validate_SerialNumber);
     }
     if (!nullToAbsent || created_date != null) {
       map['created_date'] = Variable<DateTime>(created_date);
@@ -1107,9 +1198,12 @@ class TransactionsDBData extends DataClass
           ? const Value.absent()
           : Value(item_id),
       count_ItemCode: Value(count_ItemCode),
-      count_location_id: count_location_id == null && nullToAbsent
+      itemDesc: itemDesc == null && nullToAbsent
           ? const Value.absent()
-          : Value(count_location_id),
+          : Value(itemDesc),
+      count_location_name: count_location_name == null && nullToAbsent
+          ? const Value.absent()
+          : Value(count_location_name),
       count_location_code: count_location_code == null && nullToAbsent
           ? const Value.absent()
           : Value(count_location_code),
@@ -1123,6 +1217,15 @@ class TransactionsDBData extends DataClass
           ? const Value.absent()
           : Value(status_item),
       rssi: rssi == null && nullToAbsent ? const Value.absent() : Value(rssi),
+      is_Validate_Location: is_Validate_Location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(is_Validate_Location),
+      is_Validate_ItemCode: is_Validate_ItemCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(is_Validate_ItemCode),
+      is_Validate_SerialNumber: is_Validate_SerialNumber == null && nullToAbsent
+          ? const Value.absent()
+          : Value(is_Validate_SerialNumber),
       created_date: created_date == null && nullToAbsent
           ? const Value.absent()
           : Value(created_date),
@@ -1139,14 +1242,21 @@ class TransactionsDBData extends DataClass
       key_id: serializer.fromJson<int>(json['key_id']),
       item_id: serializer.fromJson<int?>(json['item_id']),
       count_ItemCode: serializer.fromJson<String>(json['count_ItemCode']),
-      count_location_id:
-          serializer.fromJson<String?>(json['count_location_id']),
+      itemDesc: serializer.fromJson<String?>(json['itemDesc']),
+      count_location_name:
+          serializer.fromJson<String?>(json['count_location_name']),
       count_location_code:
           serializer.fromJson<String?>(json['count_location_code']),
       count_QuantityScan: serializer.fromJson<int?>(json['count_QuantityScan']),
       serial_number: serializer.fromJson<String?>(json['serial_number']),
       status_item: serializer.fromJson<String?>(json['status_item']),
       rssi: serializer.fromJson<String?>(json['rssi']),
+      is_Validate_Location:
+          serializer.fromJson<bool?>(json['is_Validate_Location']),
+      is_Validate_ItemCode:
+          serializer.fromJson<bool?>(json['is_Validate_ItemCode']),
+      is_Validate_SerialNumber:
+          serializer.fromJson<bool?>(json['is_Validate_SerialNumber']),
       created_date: serializer.fromJson<DateTime?>(json['created_date']),
       updated_date: serializer.fromJson<DateTime?>(json['updated_date']),
     );
@@ -1158,12 +1268,17 @@ class TransactionsDBData extends DataClass
       'key_id': serializer.toJson<int>(key_id),
       'item_id': serializer.toJson<int?>(item_id),
       'count_ItemCode': serializer.toJson<String>(count_ItemCode),
-      'count_location_id': serializer.toJson<String?>(count_location_id),
+      'itemDesc': serializer.toJson<String?>(itemDesc),
+      'count_location_name': serializer.toJson<String?>(count_location_name),
       'count_location_code': serializer.toJson<String?>(count_location_code),
       'count_QuantityScan': serializer.toJson<int?>(count_QuantityScan),
       'serial_number': serializer.toJson<String?>(serial_number),
       'status_item': serializer.toJson<String?>(status_item),
       'rssi': serializer.toJson<String?>(rssi),
+      'is_Validate_Location': serializer.toJson<bool?>(is_Validate_Location),
+      'is_Validate_ItemCode': serializer.toJson<bool?>(is_Validate_ItemCode),
+      'is_Validate_SerialNumber':
+          serializer.toJson<bool?>(is_Validate_SerialNumber),
       'created_date': serializer.toJson<DateTime?>(created_date),
       'updated_date': serializer.toJson<DateTime?>(updated_date),
     };
@@ -1173,21 +1288,26 @@ class TransactionsDBData extends DataClass
           {int? key_id,
           Value<int?> item_id = const Value.absent(),
           String? count_ItemCode,
-          Value<String?> count_location_id = const Value.absent(),
+          Value<String?> itemDesc = const Value.absent(),
+          Value<String?> count_location_name = const Value.absent(),
           Value<String?> count_location_code = const Value.absent(),
           Value<int?> count_QuantityScan = const Value.absent(),
           Value<String?> serial_number = const Value.absent(),
           Value<String?> status_item = const Value.absent(),
           Value<String?> rssi = const Value.absent(),
+          Value<bool?> is_Validate_Location = const Value.absent(),
+          Value<bool?> is_Validate_ItemCode = const Value.absent(),
+          Value<bool?> is_Validate_SerialNumber = const Value.absent(),
           Value<DateTime?> created_date = const Value.absent(),
           Value<DateTime?> updated_date = const Value.absent()}) =>
       TransactionsDBData(
         key_id: key_id ?? this.key_id,
         item_id: item_id.present ? item_id.value : this.item_id,
         count_ItemCode: count_ItemCode ?? this.count_ItemCode,
-        count_location_id: count_location_id.present
-            ? count_location_id.value
-            : this.count_location_id,
+        itemDesc: itemDesc.present ? itemDesc.value : this.itemDesc,
+        count_location_name: count_location_name.present
+            ? count_location_name.value
+            : this.count_location_name,
         count_location_code: count_location_code.present
             ? count_location_code.value
             : this.count_location_code,
@@ -1198,6 +1318,15 @@ class TransactionsDBData extends DataClass
             serial_number.present ? serial_number.value : this.serial_number,
         status_item: status_item.present ? status_item.value : this.status_item,
         rssi: rssi.present ? rssi.value : this.rssi,
+        is_Validate_Location: is_Validate_Location.present
+            ? is_Validate_Location.value
+            : this.is_Validate_Location,
+        is_Validate_ItemCode: is_Validate_ItemCode.present
+            ? is_Validate_ItemCode.value
+            : this.is_Validate_ItemCode,
+        is_Validate_SerialNumber: is_Validate_SerialNumber.present
+            ? is_Validate_SerialNumber.value
+            : this.is_Validate_SerialNumber,
         created_date:
             created_date.present ? created_date.value : this.created_date,
         updated_date:
@@ -1210,9 +1339,10 @@ class TransactionsDBData extends DataClass
       count_ItemCode: data.count_ItemCode.present
           ? data.count_ItemCode.value
           : this.count_ItemCode,
-      count_location_id: data.count_location_id.present
-          ? data.count_location_id.value
-          : this.count_location_id,
+      itemDesc: data.itemDesc.present ? data.itemDesc.value : this.itemDesc,
+      count_location_name: data.count_location_name.present
+          ? data.count_location_name.value
+          : this.count_location_name,
       count_location_code: data.count_location_code.present
           ? data.count_location_code.value
           : this.count_location_code,
@@ -1225,6 +1355,15 @@ class TransactionsDBData extends DataClass
       status_item:
           data.status_item.present ? data.status_item.value : this.status_item,
       rssi: data.rssi.present ? data.rssi.value : this.rssi,
+      is_Validate_Location: data.is_Validate_Location.present
+          ? data.is_Validate_Location.value
+          : this.is_Validate_Location,
+      is_Validate_ItemCode: data.is_Validate_ItemCode.present
+          ? data.is_Validate_ItemCode.value
+          : this.is_Validate_ItemCode,
+      is_Validate_SerialNumber: data.is_Validate_SerialNumber.present
+          ? data.is_Validate_SerialNumber.value
+          : this.is_Validate_SerialNumber,
       created_date: data.created_date.present
           ? data.created_date.value
           : this.created_date,
@@ -1240,12 +1379,16 @@ class TransactionsDBData extends DataClass
           ..write('key_id: $key_id, ')
           ..write('item_id: $item_id, ')
           ..write('count_ItemCode: $count_ItemCode, ')
-          ..write('count_location_id: $count_location_id, ')
+          ..write('itemDesc: $itemDesc, ')
+          ..write('count_location_name: $count_location_name, ')
           ..write('count_location_code: $count_location_code, ')
           ..write('count_QuantityScan: $count_QuantityScan, ')
           ..write('serial_number: $serial_number, ')
           ..write('status_item: $status_item, ')
           ..write('rssi: $rssi, ')
+          ..write('is_Validate_Location: $is_Validate_Location, ')
+          ..write('is_Validate_ItemCode: $is_Validate_ItemCode, ')
+          ..write('is_Validate_SerialNumber: $is_Validate_SerialNumber, ')
           ..write('created_date: $created_date, ')
           ..write('updated_date: $updated_date')
           ..write(')'))
@@ -1257,12 +1400,16 @@ class TransactionsDBData extends DataClass
       key_id,
       item_id,
       count_ItemCode,
-      count_location_id,
+      itemDesc,
+      count_location_name,
       count_location_code,
       count_QuantityScan,
       serial_number,
       status_item,
       rssi,
+      is_Validate_Location,
+      is_Validate_ItemCode,
+      is_Validate_SerialNumber,
       created_date,
       updated_date);
   @override
@@ -1272,12 +1419,16 @@ class TransactionsDBData extends DataClass
           other.key_id == this.key_id &&
           other.item_id == this.item_id &&
           other.count_ItemCode == this.count_ItemCode &&
-          other.count_location_id == this.count_location_id &&
+          other.itemDesc == this.itemDesc &&
+          other.count_location_name == this.count_location_name &&
           other.count_location_code == this.count_location_code &&
           other.count_QuantityScan == this.count_QuantityScan &&
           other.serial_number == this.serial_number &&
           other.status_item == this.status_item &&
           other.rssi == this.rssi &&
+          other.is_Validate_Location == this.is_Validate_Location &&
+          other.is_Validate_ItemCode == this.is_Validate_ItemCode &&
+          other.is_Validate_SerialNumber == this.is_Validate_SerialNumber &&
           other.created_date == this.created_date &&
           other.updated_date == this.updated_date);
 }
@@ -1286,24 +1437,32 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
   final Value<int> key_id;
   final Value<int?> item_id;
   final Value<String> count_ItemCode;
-  final Value<String?> count_location_id;
+  final Value<String?> itemDesc;
+  final Value<String?> count_location_name;
   final Value<String?> count_location_code;
   final Value<int?> count_QuantityScan;
   final Value<String?> serial_number;
   final Value<String?> status_item;
   final Value<String?> rssi;
+  final Value<bool?> is_Validate_Location;
+  final Value<bool?> is_Validate_ItemCode;
+  final Value<bool?> is_Validate_SerialNumber;
   final Value<DateTime?> created_date;
   final Value<DateTime?> updated_date;
   const TransactionsDBCompanion({
     this.key_id = const Value.absent(),
     this.item_id = const Value.absent(),
     this.count_ItemCode = const Value.absent(),
-    this.count_location_id = const Value.absent(),
+    this.itemDesc = const Value.absent(),
+    this.count_location_name = const Value.absent(),
     this.count_location_code = const Value.absent(),
     this.count_QuantityScan = const Value.absent(),
     this.serial_number = const Value.absent(),
     this.status_item = const Value.absent(),
     this.rssi = const Value.absent(),
+    this.is_Validate_Location = const Value.absent(),
+    this.is_Validate_ItemCode = const Value.absent(),
+    this.is_Validate_SerialNumber = const Value.absent(),
     this.created_date = const Value.absent(),
     this.updated_date = const Value.absent(),
   });
@@ -1311,12 +1470,16 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
     this.key_id = const Value.absent(),
     this.item_id = const Value.absent(),
     required String count_ItemCode,
-    this.count_location_id = const Value.absent(),
+    this.itemDesc = const Value.absent(),
+    this.count_location_name = const Value.absent(),
     this.count_location_code = const Value.absent(),
     this.count_QuantityScan = const Value.absent(),
     this.serial_number = const Value.absent(),
     this.status_item = const Value.absent(),
     this.rssi = const Value.absent(),
+    this.is_Validate_Location = const Value.absent(),
+    this.is_Validate_ItemCode = const Value.absent(),
+    this.is_Validate_SerialNumber = const Value.absent(),
     this.created_date = const Value.absent(),
     this.updated_date = const Value.absent(),
   }) : count_ItemCode = Value(count_ItemCode);
@@ -1324,12 +1487,16 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
     Expression<int>? key_id,
     Expression<int>? item_id,
     Expression<String>? count_ItemCode,
-    Expression<String>? count_location_id,
+    Expression<String>? itemDesc,
+    Expression<String>? count_location_name,
     Expression<String>? count_location_code,
     Expression<int>? count_QuantityScan,
     Expression<String>? serial_number,
     Expression<String>? status_item,
     Expression<String>? rssi,
+    Expression<bool>? is_Validate_Location,
+    Expression<bool>? is_Validate_ItemCode,
+    Expression<bool>? is_Validate_SerialNumber,
     Expression<DateTime>? created_date,
     Expression<DateTime>? updated_date,
   }) {
@@ -1337,13 +1504,21 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
       if (key_id != null) 'key_id': key_id,
       if (item_id != null) 'item_id': item_id,
       if (count_ItemCode != null) 'count_item_code': count_ItemCode,
-      if (count_location_id != null) 'count_location_id': count_location_id,
+      if (itemDesc != null) 'item_desc': itemDesc,
+      if (count_location_name != null)
+        'count_location_name': count_location_name,
       if (count_location_code != null)
         'count_location_code': count_location_code,
       if (count_QuantityScan != null) 'count_quantity_scan': count_QuantityScan,
       if (serial_number != null) 'serial_number': serial_number,
       if (status_item != null) 'status_item': status_item,
       if (rssi != null) 'rssi': rssi,
+      if (is_Validate_Location != null)
+        'is_validate_location': is_Validate_Location,
+      if (is_Validate_ItemCode != null)
+        'is_validate_item_code': is_Validate_ItemCode,
+      if (is_Validate_SerialNumber != null)
+        'is_validate_serial_number': is_Validate_SerialNumber,
       if (created_date != null) 'created_date': created_date,
       if (updated_date != null) 'updated_date': updated_date,
     });
@@ -1353,24 +1528,33 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
       {Value<int>? key_id,
       Value<int?>? item_id,
       Value<String>? count_ItemCode,
-      Value<String?>? count_location_id,
+      Value<String?>? itemDesc,
+      Value<String?>? count_location_name,
       Value<String?>? count_location_code,
       Value<int?>? count_QuantityScan,
       Value<String?>? serial_number,
       Value<String?>? status_item,
       Value<String?>? rssi,
+      Value<bool?>? is_Validate_Location,
+      Value<bool?>? is_Validate_ItemCode,
+      Value<bool?>? is_Validate_SerialNumber,
       Value<DateTime?>? created_date,
       Value<DateTime?>? updated_date}) {
     return TransactionsDBCompanion(
       key_id: key_id ?? this.key_id,
       item_id: item_id ?? this.item_id,
       count_ItemCode: count_ItemCode ?? this.count_ItemCode,
-      count_location_id: count_location_id ?? this.count_location_id,
+      itemDesc: itemDesc ?? this.itemDesc,
+      count_location_name: count_location_name ?? this.count_location_name,
       count_location_code: count_location_code ?? this.count_location_code,
       count_QuantityScan: count_QuantityScan ?? this.count_QuantityScan,
       serial_number: serial_number ?? this.serial_number,
       status_item: status_item ?? this.status_item,
       rssi: rssi ?? this.rssi,
+      is_Validate_Location: is_Validate_Location ?? this.is_Validate_Location,
+      is_Validate_ItemCode: is_Validate_ItemCode ?? this.is_Validate_ItemCode,
+      is_Validate_SerialNumber:
+          is_Validate_SerialNumber ?? this.is_Validate_SerialNumber,
       created_date: created_date ?? this.created_date,
       updated_date: updated_date ?? this.updated_date,
     );
@@ -1388,8 +1572,11 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
     if (count_ItemCode.present) {
       map['count_item_code'] = Variable<String>(count_ItemCode.value);
     }
-    if (count_location_id.present) {
-      map['count_location_id'] = Variable<String>(count_location_id.value);
+    if (itemDesc.present) {
+      map['item_desc'] = Variable<String>(itemDesc.value);
+    }
+    if (count_location_name.present) {
+      map['count_location_name'] = Variable<String>(count_location_name.value);
     }
     if (count_location_code.present) {
       map['count_location_code'] = Variable<String>(count_location_code.value);
@@ -1406,6 +1593,16 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
     if (rssi.present) {
       map['rssi'] = Variable<String>(rssi.value);
     }
+    if (is_Validate_Location.present) {
+      map['is_validate_location'] = Variable<bool>(is_Validate_Location.value);
+    }
+    if (is_Validate_ItemCode.present) {
+      map['is_validate_item_code'] = Variable<bool>(is_Validate_ItemCode.value);
+    }
+    if (is_Validate_SerialNumber.present) {
+      map['is_validate_serial_number'] =
+          Variable<bool>(is_Validate_SerialNumber.value);
+    }
     if (created_date.present) {
       map['created_date'] = Variable<DateTime>(created_date.value);
     }
@@ -1421,12 +1618,16 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
           ..write('key_id: $key_id, ')
           ..write('item_id: $item_id, ')
           ..write('count_ItemCode: $count_ItemCode, ')
-          ..write('count_location_id: $count_location_id, ')
+          ..write('itemDesc: $itemDesc, ')
+          ..write('count_location_name: $count_location_name, ')
           ..write('count_location_code: $count_location_code, ')
           ..write('count_QuantityScan: $count_QuantityScan, ')
           ..write('serial_number: $serial_number, ')
           ..write('status_item: $status_item, ')
           ..write('rssi: $rssi, ')
+          ..write('is_Validate_Location: $is_Validate_Location, ')
+          ..write('is_Validate_ItemCode: $is_Validate_ItemCode, ')
+          ..write('is_Validate_SerialNumber: $is_Validate_SerialNumber, ')
           ..write('created_date: $created_date, ')
           ..write('updated_date: $updated_date')
           ..write(')'))
@@ -2083,7 +2284,7 @@ class ViewTransactionsDBData extends DataClass {
   final int key_id;
   final int? item_id;
   final String count_ItemCode;
-  final String? count_location_id;
+  final String? count_location_name;
   final String? count_location_code;
   final int? count_QuantityScan;
   final String? status_item;
@@ -2091,18 +2292,26 @@ class ViewTransactionsDBData extends DataClass {
   final DateTime? created_date;
   final DateTime? updated_date;
   final String? serial_number;
+  final bool? is_Validate_Location;
+  final bool? is_Validate_ItemCode;
+  final bool? is_Validate_SerialNumber;
+  final String? itemDesc;
   const ViewTransactionsDBData(
       {required this.key_id,
       this.item_id,
       required this.count_ItemCode,
-      this.count_location_id,
+      this.count_location_name,
       this.count_location_code,
       this.count_QuantityScan,
       this.status_item,
       this.rssi,
       this.created_date,
       this.updated_date,
-      this.serial_number});
+      this.serial_number,
+      this.is_Validate_Location,
+      this.is_Validate_ItemCode,
+      this.is_Validate_SerialNumber,
+      this.itemDesc});
   factory ViewTransactionsDBData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -2110,8 +2319,8 @@ class ViewTransactionsDBData extends DataClass {
       key_id: serializer.fromJson<int>(json['key_id']),
       item_id: serializer.fromJson<int?>(json['item_id']),
       count_ItemCode: serializer.fromJson<String>(json['count_ItemCode']),
-      count_location_id:
-          serializer.fromJson<String?>(json['count_location_id']),
+      count_location_name:
+          serializer.fromJson<String?>(json['count_location_name']),
       count_location_code:
           serializer.fromJson<String?>(json['count_location_code']),
       count_QuantityScan: serializer.fromJson<int?>(json['count_QuantityScan']),
@@ -2120,6 +2329,13 @@ class ViewTransactionsDBData extends DataClass {
       created_date: serializer.fromJson<DateTime?>(json['created_date']),
       updated_date: serializer.fromJson<DateTime?>(json['updated_date']),
       serial_number: serializer.fromJson<String?>(json['serial_number']),
+      is_Validate_Location:
+          serializer.fromJson<bool?>(json['is_Validate_Location']),
+      is_Validate_ItemCode:
+          serializer.fromJson<bool?>(json['is_Validate_ItemCode']),
+      is_Validate_SerialNumber:
+          serializer.fromJson<bool?>(json['is_Validate_SerialNumber']),
+      itemDesc: serializer.fromJson<String?>(json['itemDesc']),
     );
   }
   @override
@@ -2129,7 +2345,7 @@ class ViewTransactionsDBData extends DataClass {
       'key_id': serializer.toJson<int>(key_id),
       'item_id': serializer.toJson<int?>(item_id),
       'count_ItemCode': serializer.toJson<String>(count_ItemCode),
-      'count_location_id': serializer.toJson<String?>(count_location_id),
+      'count_location_name': serializer.toJson<String?>(count_location_name),
       'count_location_code': serializer.toJson<String?>(count_location_code),
       'count_QuantityScan': serializer.toJson<int?>(count_QuantityScan),
       'status_item': serializer.toJson<String?>(status_item),
@@ -2137,6 +2353,11 @@ class ViewTransactionsDBData extends DataClass {
       'created_date': serializer.toJson<DateTime?>(created_date),
       'updated_date': serializer.toJson<DateTime?>(updated_date),
       'serial_number': serializer.toJson<String?>(serial_number),
+      'is_Validate_Location': serializer.toJson<bool?>(is_Validate_Location),
+      'is_Validate_ItemCode': serializer.toJson<bool?>(is_Validate_ItemCode),
+      'is_Validate_SerialNumber':
+          serializer.toJson<bool?>(is_Validate_SerialNumber),
+      'itemDesc': serializer.toJson<String?>(itemDesc),
     };
   }
 
@@ -2144,21 +2365,25 @@ class ViewTransactionsDBData extends DataClass {
           {int? key_id,
           Value<int?> item_id = const Value.absent(),
           String? count_ItemCode,
-          Value<String?> count_location_id = const Value.absent(),
+          Value<String?> count_location_name = const Value.absent(),
           Value<String?> count_location_code = const Value.absent(),
           Value<int?> count_QuantityScan = const Value.absent(),
           Value<String?> status_item = const Value.absent(),
           Value<String?> rssi = const Value.absent(),
           Value<DateTime?> created_date = const Value.absent(),
           Value<DateTime?> updated_date = const Value.absent(),
-          Value<String?> serial_number = const Value.absent()}) =>
+          Value<String?> serial_number = const Value.absent(),
+          Value<bool?> is_Validate_Location = const Value.absent(),
+          Value<bool?> is_Validate_ItemCode = const Value.absent(),
+          Value<bool?> is_Validate_SerialNumber = const Value.absent(),
+          Value<String?> itemDesc = const Value.absent()}) =>
       ViewTransactionsDBData(
         key_id: key_id ?? this.key_id,
         item_id: item_id.present ? item_id.value : this.item_id,
         count_ItemCode: count_ItemCode ?? this.count_ItemCode,
-        count_location_id: count_location_id.present
-            ? count_location_id.value
-            : this.count_location_id,
+        count_location_name: count_location_name.present
+            ? count_location_name.value
+            : this.count_location_name,
         count_location_code: count_location_code.present
             ? count_location_code.value
             : this.count_location_code,
@@ -2173,6 +2398,16 @@ class ViewTransactionsDBData extends DataClass {
             updated_date.present ? updated_date.value : this.updated_date,
         serial_number:
             serial_number.present ? serial_number.value : this.serial_number,
+        is_Validate_Location: is_Validate_Location.present
+            ? is_Validate_Location.value
+            : this.is_Validate_Location,
+        is_Validate_ItemCode: is_Validate_ItemCode.present
+            ? is_Validate_ItemCode.value
+            : this.is_Validate_ItemCode,
+        is_Validate_SerialNumber: is_Validate_SerialNumber.present
+            ? is_Validate_SerialNumber.value
+            : this.is_Validate_SerialNumber,
+        itemDesc: itemDesc.present ? itemDesc.value : this.itemDesc,
       );
   @override
   String toString() {
@@ -2180,14 +2415,18 @@ class ViewTransactionsDBData extends DataClass {
           ..write('key_id: $key_id, ')
           ..write('item_id: $item_id, ')
           ..write('count_ItemCode: $count_ItemCode, ')
-          ..write('count_location_id: $count_location_id, ')
+          ..write('count_location_name: $count_location_name, ')
           ..write('count_location_code: $count_location_code, ')
           ..write('count_QuantityScan: $count_QuantityScan, ')
           ..write('status_item: $status_item, ')
           ..write('rssi: $rssi, ')
           ..write('created_date: $created_date, ')
           ..write('updated_date: $updated_date, ')
-          ..write('serial_number: $serial_number')
+          ..write('serial_number: $serial_number, ')
+          ..write('is_Validate_Location: $is_Validate_Location, ')
+          ..write('is_Validate_ItemCode: $is_Validate_ItemCode, ')
+          ..write('is_Validate_SerialNumber: $is_Validate_SerialNumber, ')
+          ..write('itemDesc: $itemDesc')
           ..write(')'))
         .toString();
   }
@@ -2197,14 +2436,18 @@ class ViewTransactionsDBData extends DataClass {
       key_id,
       item_id,
       count_ItemCode,
-      count_location_id,
+      count_location_name,
       count_location_code,
       count_QuantityScan,
       status_item,
       rssi,
       created_date,
       updated_date,
-      serial_number);
+      serial_number,
+      is_Validate_Location,
+      is_Validate_ItemCode,
+      is_Validate_SerialNumber,
+      itemDesc);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2212,14 +2455,18 @@ class ViewTransactionsDBData extends DataClass {
           other.key_id == this.key_id &&
           other.item_id == this.item_id &&
           other.count_ItemCode == this.count_ItemCode &&
-          other.count_location_id == this.count_location_id &&
+          other.count_location_name == this.count_location_name &&
           other.count_location_code == this.count_location_code &&
           other.count_QuantityScan == this.count_QuantityScan &&
           other.status_item == this.status_item &&
           other.rssi == this.rssi &&
           other.created_date == this.created_date &&
           other.updated_date == this.updated_date &&
-          other.serial_number == this.serial_number);
+          other.serial_number == this.serial_number &&
+          other.is_Validate_Location == this.is_Validate_Location &&
+          other.is_Validate_ItemCode == this.is_Validate_ItemCode &&
+          other.is_Validate_SerialNumber == this.is_Validate_SerialNumber &&
+          other.itemDesc == this.itemDesc);
 }
 
 class $ViewTransactionsDBView
@@ -2236,14 +2483,18 @@ class $ViewTransactionsDBView
         key_id,
         item_id,
         count_ItemCode,
-        count_location_id,
+        count_location_name,
         count_location_code,
         count_QuantityScan,
         status_item,
         rssi,
         created_date,
         updated_date,
-        serial_number
+        serial_number,
+        is_Validate_Location,
+        is_Validate_ItemCode,
+        is_Validate_SerialNumber,
+        itemDesc
       ];
   @override
   String get aliasedName => _alias ?? entityName;
@@ -2263,8 +2514,8 @@ class $ViewTransactionsDBView
           .read(DriftSqlType.int, data['${effectivePrefix}item_id']),
       count_ItemCode: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}count_item_code'])!,
-      count_location_id: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}count_location_id']),
+      count_location_name: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}count_location_name']),
       count_location_code: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}count_location_code']),
       count_QuantityScan: attachedDatabase.typeMapping.read(
@@ -2279,6 +2530,15 @@ class $ViewTransactionsDBView
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_date']),
       serial_number: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}serial_number']),
+      is_Validate_Location: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}is_validate_location']),
+      is_Validate_ItemCode: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}is_validate_item_code']),
+      is_Validate_SerialNumber: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}is_validate_serial_number']),
+      itemDesc: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}item_desc']),
     );
   }
 
@@ -2294,9 +2554,9 @@ class $ViewTransactionsDBView
       'count_item_code', aliasedName, false,
       generatedAs: GeneratedAs(transactionsDB.count_ItemCode, false),
       type: DriftSqlType.string);
-  late final GeneratedColumn<String> count_location_id =
-      GeneratedColumn<String>('count_location_id', aliasedName, true,
-          generatedAs: GeneratedAs(transactionsDB.count_location_id, false),
+  late final GeneratedColumn<String> count_location_name =
+      GeneratedColumn<String>('count_location_name', aliasedName, true,
+          generatedAs: GeneratedAs(transactionsDB.count_location_name, false),
           type: DriftSqlType.string);
   late final GeneratedColumn<String> count_location_code =
       GeneratedColumn<String>('count_location_code', aliasedName, true,
@@ -2325,6 +2585,29 @@ class $ViewTransactionsDBView
   late final GeneratedColumn<String> serial_number = GeneratedColumn<String>(
       'serial_number', aliasedName, true,
       generatedAs: GeneratedAs(transactionsDB.serial_number, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> is_Validate_Location = GeneratedColumn<bool>(
+      'is_validate_location', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.is_Validate_Location, false),
+      type: DriftSqlType.bool,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_validate_location" IN (0, 1))'));
+  late final GeneratedColumn<bool> is_Validate_ItemCode = GeneratedColumn<bool>(
+      'is_validate_item_code', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.is_Validate_ItemCode, false),
+      type: DriftSqlType.bool,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_validate_item_code" IN (0, 1))'));
+  late final GeneratedColumn<bool> is_Validate_SerialNumber =
+      GeneratedColumn<bool>('is_validate_serial_number', aliasedName, true,
+          generatedAs:
+              GeneratedAs(transactionsDB.is_Validate_SerialNumber, false),
+          type: DriftSqlType.bool,
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'CHECK ("is_validate_serial_number" IN (0, 1))'));
+  late final GeneratedColumn<String> itemDesc = GeneratedColumn<String>(
+      'item_desc', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.itemDesc, false),
       type: DriftSqlType.string);
   @override
   $ViewTransactionsDBView createAlias(String alias) {
@@ -2744,12 +3027,16 @@ typedef $$TransactionsDBTableCreateCompanionBuilder = TransactionsDBCompanion
   Value<int> key_id,
   Value<int?> item_id,
   required String count_ItemCode,
-  Value<String?> count_location_id,
+  Value<String?> itemDesc,
+  Value<String?> count_location_name,
   Value<String?> count_location_code,
   Value<int?> count_QuantityScan,
   Value<String?> serial_number,
   Value<String?> status_item,
   Value<String?> rssi,
+  Value<bool?> is_Validate_Location,
+  Value<bool?> is_Validate_ItemCode,
+  Value<bool?> is_Validate_SerialNumber,
   Value<DateTime?> created_date,
   Value<DateTime?> updated_date,
 });
@@ -2758,12 +3045,16 @@ typedef $$TransactionsDBTableUpdateCompanionBuilder = TransactionsDBCompanion
   Value<int> key_id,
   Value<int?> item_id,
   Value<String> count_ItemCode,
-  Value<String?> count_location_id,
+  Value<String?> itemDesc,
+  Value<String?> count_location_name,
   Value<String?> count_location_code,
   Value<int?> count_QuantityScan,
   Value<String?> serial_number,
   Value<String?> status_item,
   Value<String?> rssi,
+  Value<bool?> is_Validate_Location,
+  Value<bool?> is_Validate_ItemCode,
+  Value<bool?> is_Validate_SerialNumber,
   Value<DateTime?> created_date,
   Value<DateTime?> updated_date,
 });
@@ -2786,8 +3077,13 @@ class $$TransactionsDBTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get count_location_id => $state.composableBuilder(
-      column: $state.table.count_location_id,
+  ColumnFilters<String> get itemDesc => $state.composableBuilder(
+      column: $state.table.itemDesc,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get count_location_name => $state.composableBuilder(
+      column: $state.table.count_location_name,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -2813,6 +3109,21 @@ class $$TransactionsDBTableFilterComposer
 
   ColumnFilters<String> get rssi => $state.composableBuilder(
       column: $state.table.rssi,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get is_Validate_Location => $state.composableBuilder(
+      column: $state.table.is_Validate_Location,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get is_Validate_ItemCode => $state.composableBuilder(
+      column: $state.table.is_Validate_ItemCode,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<bool> get is_Validate_SerialNumber => $state.composableBuilder(
+      column: $state.table.is_Validate_SerialNumber,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -2845,8 +3156,13 @@ class $$TransactionsDBTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get count_location_id => $state.composableBuilder(
-      column: $state.table.count_location_id,
+  ColumnOrderings<String> get itemDesc => $state.composableBuilder(
+      column: $state.table.itemDesc,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get count_location_name => $state.composableBuilder(
+      column: $state.table.count_location_name,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -2874,6 +3190,22 @@ class $$TransactionsDBTableOrderingComposer
       column: $state.table.rssi,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get is_Validate_Location => $state.composableBuilder(
+      column: $state.table.is_Validate_Location,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get is_Validate_ItemCode => $state.composableBuilder(
+      column: $state.table.is_Validate_ItemCode,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get is_Validate_SerialNumber =>
+      $state.composableBuilder(
+          column: $state.table.is_Validate_SerialNumber,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<DateTime> get created_date => $state.composableBuilder(
       column: $state.table.created_date,
@@ -2912,12 +3244,16 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
             Value<int> key_id = const Value.absent(),
             Value<int?> item_id = const Value.absent(),
             Value<String> count_ItemCode = const Value.absent(),
-            Value<String?> count_location_id = const Value.absent(),
+            Value<String?> itemDesc = const Value.absent(),
+            Value<String?> count_location_name = const Value.absent(),
             Value<String?> count_location_code = const Value.absent(),
             Value<int?> count_QuantityScan = const Value.absent(),
             Value<String?> serial_number = const Value.absent(),
             Value<String?> status_item = const Value.absent(),
             Value<String?> rssi = const Value.absent(),
+            Value<bool?> is_Validate_Location = const Value.absent(),
+            Value<bool?> is_Validate_ItemCode = const Value.absent(),
+            Value<bool?> is_Validate_SerialNumber = const Value.absent(),
             Value<DateTime?> created_date = const Value.absent(),
             Value<DateTime?> updated_date = const Value.absent(),
           }) =>
@@ -2925,12 +3261,16 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
             key_id: key_id,
             item_id: item_id,
             count_ItemCode: count_ItemCode,
-            count_location_id: count_location_id,
+            itemDesc: itemDesc,
+            count_location_name: count_location_name,
             count_location_code: count_location_code,
             count_QuantityScan: count_QuantityScan,
             serial_number: serial_number,
             status_item: status_item,
             rssi: rssi,
+            is_Validate_Location: is_Validate_Location,
+            is_Validate_ItemCode: is_Validate_ItemCode,
+            is_Validate_SerialNumber: is_Validate_SerialNumber,
             created_date: created_date,
             updated_date: updated_date,
           ),
@@ -2938,12 +3278,16 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
             Value<int> key_id = const Value.absent(),
             Value<int?> item_id = const Value.absent(),
             required String count_ItemCode,
-            Value<String?> count_location_id = const Value.absent(),
+            Value<String?> itemDesc = const Value.absent(),
+            Value<String?> count_location_name = const Value.absent(),
             Value<String?> count_location_code = const Value.absent(),
             Value<int?> count_QuantityScan = const Value.absent(),
             Value<String?> serial_number = const Value.absent(),
             Value<String?> status_item = const Value.absent(),
             Value<String?> rssi = const Value.absent(),
+            Value<bool?> is_Validate_Location = const Value.absent(),
+            Value<bool?> is_Validate_ItemCode = const Value.absent(),
+            Value<bool?> is_Validate_SerialNumber = const Value.absent(),
             Value<DateTime?> created_date = const Value.absent(),
             Value<DateTime?> updated_date = const Value.absent(),
           }) =>
@@ -2951,12 +3295,16 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
             key_id: key_id,
             item_id: item_id,
             count_ItemCode: count_ItemCode,
-            count_location_id: count_location_id,
+            itemDesc: itemDesc,
+            count_location_name: count_location_name,
             count_location_code: count_location_code,
             count_QuantityScan: count_QuantityScan,
             serial_number: serial_number,
             status_item: status_item,
             rssi: rssi,
+            is_Validate_Location: is_Validate_Location,
+            is_Validate_ItemCode: is_Validate_ItemCode,
+            is_Validate_SerialNumber: is_Validate_SerialNumber,
             created_date: created_date,
             updated_date: updated_date,
           ),

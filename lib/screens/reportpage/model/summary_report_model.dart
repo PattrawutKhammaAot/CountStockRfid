@@ -10,17 +10,19 @@ SumReportModel totalScanModelFromJson(String str) =>
 String totalScanModelToJson(SumReportModel data) => json.encode(data.toJson());
 
 class SumReportModel {
-  int? totalMaster;
-  int? totalLoss;
-  int? totalFound;
+  int? importMaster;
+  int? location;
+  int? scanned;
+  int? notScanned;
   bool? statusCode;
   String? message;
 
   SumReportModel({
-    this.totalMaster,
-    this.totalLoss,
-    this.totalFound,
+    this.importMaster,
+    this.location,
+    this.scanned,
     this.statusCode,
+    this.notScanned,
     this.message,
   });
 
@@ -32,25 +34,25 @@ class SumReportModel {
     String? message,
   }) =>
       SumReportModel(
-        totalMaster: totalMaster ?? this.totalMaster,
-        totalLoss: totalLoss ?? this.totalLoss,
-        totalFound: totalFound ?? this.totalFound,
+        importMaster: totalMaster ?? this.importMaster,
+        location: totalLoss ?? this.location,
+        scanned: totalFound ?? this.scanned,
         statusCode: statusCode ?? this.statusCode,
         message: message ?? this.message,
       );
 
   factory SumReportModel.fromJson(Map<String, dynamic> json) => SumReportModel(
-        totalMaster: json["total_master"],
-        totalLoss: json["total_loss"],
-        totalFound: json["total_found"],
+        importMaster: json["total_master"],
+        location: json["total_loss"],
+        scanned: json["total_found"],
         statusCode: json["status_code"],
         message: json["message"],
       );
 
   Map<String, dynamic> toJson() => {
-        "total_master": totalMaster,
-        "total_loss": totalLoss,
-        "total_found": totalFound,
+        "total_master": importMaster,
+        "total_loss": location,
+        "total_found": scanned,
         "status_code": statusCode,
         "message": message,
       };
