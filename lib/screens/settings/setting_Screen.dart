@@ -68,6 +68,12 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.blue[700],
+        title: Text(appLocalizations.menu_setting,
+            style: TextStyle(color: Colors.white)),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

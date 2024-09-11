@@ -27,6 +27,7 @@ class TransactionsDB extends Table {
   BoolColumn get is_Validate_Location => boolean().nullable()();
   BoolColumn get is_Validate_ItemCode => boolean().nullable()();
   BoolColumn get is_Validate_SerialNumber => boolean().nullable()();
+  TextColumn get scan_by => text().nullable()();
   DateTimeColumn get created_date => dateTime().nullable()();
   DateTimeColumn get updated_date => dateTime().nullable()();
 }
@@ -51,6 +52,7 @@ abstract class ViewTransactionsDB extends View {
         transactionsDB.is_Validate_ItemCode,
         transactionsDB.item_id,
         transactionsDB.itemDesc,
+        transactionsDB.scan_by,
       ]).from(transactionsDB);
 }
 
@@ -79,6 +81,22 @@ class Transactions {
               .firstOrNull
               ?.is_validate ??
           false;
+      final insertToDB = TransactionsDBCompanion(
+        item_id: Value(0),
+        count_ItemCode: Value(data.count_ItemCode),
+        itemDesc: Value(itemDesc.toString()),
+        count_location_name: Value(data.count_location_name),
+        count_location_code: Value(data.count_location_code),
+        count_QuantityScan: Value(data.count_QuantityScan ?? 1),
+        serial_number: Value(data.serial_number),
+        status_item: Value(data.status_item ?? ""),
+        rssi: Value(data.rssi),
+        created_date: Value(data.created_date),
+        is_Validate_Location: Value(isValidateLocation),
+        is_Validate_ItemCode: Value(isValidateItemCode),
+        is_Validate_SerialNumber: Value(isValidateSerialNumber),
+        scan_by: Value(data.scan_by),
+      );
 
       if (isValidateItemCode && isValidateLocation && isValidateSerialNumber) {
         //validate ทั้งหมด
@@ -111,24 +129,7 @@ class Transactions {
                     .equals(isValidateSerialNumber)))
               .get();
           if (checkDuplicate.isEmpty) {
-            final insert = await tranDb
-                .into(appDb.transactionsDB)
-                .insert(TransactionsDBCompanion(
-                  item_id: Value(0),
-                  count_ItemCode: Value(data.count_ItemCode),
-                  itemDesc: Value(itemDesc.toString()),
-                  count_location_name: Value(data.count_location_name),
-                  count_location_code: Value(data.count_location_code),
-                  count_QuantityScan: Value(data.count_QuantityScan ?? 1),
-                  serial_number: Value(data.serial_number),
-                  status_item: Value(data.status_item ?? ""),
-                  rssi: Value(data.rssi),
-                  created_date: Value(DateTime.tryParse(
-                      DateFormat("yyyy-MM-dd HH:mm").format(DateTime.now()))),
-                  is_Validate_Location: Value(isValidateLocation),
-                  is_Validate_ItemCode: Value(isValidateItemCode),
-                  is_Validate_SerialNumber: Value(isValidateSerialNumber),
-                ));
+            await tranDb.into(appDb.transactionsDB).insert(insertToDB);
           } else {
             final update = await (tranDb.update(tranDb.transactionsDB)
                   ..where(
@@ -175,24 +176,8 @@ class Transactions {
                       .equals(isValidateSerialNumber)))
                 .get();
             if (checkDuplicate.isEmpty) {
-              final insert = await tranDb
-                  .into(appDb.transactionsDB)
-                  .insert(TransactionsDBCompanion(
-                    item_id: Value(0),
-                    count_ItemCode: Value(data.count_ItemCode),
-                    itemDesc: Value(itemDesc.toString()),
-                    count_location_name: Value(data.count_location_name),
-                    count_location_code: Value(data.count_location_code),
-                    count_QuantityScan: Value(data.count_QuantityScan ?? 1),
-                    serial_number: Value(data.serial_number),
-                    status_item: Value(data.status_item ?? ""),
-                    rssi: Value(data.rssi),
-                    created_date: Value(DateTime.tryParse(
-                        DateFormat("yyyy-MM-dd HH:mm").format(DateTime.now()))),
-                    is_Validate_Location: Value(isValidateLocation),
-                    is_Validate_ItemCode: Value(isValidateItemCode),
-                    is_Validate_SerialNumber: Value(isValidateSerialNumber),
-                  ));
+              final insert =
+                  await tranDb.into(appDb.transactionsDB).insert(insertToDB);
             } else {
               final update = await (tranDb.update(tranDb.transactionsDB)
                     ..where((tbl) => tbl.count_location_code
@@ -239,24 +224,8 @@ class Transactions {
                       .equals(isValidateSerialNumber)))
                 .get();
             if (checkDuplicate.isEmpty) {
-              final insert = await tranDb
-                  .into(appDb.transactionsDB)
-                  .insert(TransactionsDBCompanion(
-                    item_id: Value(0),
-                    count_ItemCode: Value(data.count_ItemCode),
-                    itemDesc: Value(itemDesc.toString()),
-                    count_location_name: Value(data.count_location_name),
-                    count_location_code: Value(data.count_location_code),
-                    count_QuantityScan: Value(data.count_QuantityScan ?? 1),
-                    serial_number: Value(data.serial_number),
-                    status_item: Value(data.status_item ?? ""),
-                    rssi: Value(data.rssi),
-                    created_date: Value(DateTime.tryParse(
-                        DateFormat("yyyy-MM-dd HH:mm").format(DateTime.now()))),
-                    is_Validate_Location: Value(isValidateLocation),
-                    is_Validate_ItemCode: Value(isValidateItemCode),
-                    is_Validate_SerialNumber: Value(isValidateSerialNumber),
-                  ));
+              final insert =
+                  await tranDb.into(appDb.transactionsDB).insert(insertToDB);
             } else {
               final update = await (tranDb.update(tranDb.transactionsDB)
                     ..where(
@@ -302,24 +271,8 @@ class Transactions {
                     tbl.is_Validate_Location.equals(isValidateLocation)))
               .get();
           if (checkDuplicate.isEmpty) {
-            final insert = await tranDb
-                .into(appDb.transactionsDB)
-                .insert(TransactionsDBCompanion(
-                  item_id: Value(0),
-                  count_ItemCode: Value(data.count_ItemCode),
-                  itemDesc: Value(itemDesc.toString()),
-                  count_location_name: Value(data.count_location_name),
-                  count_location_code: Value(data.count_location_code),
-                  count_QuantityScan: Value(data.count_QuantityScan ?? 1),
-                  serial_number: Value(data.serial_number),
-                  status_item: Value(data.status_item ?? ""),
-                  rssi: Value(data.rssi),
-                  created_date: Value(DateTime.tryParse(
-                      DateFormat("yyyy-MM-dd HH:mm").format(DateTime.now()))),
-                  is_Validate_Location: Value(isValidateLocation),
-                  is_Validate_ItemCode: Value(isValidateItemCode),
-                  is_Validate_SerialNumber: Value(isValidateSerialNumber),
-                ));
+            final insert =
+                await tranDb.into(appDb.transactionsDB).insert(insertToDB);
           } else {
             final update = await (tranDb.update(tranDb.transactionsDB)
                   ..where(
@@ -357,24 +310,8 @@ class Transactions {
                     .equals(isValidateSerialNumber)))
               .get();
           if (checkDuplicate.isEmpty) {
-            final insert = await tranDb
-                .into(appDb.transactionsDB)
-                .insert(TransactionsDBCompanion(
-                  item_id: Value(0),
-                  count_ItemCode: Value(data.count_ItemCode),
-                  itemDesc: Value(itemDesc.toString()),
-                  count_location_name: Value(data.count_location_name),
-                  count_location_code: Value(data.count_location_code),
-                  count_QuantityScan: Value(data.count_QuantityScan ?? 1),
-                  serial_number: Value(data.serial_number),
-                  status_item: Value(data.status_item ?? ""),
-                  rssi: Value(data.rssi),
-                  created_date: Value(DateTime.tryParse(
-                      DateFormat("yyyy-MM-dd HH:mm").format(DateTime.now()))),
-                  is_Validate_Location: Value(isValidateLocation),
-                  is_Validate_ItemCode: Value(isValidateItemCode),
-                  is_Validate_SerialNumber: Value(isValidateSerialNumber),
-                ));
+            final insert =
+                await tranDb.into(appDb.transactionsDB).insert(insertToDB);
           } else {
             final update = await (tranDb.update(tranDb.transactionsDB)
                   ..where(
@@ -412,24 +349,8 @@ class Transactions {
                     tbl.is_Validate_Location.equals(isValidateLocation)))
               .get();
           if (checkDuplicate.isEmpty) {
-            final insert = await tranDb
-                .into(appDb.transactionsDB)
-                .insert(TransactionsDBCompanion(
-                  item_id: Value(0),
-                  count_ItemCode: Value(data.count_ItemCode),
-                  itemDesc: Value(itemDesc.toString()),
-                  count_location_name: Value(data.count_location_name),
-                  count_location_code: Value(data.count_location_code),
-                  count_QuantityScan: Value(data.count_QuantityScan ?? 1),
-                  serial_number: Value(data.serial_number),
-                  status_item: Value(data.status_item ?? ""),
-                  rssi: Value(data.rssi),
-                  created_date: Value(DateTime.tryParse(
-                      DateFormat("yyyy-MM-dd HH:mm").format(DateTime.now()))),
-                  is_Validate_Location: Value(isValidateLocation),
-                  is_Validate_ItemCode: Value(isValidateItemCode),
-                  is_Validate_SerialNumber: Value(isValidateSerialNumber),
-                ));
+            final insert =
+                await tranDb.into(appDb.transactionsDB).insert(insertToDB);
           } else {
             final update = await (tranDb.update(tranDb.transactionsDB)
                   ..where((tbl) => tbl.count_location_code
@@ -467,24 +388,8 @@ class Transactions {
               .get();
 
           if (checkDuplicate.isEmpty) {
-            final insert = await tranDb
-                .into(appDb.transactionsDB)
-                .insert(TransactionsDBCompanion(
-                  item_id: Value(0),
-                  count_ItemCode: Value(data.count_ItemCode),
-                  itemDesc: Value(itemDesc.toString()),
-                  count_location_name: Value(data.count_location_name),
-                  count_location_code: Value(data.count_location_code),
-                  count_QuantityScan: Value(data.count_QuantityScan ?? 1),
-                  serial_number: Value(data.serial_number),
-                  status_item: Value(data.status_item ?? ""),
-                  rssi: Value(data.rssi),
-                  created_date: Value(DateTime.tryParse(
-                      DateFormat("yyyy-MM-dd HH:mm").format(DateTime.now()))),
-                  is_Validate_Location: Value(isValidateLocation),
-                  is_Validate_ItemCode: Value(isValidateItemCode),
-                  is_Validate_SerialNumber: Value(isValidateSerialNumber),
-                ));
+            final insert =
+                await tranDb.into(appDb.transactionsDB).insert(insertToDB);
           } else {
             final update = await (tranDb.update(tranDb.transactionsDB)
                   ..where(
@@ -518,24 +423,8 @@ class Transactions {
                   tbl.serial_number.equals(data.serial_number ?? "1234")))
             .get();
         if (checkDuplicate.isEmpty) {
-          final insert = await tranDb
-              .into(appDb.transactionsDB)
-              .insert(TransactionsDBCompanion(
-                item_id: Value(0),
-                count_ItemCode: Value(data.count_ItemCode),
-                itemDesc: Value(itemDesc.toString()),
-                count_location_name: Value(data.count_location_name),
-                count_location_code: Value(data.count_location_code),
-                count_QuantityScan: Value(data.count_QuantityScan ?? 1),
-                serial_number: Value(data.serial_number),
-                status_item: Value(data.status_item ?? ""),
-                rssi: Value(data.rssi),
-                created_date: Value(DateTime.tryParse(
-                    DateFormat("yyyy-MM-dd HH:mm").format(DateTime.now()))),
-                is_Validate_Location: Value(isValidateLocation),
-                is_Validate_ItemCode: Value(isValidateItemCode),
-                is_Validate_SerialNumber: Value(isValidateSerialNumber),
-              ));
+          final insert =
+              await tranDb.into(appDb.transactionsDB).insert(insertToDB);
         } else {
           final update = await (tranDb.update(tranDb.transactionsDB)
                 ..where((tbl) => tbl.count_ItemCode.equals(data.count_ItemCode))
@@ -579,33 +468,46 @@ class Transactions {
       result.removeWhere((qry) => qry.name == 'Item Code');
 
       if (result.isNotEmpty) {
-        final queryLocation = await appDb.locationMasterDB.select().get();
+        final queryLocation =
+            await (appDb.select(appDb.locationMasterDB, distinct: true)
+                  ..addColumns([
+                    appDb.locationMasterDB.location_code,
+                    appDb.locationMasterDB.location_name
+                  ]))
+                .get();
 
+        final uniqueLocationSet = <String>{};
+
+        final uniqueLocation = queryLocation
+            .where(
+                (e) => e.location_code != null && e.location_code!.isNotEmpty)
+            .where((e) =>
+                uniqueLocationSet.add(e.location_code! + e.location_name!))
+            .map((e) => ListDropdownModel(
+                  location_code: e.location_code!,
+                  location_name: e.location_name!,
+                ))
+            .toList();
         final querySerialNumber =
             await (appDb.select(appDb.itemMasterDB, distinct: true)
                   ..addColumns([appDb.itemMasterDB.SerialNumber]))
                 .get();
-
+        final uniqueSerialNumbers = querySerialNumber
+            .where((e) => e.SerialNumber != null && e.SerialNumber!.isNotEmpty)
+            .map((e) => e.SerialNumber!)
+            .toSet() // ใช้ Set เพื่อกรองค่าที่ซ้ำกันออก
+            .map((serial) => ListDropdownModel(
+                  location_code: serial,
+                  location_name: serial,
+                ))
+            .toList();
         list = result
             .map((e) => dropdownModel(
                   item_id: e.item_id,
                   name: e.name!,
                   valueDropdown: e.name == 'Location Code'
-                      ? queryLocation
-                          .map((e) => ListDropdownModel(
-                                location_code: e.location_code!,
-                                location_name: e.location_name!,
-                              ))
-                          .toList()
-                      : querySerialNumber
-                          .where((e) =>
-                              e.SerialNumber != null &&
-                              e.SerialNumber!.isNotEmpty)
-                          .map((e) => ListDropdownModel(
-                                location_code: e.SerialNumber!,
-                                location_name: e.SerialNumber!,
-                              ))
-                          .toList(),
+                      ? uniqueLocation
+                      : uniqueSerialNumbers,
                   is_validate: e.is_validate,
                   is_active: e.is_active,
                 ))
@@ -614,6 +516,8 @@ class Transactions {
 
       return list;
     } catch (e, s) {
+      print(e);
+      print(s);
       throw Exception();
     }
   }
@@ -635,6 +539,18 @@ class Transactions {
         print("object");
         return "";
       }
+    } catch (e, s) {
+      throw Exception();
+    }
+  }
+
+  Future<void> updateEdit(TransactionsDBData data) async {
+    try {
+      final update = await (tranDb.update(tranDb.transactionsDB)
+            ..where((tbl) => tbl.key_id.equals(data.key_id)))
+          .write(TransactionsDBCompanion(
+              status_item: Value(data.status_item),
+              updated_date: Value(DateTime.now())));
     } catch (e, s) {
       throw Exception();
     }

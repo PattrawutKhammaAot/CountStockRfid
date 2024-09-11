@@ -223,8 +223,9 @@ class ItemMaster {
 
   Future<String> getQtyPlan(String itemCode) async {
     final ItemMasterDBData item = await (_db.select(_db.itemMasterDB)
-          ..where((tbl) => tbl.ItemCode.equals(itemCode.toUpperCase())))
-        .getSingle();
+              ..where((tbl) => tbl.ItemCode.equals(itemCode.toUpperCase())))
+            .getSingleOrNull() ??
+        ItemMasterDBData(item_id: 0, Quantity: "0");
     return item.Quantity!;
   }
 }

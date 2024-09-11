@@ -13,11 +13,7 @@ class GridDataSource extends DataGridSource {
                 DataGridCell<String>(
                     columnName: 'rfid_tag', value: _item.rfid_tag),
                 DataGridCell(columnName: 'RSSI', value: "${_item.rssi} dBm"),
-                DataGridCell<String>(
-                    columnName: 'status',
-                    value: _item.status == "Found"
-                        ? appLocalizations.txt_found
-                        : appLocalizations.txt_not_found),
+
                 // DataGridCell<String>(columnName: 't1', value: _item.Thickness1),
                 // DataGridCell<String>(columnName: 't2', value: _item.Thickness2),
                 // DataGridCell<String>(columnName: 't3', value: _item.Thickness3),
@@ -39,43 +35,23 @@ class GridDataSource extends DataGridSource {
 
   @override
   List<DataGridRow> get rows => _employees;
-
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
       cells: row.getCells().map<Widget>(
         (dataGridCell) {
           Color getColor() {
-            if ((dataGridCell.columnName == 'status' &&
-                    dataGridCell.value == 'Not Found') ||
-                (dataGridCell.columnName == 'status' &&
-                    dataGridCell.value == 'ไม่พบ')) {
+            if (dataGridCell.columnName == 'rfid_tag' &&
+                dataGridCell.value == 'Not Found') {
               return Colors.red;
-            } else if ((dataGridCell.columnName == 'rfid_tag' &&
-                    row
-                            .getCells()
-                            .firstWhere((cell) => cell.columnName == 'status')
-                            .value ==
-                        'Not Found') ||
-                (dataGridCell.columnName == 'rfid_tag' &&
-                    row
-                            .getCells()
-                            .firstWhere((cell) => cell.columnName == 'status')
-                            .value ==
-                        'ไม่พบ')) {
+            } else if (dataGridCell.columnName == 'rfid_tag' &&
+                dataGridCell.value == 'ไม่พบ') {
               return Colors.red;
-            } else if ((dataGridCell.columnName == 'RSSI' &&
-                    row
-                            .getCells()
-                            .firstWhere((cell) => cell.columnName == 'status')
-                            .value ==
-                        'Not Found') ||
-                (dataGridCell.columnName == 'RSSI' &&
-                    row
-                            .getCells()
-                            .firstWhere((cell) => cell.columnName == 'status')
-                            .value ==
-                        'ไม่พบ')) {
+            } else if (dataGridCell.columnName == 'RSSI' &&
+                dataGridCell.value == 'Not Found') {
+              return Colors.red;
+            } else if (dataGridCell.columnName == 'RSSI' &&
+                dataGridCell.value == 'ไม่พบ') {
               return Colors.red;
             } else {
               return Colors.green;
@@ -83,36 +59,17 @@ class GridDataSource extends DataGridSource {
           }
 
           Color getTextColor() {
-            if ((dataGridCell.columnName == 'status' &&
-                    dataGridCell.value == 'Not Found') ||
-                (dataGridCell.columnName == 'status' &&
-                    dataGridCell.value == 'ไม่พบ')) {
+            if (dataGridCell.columnName == 'rfid_tag' &&
+                dataGridCell.value == 'Not Found') {
               return Colors.white;
-            } else if ((dataGridCell.columnName == 'rfid_tag' &&
-                    row
-                            .getCells()
-                            .firstWhere((cell) => cell.columnName == 'status')
-                            .value ==
-                        'Not Found') ||
-                (dataGridCell.columnName == 'rfid_tag' &&
-                    row
-                            .getCells()
-                            .firstWhere((cell) => cell.columnName == 'status')
-                            .value ==
-                        'ไม่พบ')) {
+            } else if (dataGridCell.columnName == 'rfid_tag' &&
+                dataGridCell.value == 'ไม่พบ') {
               return Colors.white;
-            } else if ((dataGridCell.columnName == 'RSSI' &&
-                    row
-                            .getCells()
-                            .firstWhere((cell) => cell.columnName == 'status')
-                            .value ==
-                        'Not Found') ||
-                (dataGridCell.columnName == 'RSSI' &&
-                    row
-                            .getCells()
-                            .firstWhere((cell) => cell.columnName == 'status')
-                            .value ==
-                        'ไม่พบ')) {
+            } else if (dataGridCell.columnName == 'RSSI' &&
+                dataGridCell.value == 'Not Found') {
+              return Colors.white;
+            } else if (dataGridCell.columnName == 'RSSI' &&
+                dataGridCell.value == 'ไม่พบ') {
               return Colors.white;
             }
 
@@ -122,7 +79,7 @@ class GridDataSource extends DataGridSource {
           return Container(
             color: getColor(),
             alignment: (dataGridCell.columnName == 'rfid_tag' ||
-                    dataGridCell.columnName == 'status')
+                    dataGridCell.columnName == 'RSSI')
                 ? Alignment.center
                 : Alignment.center,
             child: Text(

@@ -1,6 +1,8 @@
 import 'package:countstock_rfid/main.dart';
 import 'package:drift/drift.dart';
 
+import '../screens/report_old/model/summary_report_model.dart';
+
 class ReportDB {
   Future<int> getLocationMaster() async {
     try {

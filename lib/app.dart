@@ -1,3 +1,6 @@
+import 'package:countstock_rfid/routes/routes.dart';
+import 'package:countstock_rfid/screens/homepage/dashboard.dart';
+import 'package:countstock_rfid/screens/homepage/homePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -15,6 +18,7 @@ import 'package:countstock_rfid/screens/homepage/homepageControl.dart';
 import 'package:countstock_rfid/screens/scan/scanScreen.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 enum FetchStatus {
   fetching,
@@ -113,6 +117,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             BlocProvider<SearchBloc>(
               create: (_) => SearchBloc(),
             ),
+
             // BlocProvider<MasterRfidBloc>(
             //   create: (_) => MasterRfidBloc(),
             // ),
@@ -141,6 +146,7 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   final easyLoading = EasyLoading.init();
   Locale _locale = Locale('en');
+  RouteObserver<PageRoute> routeObserve = RouteObserver<PageRoute>();
   @override
   void initState() {
     AppData.getLocale().then((e) {
@@ -161,22 +167,26 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: true,
-      builder: (context, child) {
-        appLocalizations = AppLocalizations.of(context)!;
-        child = easyLoading(context, child);
-        return child;
-      },
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      locale: _locale,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: HomePageControl(),
+    return ChangeNotifierProvider(
+      create: (context) => DashboardNotifier(context.read<ReportBloc>()),
+      child: MaterialApp(
+        builder: (context, child) {
+          appLocalizations = AppLocalizations.of(context)!;
+          child = easyLoading(context, child);
+          return child;
+        },
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        navigatorObservers: [routeObserve],
+        locale: _locale,
+        initialRoute: Routes.home,
+        routes: Routes.getRoutes(),
+        supportedLocales: AppLocalizations.supportedLocales,
+      ),
     );
   }
 }

@@ -8,3 +8,9 @@ const Color pinkPaletteColor_not_found = Color(0xFFc06b84);
 const Color pinkPaletteColor1_not_scan = Color(0xFFf7b095);
 
 const String txtPattern = '|';
+
+class StatusAssets {
+  static String status_normal = "Normal";
+  static String status_dmg = "Damage";
+  static String status_loss = "Loss";
+}

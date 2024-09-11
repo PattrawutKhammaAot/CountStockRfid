@@ -92,7 +92,8 @@
      "settings_txt_clear_title_warning":"Warning !!!",
     "settings_txt_delete_data":"Delete Data",
      "settings_txt_clear_content":"Are you sure you want to delete all data?",
-     "success":"Success !"
+     "success":"Success !",
+     "count":"Count Assets"
 
 
 }

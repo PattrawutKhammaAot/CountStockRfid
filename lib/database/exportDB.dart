@@ -133,7 +133,8 @@ class ExportDB {
         final cell6 = sheet.getRangeByIndex(i + 2, 7);
         cell6.setText(username);
         final cell7 = sheet.getRangeByIndex(i + 2, 8);
-        cell7.setText(item[i].created_date.toString());
+        cell7.setText(DateFormat('dd-MM-yyyy hh:mm')
+            .format(item[i].created_date ?? DateTime.now()));
         cell7.columnWidth = 15;
         final cell8 = sheet.getRangeByIndex(i + 2, 9);
         cell8.setText("Status");
@@ -193,7 +194,8 @@ class ExportDB {
           item[i].count_QuantityScan.toString(),
           await itemMasterDB.getQtyPlan(item[i].count_ItemCode),
           username,
-          item[i].created_date.toString(),
+          DateFormat('dd-MM-yyyy hh:mm')
+              .format(item[i].created_date ?? DateTime.now()),
           "Status",
           "",
           "",

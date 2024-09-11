@@ -983,6 +983,12 @@ class $TransactionsDBTable extends TransactionsDB
           requiredDuringInsert: false,
           defaultConstraints: GeneratedColumn.constraintIsAlways(
               'CHECK ("is_validate_serial_number" IN (0, 1))'));
+  static const VerificationMeta _scan_byMeta =
+      const VerificationMeta('scan_by');
+  @override
+  late final GeneratedColumn<String> scan_by = GeneratedColumn<String>(
+      'scan_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _created_dateMeta =
       const VerificationMeta('created_date');
   @override
@@ -1010,6 +1016,7 @@ class $TransactionsDBTable extends TransactionsDB
         is_Validate_Location,
         is_Validate_ItemCode,
         is_Validate_SerialNumber,
+        scan_by,
         created_date,
         updated_date
       ];
@@ -1096,6 +1103,10 @@ class $TransactionsDBTable extends TransactionsDB
               data['is_validate_serial_number']!,
               _is_Validate_SerialNumberMeta));
     }
+    if (data.containsKey('scan_by')) {
+      context.handle(_scan_byMeta,
+          scan_by.isAcceptableOrUnknown(data['scan_by']!, _scan_byMeta));
+    }
     if (data.containsKey('created_date')) {
       context.handle(
           _created_dateMeta,
@@ -1144,6 +1155,8 @@ class $TransactionsDBTable extends TransactionsDB
       is_Validate_SerialNumber: attachedDatabase.typeMapping.read(
           DriftSqlType.bool,
           data['${effectivePrefix}is_validate_serial_number']),
+      scan_by: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}scan_by']),
       created_date: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_date']),
       updated_date: attachedDatabase.typeMapping
@@ -1172,6 +1185,7 @@ class TransactionsDBData extends DataClass
   final bool? is_Validate_Location;
   final bool? is_Validate_ItemCode;
   final bool? is_Validate_SerialNumber;
+  final String? scan_by;
   final DateTime? created_date;
   final DateTime? updated_date;
   const TransactionsDBData(
@@ -1188,6 +1202,7 @@ class TransactionsDBData extends DataClass
       this.is_Validate_Location,
       this.is_Validate_ItemCode,
       this.is_Validate_SerialNumber,
+      this.scan_by,
       this.created_date,
       this.updated_date});
   @override
@@ -1228,6 +1243,9 @@ class TransactionsDBData extends DataClass
     if (!nullToAbsent || is_Validate_SerialNumber != null) {
       map['is_validate_serial_number'] =
           Variable<bool>(is_Validate_SerialNumber);
+    }
+    if (!nullToAbsent || scan_by != null) {
+      map['scan_by'] = Variable<String>(scan_by);
     }
     if (!nullToAbsent || created_date != null) {
       map['created_date'] = Variable<DateTime>(created_date);
@@ -1273,6 +1291,9 @@ class TransactionsDBData extends DataClass
       is_Validate_SerialNumber: is_Validate_SerialNumber == null && nullToAbsent
           ? const Value.absent()
           : Value(is_Validate_SerialNumber),
+      scan_by: scan_by == null && nullToAbsent
+          ? const Value.absent()
+          : Value(scan_by),
       created_date: created_date == null && nullToAbsent
           ? const Value.absent()
           : Value(created_date),
@@ -1304,6 +1325,7 @@ class TransactionsDBData extends DataClass
           serializer.fromJson<bool?>(json['is_Validate_ItemCode']),
       is_Validate_SerialNumber:
           serializer.fromJson<bool?>(json['is_Validate_SerialNumber']),
+      scan_by: serializer.fromJson<String?>(json['scan_by']),
       created_date: serializer.fromJson<DateTime?>(json['created_date']),
       updated_date: serializer.fromJson<DateTime?>(json['updated_date']),
     );
@@ -1326,6 +1348,7 @@ class TransactionsDBData extends DataClass
       'is_Validate_ItemCode': serializer.toJson<bool?>(is_Validate_ItemCode),
       'is_Validate_SerialNumber':
           serializer.toJson<bool?>(is_Validate_SerialNumber),
+      'scan_by': serializer.toJson<String?>(scan_by),
       'created_date': serializer.toJson<DateTime?>(created_date),
       'updated_date': serializer.toJson<DateTime?>(updated_date),
     };
@@ -1345,6 +1368,7 @@ class TransactionsDBData extends DataClass
           Value<bool?> is_Validate_Location = const Value.absent(),
           Value<bool?> is_Validate_ItemCode = const Value.absent(),
           Value<bool?> is_Validate_SerialNumber = const Value.absent(),
+          Value<String?> scan_by = const Value.absent(),
           Value<DateTime?> created_date = const Value.absent(),
           Value<DateTime?> updated_date = const Value.absent()}) =>
       TransactionsDBData(
@@ -1374,6 +1398,7 @@ class TransactionsDBData extends DataClass
         is_Validate_SerialNumber: is_Validate_SerialNumber.present
             ? is_Validate_SerialNumber.value
             : this.is_Validate_SerialNumber,
+        scan_by: scan_by.present ? scan_by.value : this.scan_by,
         created_date:
             created_date.present ? created_date.value : this.created_date,
         updated_date:
@@ -1411,6 +1436,7 @@ class TransactionsDBData extends DataClass
       is_Validate_SerialNumber: data.is_Validate_SerialNumber.present
           ? data.is_Validate_SerialNumber.value
           : this.is_Validate_SerialNumber,
+      scan_by: data.scan_by.present ? data.scan_by.value : this.scan_by,
       created_date: data.created_date.present
           ? data.created_date.value
           : this.created_date,
@@ -1436,6 +1462,7 @@ class TransactionsDBData extends DataClass
           ..write('is_Validate_Location: $is_Validate_Location, ')
           ..write('is_Validate_ItemCode: $is_Validate_ItemCode, ')
           ..write('is_Validate_SerialNumber: $is_Validate_SerialNumber, ')
+          ..write('scan_by: $scan_by, ')
           ..write('created_date: $created_date, ')
           ..write('updated_date: $updated_date')
           ..write(')'))
@@ -1457,6 +1484,7 @@ class TransactionsDBData extends DataClass
       is_Validate_Location,
       is_Validate_ItemCode,
       is_Validate_SerialNumber,
+      scan_by,
       created_date,
       updated_date);
   @override
@@ -1476,6 +1504,7 @@ class TransactionsDBData extends DataClass
           other.is_Validate_Location == this.is_Validate_Location &&
           other.is_Validate_ItemCode == this.is_Validate_ItemCode &&
           other.is_Validate_SerialNumber == this.is_Validate_SerialNumber &&
+          other.scan_by == this.scan_by &&
           other.created_date == this.created_date &&
           other.updated_date == this.updated_date);
 }
@@ -1494,6 +1523,7 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
   final Value<bool?> is_Validate_Location;
   final Value<bool?> is_Validate_ItemCode;
   final Value<bool?> is_Validate_SerialNumber;
+  final Value<String?> scan_by;
   final Value<DateTime?> created_date;
   final Value<DateTime?> updated_date;
   const TransactionsDBCompanion({
@@ -1510,6 +1540,7 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
     this.is_Validate_Location = const Value.absent(),
     this.is_Validate_ItemCode = const Value.absent(),
     this.is_Validate_SerialNumber = const Value.absent(),
+    this.scan_by = const Value.absent(),
     this.created_date = const Value.absent(),
     this.updated_date = const Value.absent(),
   });
@@ -1527,6 +1558,7 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
     this.is_Validate_Location = const Value.absent(),
     this.is_Validate_ItemCode = const Value.absent(),
     this.is_Validate_SerialNumber = const Value.absent(),
+    this.scan_by = const Value.absent(),
     this.created_date = const Value.absent(),
     this.updated_date = const Value.absent(),
   }) : count_ItemCode = Value(count_ItemCode);
@@ -1544,6 +1576,7 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
     Expression<bool>? is_Validate_Location,
     Expression<bool>? is_Validate_ItemCode,
     Expression<bool>? is_Validate_SerialNumber,
+    Expression<String>? scan_by,
     Expression<DateTime>? created_date,
     Expression<DateTime>? updated_date,
   }) {
@@ -1566,6 +1599,7 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
         'is_validate_item_code': is_Validate_ItemCode,
       if (is_Validate_SerialNumber != null)
         'is_validate_serial_number': is_Validate_SerialNumber,
+      if (scan_by != null) 'scan_by': scan_by,
       if (created_date != null) 'created_date': created_date,
       if (updated_date != null) 'updated_date': updated_date,
     });
@@ -1585,6 +1619,7 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
       Value<bool?>? is_Validate_Location,
       Value<bool?>? is_Validate_ItemCode,
       Value<bool?>? is_Validate_SerialNumber,
+      Value<String?>? scan_by,
       Value<DateTime?>? created_date,
       Value<DateTime?>? updated_date}) {
     return TransactionsDBCompanion(
@@ -1602,6 +1637,7 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
       is_Validate_ItemCode: is_Validate_ItemCode ?? this.is_Validate_ItemCode,
       is_Validate_SerialNumber:
           is_Validate_SerialNumber ?? this.is_Validate_SerialNumber,
+      scan_by: scan_by ?? this.scan_by,
       created_date: created_date ?? this.created_date,
       updated_date: updated_date ?? this.updated_date,
     );
@@ -1650,6 +1686,9 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
       map['is_validate_serial_number'] =
           Variable<bool>(is_Validate_SerialNumber.value);
     }
+    if (scan_by.present) {
+      map['scan_by'] = Variable<String>(scan_by.value);
+    }
     if (created_date.present) {
       map['created_date'] = Variable<DateTime>(created_date.value);
     }
@@ -1675,6 +1714,7 @@ class TransactionsDBCompanion extends UpdateCompanion<TransactionsDBData> {
           ..write('is_Validate_Location: $is_Validate_Location, ')
           ..write('is_Validate_ItemCode: $is_Validate_ItemCode, ')
           ..write('is_Validate_SerialNumber: $is_Validate_SerialNumber, ')
+          ..write('scan_by: $scan_by, ')
           ..write('created_date: $created_date, ')
           ..write('updated_date: $updated_date')
           ..write(')'))
@@ -2369,6 +2409,7 @@ class ViewTransactionsDBData extends DataClass {
   final bool? is_Validate_ItemCode;
   final int? item_id;
   final String? itemDesc;
+  final String? scan_by;
   const ViewTransactionsDBData(
       {required this.key_id,
       this.is_Validate_SerialNumber,
@@ -2384,7 +2425,8 @@ class ViewTransactionsDBData extends DataClass {
       this.is_Validate_Location,
       this.is_Validate_ItemCode,
       this.item_id,
-      this.itemDesc});
+      this.itemDesc,
+      this.scan_by});
   factory ViewTransactionsDBData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -2409,6 +2451,7 @@ class ViewTransactionsDBData extends DataClass {
           serializer.fromJson<bool?>(json['is_Validate_ItemCode']),
       item_id: serializer.fromJson<int?>(json['item_id']),
       itemDesc: serializer.fromJson<String?>(json['itemDesc']),
+      scan_by: serializer.fromJson<String?>(json['scan_by']),
     );
   }
   @override
@@ -2431,6 +2474,7 @@ class ViewTransactionsDBData extends DataClass {
       'is_Validate_ItemCode': serializer.toJson<bool?>(is_Validate_ItemCode),
       'item_id': serializer.toJson<int?>(item_id),
       'itemDesc': serializer.toJson<String?>(itemDesc),
+      'scan_by': serializer.toJson<String?>(scan_by),
     };
   }
 
@@ -2449,7 +2493,8 @@ class ViewTransactionsDBData extends DataClass {
           Value<bool?> is_Validate_Location = const Value.absent(),
           Value<bool?> is_Validate_ItemCode = const Value.absent(),
           Value<int?> item_id = const Value.absent(),
-          Value<String?> itemDesc = const Value.absent()}) =>
+          Value<String?> itemDesc = const Value.absent(),
+          Value<String?> scan_by = const Value.absent()}) =>
       ViewTransactionsDBData(
         key_id: key_id ?? this.key_id,
         is_Validate_SerialNumber: is_Validate_SerialNumber.present
@@ -2481,6 +2526,7 @@ class ViewTransactionsDBData extends DataClass {
             : this.is_Validate_ItemCode,
         item_id: item_id.present ? item_id.value : this.item_id,
         itemDesc: itemDesc.present ? itemDesc.value : this.itemDesc,
+        scan_by: scan_by.present ? scan_by.value : this.scan_by,
       );
   @override
   String toString() {
@@ -2499,7 +2545,8 @@ class ViewTransactionsDBData extends DataClass {
           ..write('is_Validate_Location: $is_Validate_Location, ')
           ..write('is_Validate_ItemCode: $is_Validate_ItemCode, ')
           ..write('item_id: $item_id, ')
-          ..write('itemDesc: $itemDesc')
+          ..write('itemDesc: $itemDesc, ')
+          ..write('scan_by: $scan_by')
           ..write(')'))
         .toString();
   }
@@ -2520,7 +2567,8 @@ class ViewTransactionsDBData extends DataClass {
       is_Validate_Location,
       is_Validate_ItemCode,
       item_id,
-      itemDesc);
+      itemDesc,
+      scan_by);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2539,7 +2587,8 @@ class ViewTransactionsDBData extends DataClass {
           other.is_Validate_Location == this.is_Validate_Location &&
           other.is_Validate_ItemCode == this.is_Validate_ItemCode &&
           other.item_id == this.item_id &&
-          other.itemDesc == this.itemDesc);
+          other.itemDesc == this.itemDesc &&
+          other.scan_by == this.scan_by);
 }
 
 class $ViewTransactionsDBView
@@ -2567,7 +2616,8 @@ class $ViewTransactionsDBView
         is_Validate_Location,
         is_Validate_ItemCode,
         item_id,
-        itemDesc
+        itemDesc,
+        scan_by
       ];
   @override
   String get aliasedName => _alias ?? entityName;
@@ -2612,6 +2662,8 @@ class $ViewTransactionsDBView
           .read(DriftSqlType.int, data['${effectivePrefix}item_id']),
       itemDesc: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}item_desc']),
+      scan_by: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}scan_by']),
     );
   }
 
@@ -2681,6 +2733,10 @@ class $ViewTransactionsDBView
   late final GeneratedColumn<String> itemDesc = GeneratedColumn<String>(
       'item_desc', aliasedName, true,
       generatedAs: GeneratedAs(transactionsDB.itemDesc, false),
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> scan_by = GeneratedColumn<String>(
+      'scan_by', aliasedName, true,
+      generatedAs: GeneratedAs(transactionsDB.scan_by, false),
       type: DriftSqlType.string);
   @override
   $ViewTransactionsDBView createAlias(String alias) {
@@ -3126,6 +3182,7 @@ typedef $$TransactionsDBTableCreateCompanionBuilder = TransactionsDBCompanion
   Value<bool?> is_Validate_Location,
   Value<bool?> is_Validate_ItemCode,
   Value<bool?> is_Validate_SerialNumber,
+  Value<String?> scan_by,
   Value<DateTime?> created_date,
   Value<DateTime?> updated_date,
 });
@@ -3144,6 +3201,7 @@ typedef $$TransactionsDBTableUpdateCompanionBuilder = TransactionsDBCompanion
   Value<bool?> is_Validate_Location,
   Value<bool?> is_Validate_ItemCode,
   Value<bool?> is_Validate_SerialNumber,
+  Value<String?> scan_by,
   Value<DateTime?> created_date,
   Value<DateTime?> updated_date,
 });
@@ -3213,6 +3271,11 @@ class $$TransactionsDBTableFilterComposer
 
   ColumnFilters<bool> get is_Validate_SerialNumber => $state.composableBuilder(
       column: $state.table.is_Validate_SerialNumber,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get scan_by => $state.composableBuilder(
+      column: $state.table.scan_by,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -3296,6 +3359,11 @@ class $$TransactionsDBTableOrderingComposer
           builder: (column, joinBuilders) =>
               ColumnOrderings(column, joinBuilders: joinBuilders));
 
+  ColumnOrderings<String> get scan_by => $state.composableBuilder(
+      column: $state.table.scan_by,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
   ColumnOrderings<DateTime> get created_date => $state.composableBuilder(
       column: $state.table.created_date,
       builder: (column, joinBuilders) =>
@@ -3343,6 +3411,7 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
             Value<bool?> is_Validate_Location = const Value.absent(),
             Value<bool?> is_Validate_ItemCode = const Value.absent(),
             Value<bool?> is_Validate_SerialNumber = const Value.absent(),
+            Value<String?> scan_by = const Value.absent(),
             Value<DateTime?> created_date = const Value.absent(),
             Value<DateTime?> updated_date = const Value.absent(),
           }) =>
@@ -3360,6 +3429,7 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
             is_Validate_Location: is_Validate_Location,
             is_Validate_ItemCode: is_Validate_ItemCode,
             is_Validate_SerialNumber: is_Validate_SerialNumber,
+            scan_by: scan_by,
             created_date: created_date,
             updated_date: updated_date,
           ),
@@ -3377,6 +3447,7 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
             Value<bool?> is_Validate_Location = const Value.absent(),
             Value<bool?> is_Validate_ItemCode = const Value.absent(),
             Value<bool?> is_Validate_SerialNumber = const Value.absent(),
+            Value<String?> scan_by = const Value.absent(),
             Value<DateTime?> created_date = const Value.absent(),
             Value<DateTime?> updated_date = const Value.absent(),
           }) =>
@@ -3394,6 +3465,7 @@ class $$TransactionsDBTableTableManager extends RootTableManager<
             is_Validate_Location: is_Validate_Location,
             is_Validate_ItemCode: is_Validate_ItemCode,
             is_Validate_SerialNumber: is_Validate_SerialNumber,
+            scan_by: scan_by,
             created_date: created_date,
             updated_date: updated_date,
           ),

@@ -4,8 +4,10 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:android_path_provider/android_path_provider.dart';
+import 'package:countstock_rfid/routes/routes.dart';
 import 'package:countstock_rfid/screens/scan/model/dropdownModel.dart';
 import 'package:countstock_rfid/screens/settings/model/appsettingModel.dart';
+import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +52,7 @@ class _ScanScreenState extends State<ScanScreen> {
   String selectLocationDropdown = "";
   String locationCode = "";
   String selectSerialDropdown = "";
+  String username = "";
 
   bool isLocation = false;
   bool isSerial = false;
@@ -60,6 +63,10 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   void initState() {
     SDK_Function.init();
+    AppData.getUsername().then((value) {
+      username = value;
+      setState(() {});
+    });
 
     dataSource = GridDataSource(process: []);
     transactionDB.getValidate();
@@ -78,6 +85,53 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: Colors.blue[700],
+          title: GestureDetector(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Please enter username'),
+                      content: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Username',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) {
+                          AppData.setUsername(value);
+                        },
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            AppData.getUsername().then((value) {
+                              username = value;
+                              setState(() {});
+                            });
+                          },
+                          child: Text('OK'),
+                        )
+                      ],
+                    );
+                  });
+            },
+            child: Text("${appLocalizations.scan_title} : User $username",
+                style: TextStyle(color: Colors.white)),
+          ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, Routes.settings).then((value) {
+                    setState(() {});
+                  });
+                },
+                icon: Icon(Icons.settings))
+          ],
+        ),
         body: KeyboardListener(
             focusNode: focusNode,
             autofocus: true,
@@ -341,18 +395,6 @@ class _ScanScreenState extends State<ScanScreen> {
                     ),
                   ),
                   allowSorting: true),
-              GridColumn(
-                  visible: true,
-                  columnName: 'Status',
-                  label: Container(
-                    color: Colors.white,
-                    child: Center(
-                      child: Text(
-                        appLocalizations.txt_status,
-                      ),
-                    ),
-                  ),
-                  allowSorting: false),
             ],
           ),
         );
@@ -469,15 +511,17 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   Future onEventScan(String _controller, String rssi) async {
-    if (!_controller.isNotEmpty) {
+    if (_controller.isNotEmpty) {
       final itemReturn = await transactionDB.scanItem(TransactionsDBData(
-        key_id: 0,
-        count_ItemCode: "i00004".toUpperCase(),
-        count_location_code: locationCode,
-        serial_number: selectSerialDropdown,
-        count_location_name: selectLocationDropdown,
-        rssi: "${Random().nextInt(100)}",
-      ));
+          key_id: 0,
+          count_ItemCode: _controller,
+          count_location_code: locationCode,
+          serial_number: selectSerialDropdown,
+          count_location_name: selectLocationDropdown,
+          created_date: DateTime.now(),
+          rssi: rssi,
+          status_item: StatusAssets.status_normal,
+          scan_by: username));
 
       _addTable.add(itemReturn);
     }
@@ -486,40 +530,40 @@ class _ScanScreenState extends State<ScanScreen> {
     });
   }
 
-  Future<void> exportDataToTxt() async {
-    try {
-      await Permission.manageExternalStorage.request();
-      if (await Permission.manageExternalStorage.request().isGranted) {
-        var directory = await AndroidPathProvider.downloadsPath;
+  // Future<void> exportDataToTxt() async {
+  //   try {
+  //     await Permission.manageExternalStorage.request();
+  //     if (await Permission.manageExternalStorage.request().isGranted) {
+  //       var directory = await AndroidPathProvider.downloadsPath;
 
-        var selectDirectory = directory;
-        var directoryExists = await Directory(selectDirectory).exists();
-        if (!directoryExists) {
-          await Directory(selectDirectory).create(recursive: true);
-        }
+  //       var selectDirectory = directory;
+  //       var directoryExists = await Directory(selectDirectory).exists();
+  //       if (!directoryExists) {
+  //         await Directory(selectDirectory).create(recursive: true);
+  //       }
 
-        var now = DateTime.now();
-        var formatter = DateFormat('dd_MM_yyyy_HH_mm_ss');
-        var formattedDate = formatter.format(now);
+  //       var now = DateTime.now();
+  //       var formatter = DateFormat('dd_MM_yyyy_HH_mm_ss');
+  //       var formattedDate = formatter.format(now);
 
-        var pathFile = '$selectDirectory/rfid_scanned_$formattedDate.txt';
-        var file = File(pathFile);
-        var sink = file.openWrite();
-        sink.write('tag|Rssi|status\n');
-        for (var item in _addTable) {
-          sink.write('${item.rfid_tag}|${item.rssi} dBm|${item.status}\n');
-        }
+  //       var pathFile = '$selectDirectory/rfid_scanned_$formattedDate.txt';
+  //       var file = File(pathFile);
+  //       var sink = file.openWrite();
+  //       sink.write('tag|Rssi|status\n');
+  //       for (var item in _addTable) {
+  //         sink.write('${item.rfid_tag}|${item.rssi} dBm|${item.status}\n');
+  //       }
 
-        await sink.close();
+  //       await sink.close();
 
-        EasyLoading.showSuccess(appLocalizations.txt_export_success);
-        print(pathFile);
-      } else {
-        openAppSettings();
-      }
-      print("object");
-    } catch (e, s) {
-      print("$e$s");
-    }
-  }
+  //       EasyLoading.showSuccess(appLocalizations.txt_export_success);
+  //       print(pathFile);
+  //     } else {
+  //       openAppSettings();
+  //     }
+  //     print("object");
+  //   } catch (e, s) {
+  //     print("$e$s");
+  //   }
+  // }
 }
