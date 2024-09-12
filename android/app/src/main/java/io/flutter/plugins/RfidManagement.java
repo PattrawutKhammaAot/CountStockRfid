@@ -48,7 +48,7 @@ public class RfidManagement implements FlutterPlugin, MethodCallHandler {
     private Context context;
     private FlutterPluginBinding bindingObject;
 
-    boolean isASCII = true;
+    boolean isASCII = false;
     int lengthOfASCII = 10;
     private SoundTool soundTool;
 
@@ -184,11 +184,11 @@ public class RfidManagement implements FlutterPlugin, MethodCallHandler {
             case "stopInventory":
                 result.success(mRfidManager.stopInventory());
                 break;
-            case "Scanned":
-                RFIDSDKManager.getInstance()
-                        .enableScanHead(Boolean.parseBoolean(call.argument("statusTrg").toString()));
-                result.success("Scanned" + call.argument("statusTrg"));
-                break;
+            // case "Scanned":
+            //     RFIDSDKManager.getInstance()
+            //             .enableScanHead(Boolean.parseBoolean(call.argument("statusTrg").toString()));
+            //     result.success("Scanned" + call.argument("statusTrg"));
+            //     break;
             case "GetPower":
                 result.success(mRfidManager.getOutputPower());
                 break;
@@ -213,20 +213,20 @@ public class RfidManagement implements FlutterPlugin, MethodCallHandler {
                 result.error("EXCEPTION", "Exception setting power: " + e.getMessage(), null);
             }
                 break;
-            case "SetASCII":
-                isASCII = Boolean.parseBoolean(call.argument("isASCII").toString());
-                result.success("Success! ASCII set to " + isASCII);
-                break;
-            case "GetASCII":
-                result.success(isASCII);
-                break;
-            case "GetLengthASCII":
-                result.success(lengthOfASCII);
-                break;
-            case "SetLengthASCII":
-                lengthOfASCII = Integer.parseInt(call.argument("length").toString());
-                result.success("Success! Length set to " + lengthOfASCII);
-                break;
+            // case "SetASCII":
+            //     isASCII = Boolean.parseBoolean(call.argument("isASCII").toString());
+            //     result.success("Success! ASCII set to " + isASCII);
+            //     break;
+            // case "GetASCII":
+            //     result.success(isASCII);
+            //     break;
+            // case "GetLengthASCII":
+            //     result.success(lengthOfASCII);
+            //     break;
+            // case "SetLengthASCII":
+            //     lengthOfASCII = Integer.parseInt(call.argument("length").toString());
+            //     result.success("Success! Length set to " + lengthOfASCII);
+            //     break;
 
             case "OpenScanner":
                 mScanManager.openScanner();
@@ -238,22 +238,22 @@ public class RfidManagement implements FlutterPlugin, MethodCallHandler {
                 soundTool.playBeep();
                 result.success("Scanner closed");
                 break;
-            case "CheckScanner":
-                try{
-                result.success(mScanManager.getScannerState());
-                }catch(Exception e){
-                    Log.e(TAG, "Error in CheckScanner", e);
-                    result.success(e);
-                }
-            break;
-              case "getTriggerLockState":
-                try{
-                result.success(mScanManager.getTriggerLockState());
-                }catch(Exception e){
-                    Log.e(TAG, "Error in CheckScanner", e);
-                    result.success(e);
-                }
-            break;
+            // case "CheckScanner":
+            //     try{
+            //     result.success(mScanManager.getScannerState());
+            //     }catch(Exception e){
+            //         Log.e(TAG, "Error in CheckScanner", e);
+            //         result.success(e);
+            //     }
+            // break;
+            //   case "getTriggerLockState":
+            //     try{
+            //     result.success(mScanManager.getTriggerLockState());
+            //     }catch(Exception e){
+            //         Log.e(TAG, "Error in CheckScanner", e);
+            //         result.success(e);
+            //     }
+            // break;
             case "initScanner":
                 try{
                initRfid(bindingObject.getApplicationContext());

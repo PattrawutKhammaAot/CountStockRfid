@@ -514,7 +514,7 @@ class _ScanScreenState extends State<ScanScreen> {
     if (_controller.isNotEmpty) {
       final itemReturn = await transactionDB.scanItem(TransactionsDBData(
           key_id: 0,
-          count_ItemCode: _controller,
+          count_ItemCode: _controller.toUpperCase(),
           count_location_code: locationCode,
           serial_number: selectSerialDropdown,
           count_location_name: selectLocationDropdown,
@@ -523,7 +523,15 @@ class _ScanScreenState extends State<ScanScreen> {
           status_item: StatusAssets.status_normal,
           scan_by: username));
 
-      _addTable.add(itemReturn);
+      _addTable
+              .where((element) =>
+                  element.rfid_tag?.toUpperCase() == _controller.toUpperCase())
+              .toList()
+              .isEmpty
+          ? _addTable.add(itemReturn)
+          : null;
+
+      // _addTable.add(itemReturn);
     }
     setState(() {
       dataSource = GridDataSource(process: _addTable);
