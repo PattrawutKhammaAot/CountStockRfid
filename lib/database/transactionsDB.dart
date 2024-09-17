@@ -457,24 +457,34 @@ class Transactions {
     }
   }
 
-  Future<List<dropdownModel>> getValidate() async {
-    List<dropdownModel> list = [];
+  Future<dropdownModel> getValidateLocation() async {
+    dropdownModel dataReturn = dropdownModel(
+      item_id: 0,
+      name: "",
+      is_active: false,
+      is_validate: false,
+      valueDropdown: [],
+    );
     try {
-      final query = await tranDb.select(tranDb.appSettingDB)
-        ..where((tbl) => tbl.is_active.equals(true));
+      final dataQuery = await (tranDb.selectOnly(tranDb.appSettingDB)
+        ..addColumns([
+          tranDb.appSettingDB.item_id,
+          tranDb.appSettingDB.name,
+          tranDb.appSettingDB.is_active,
+          tranDb.appSettingDB.is_validate,
+        ])
+        ..where(tranDb.appSettingDB.name.equals('Location Code'))
+        ..where(tranDb.appSettingDB.is_active.equals(true)));
 
-      final result = await query.get();
+      final resultQuery = await dataQuery.getSingleOrNull();
 
-      result.removeWhere((qry) => qry.name == 'Item Code');
-
-      if (result.isNotEmpty) {
-        final queryLocation =
-            await (appDb.select(appDb.locationMasterDB, distinct: true)
-                  ..addColumns([
-                    appDb.locationMasterDB.location_code,
-                    appDb.locationMasterDB.location_name
-                  ]))
-                .get();
+      if (resultQuery != null) {
+        final queryLocation = await (tranDb.select(appDb.locationMasterDB)
+              ..addColumns([
+                appDb.locationMasterDB.location_code,
+                appDb.locationMasterDB.location_name
+              ]))
+            .get();
 
         final uniqueLocationSet = <String>{};
 
@@ -488,39 +498,108 @@ class Transactions {
                   location_name: e.location_name!,
                 ))
             .toList();
-        final querySerialNumber =
-            await (appDb.select(appDb.itemMasterDB, distinct: true)
-                  ..addColumns([appDb.itemMasterDB.SerialNumber]))
-                .get();
-        final uniqueSerialNumbers = querySerialNumber
-            .where((e) => e.SerialNumber != null && e.SerialNumber!.isNotEmpty)
-            .map((e) => e.SerialNumber!)
-            .toSet() // ใช้ Set เพื่อกรองค่าที่ซ้ำกันออก
-            .map((serial) => ListDropdownModel(
-                  location_code: serial,
-                  location_name: serial,
-                ))
-            .toList();
-        list = result
-            .map((e) => dropdownModel(
-                  item_id: e.item_id,
-                  name: e.name!,
-                  valueDropdown: e.name == 'Location Code'
-                      ? uniqueLocation
-                      : uniqueSerialNumbers,
-                  is_validate: e.is_validate,
-                  is_active: e.is_active,
-                ))
-            .toList();
-      }
 
-      return list;
+        dataReturn = dropdownModel(
+          item_id: resultQuery.read(tranDb.appSettingDB.item_id)!.toInt(),
+          name: resultQuery.read(tranDb.appSettingDB.name)!,
+          is_active: resultQuery.read(tranDb.appSettingDB.is_active)!,
+          is_validate: resultQuery.read(tranDb.appSettingDB.is_validate)!,
+          valueDropdown: uniqueLocation,
+        );
+        return dataReturn;
+      }
     } catch (e, s) {
       print(e);
       print(s);
-      throw Exception();
+      return dataReturn;
     }
+    return dataReturn;
   }
+
+  Future<AppSettingDBData> getValidateSerial() async {
+    AppSettingDBData dataReturn = const AppSettingDBData(
+      item_id: 0,
+      name: "",
+      is_active: false,
+      is_validate: false,
+    );
+    try {
+      final dataQuery = await (tranDb.selectOnly(tranDb.appSettingDB)
+        ..addColumns([
+          tranDb.appSettingDB.item_id,
+          tranDb.appSettingDB.name,
+          tranDb.appSettingDB.is_active,
+          tranDb.appSettingDB.is_validate,
+        ])
+        ..where(tranDb.appSettingDB.name.equals('Serial Number'))
+        ..where(tranDb.appSettingDB.is_active.equals(true)));
+
+      final resultQuery = await dataQuery.getSingleOrNull();
+      if (resultQuery != null) {
+        dataReturn = AppSettingDBData(
+          item_id: resultQuery.read(tranDb.appSettingDB.item_id)!.toInt(),
+          name: resultQuery.read(tranDb.appSettingDB.name)!,
+          is_active: resultQuery.read(tranDb.appSettingDB.is_active)!,
+          is_validate: resultQuery.read(tranDb.appSettingDB.is_validate)!,
+        );
+        return dataReturn;
+      }
+    } catch (e, s) {
+      return dataReturn;
+    }
+    return dataReturn;
+  }
+
+  // Future<List<dropdownModel>> getValidate() async {
+  //   List<dropdownModel> list = [];
+  //   try {
+  //     final query = await tranDb.select(tranDb.appSettingDB)
+  //       ..where((tbl) => tbl.is_active.equals(true));
+
+  //     final result = await query.get();
+
+  //     result.removeWhere((qry) => qry.name == 'Item Code');
+
+  //     if (result.isNotEmpty) {
+  // final queryLocation =
+  //     await (appDb.select(appDb.locationMasterDB, distinct: true)
+  //           ..addColumns([
+  //             appDb.locationMasterDB.location_code,
+  //             appDb.locationMasterDB.location_name
+  //           ]))
+  //         .get();
+
+  // final uniqueLocationSet = <String>{};
+
+  // final uniqueLocation = queryLocation
+  //     .where(
+  //         (e) => e.location_code != null && e.location_code!.isNotEmpty)
+  //     .where((e) =>
+  //         uniqueLocationSet.add(e.location_code! + e.location_name!))
+  //     .map((e) => ListDropdownModel(
+  //           location_code: e.location_code!,
+  //           location_name: e.location_name!,
+  //         ))
+  //     .toList();
+
+  //       list = result
+  //           .map((e) => dropdownModel(
+  //                 item_id: e.item_id,
+  //                 name: e.name!,
+  //                 is_validate: e.is_validate,
+  //                 is_active: e.is_active,
+  //               ))
+  //           .toList();
+  //       print("object ${list}");
+  //     }
+
+  //     return list;
+  //   } catch (e, s) {
+  //     print(e);
+  //     print(s);
+  //     throw Exception();
+  //   }
+  // }
 
   Future<String> getItemDesc(String itemCode) async {
     try {

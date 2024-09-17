@@ -13,14 +13,34 @@ class ImportLocationScreen extends StatefulWidget {
 class _ImportLocationScreenState extends State<ImportLocationScreen> {
   List<LocationMasterDBData> itemLocation = [];
 
+  ScrollController _scrollController = ScrollController();
+  bool isLoading = false;
+  int currentPage = 0;
+  final int pageSize = 50;
+
   @override
   void initState() {
-    // TODO: implement initState
-    locationDB.searchMaster('').then((value) {
-      itemLocation = value;
+    _fetchData();
+    _scrollController.addListener(_scrollListener);
+    super.initState();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent * 0.75 &&
+        !isLoading) {
+      isLoading = true;
+      currentPage++;
+      _fetchData();
+    }
+  }
+
+  _fetchData() async {
+    locationDB.pagingMaster(pageSize, currentPage * pageSize).then((value) {
+      itemLocation.addAll(value);
+      isLoading = false;
       setState(() {});
     });
-    super.initState();
   }
 
   @override
@@ -62,13 +82,10 @@ class _ImportLocationScreenState extends State<ImportLocationScreen> {
                             backgroundColor:
                                 WidgetStatePropertyAll(Colors.blue[700])),
                         onPressed: () async {
-                          await locationDB
-                              .imporLocationMaster()
-                              .then((value) async {
-                            await locationDB.searchMaster('').then((value) {
-                              itemLocation = value;
-                              setState(() {});
-                            });
+                          await locationDB.importChoice(context).then((v) {
+                            itemLocation = [];
+                            _fetchData();
+                            setState(() {});
                           });
                         },
                         child: Text(
@@ -81,7 +98,8 @@ class _ImportLocationScreenState extends State<ImportLocationScreen> {
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: itemLocation.length,
+                  controller: _scrollController,
+                  itemCount: itemLocation.length + (isLoading ? 1 : 0),
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),

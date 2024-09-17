@@ -7,6 +7,7 @@ import 'package:countstock_rfid/database/database.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter/material.dart' as Mt;
 
 class LocationMasterDB extends Table {
   IntColumn get location_id => integer().autoIncrement()();
@@ -32,7 +33,14 @@ class LocationMaster {
 
   LocationMaster(this._db);
 
-  Future<void> imporLocationMaster() async {
+  Future<dynamic> pagingMaster(int limit, int offset) async {
+    return (_db.select(_db.locationMasterDB)
+          ..limit(limit, offset: offset)
+          ..orderBy([(t) => OrderingTerm(expression: t.location_id)]))
+        .get();
+  }
+
+  Future<void> imporLocationMaster_Txt_CSV() async {
     try {
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -169,5 +177,86 @@ class LocationMaster {
 
   Future<void> deleteLocationMaster() async {
     await (_db.delete(_db.locationMasterDB).go());
+  }
+
+  Future<bool> importChoice(Mt.BuildContext context) async {
+    final result = await Mt.showModalBottomSheet<bool>(
+      context: context,
+      builder: (Mt.BuildContext context) {
+        return Mt.Padding(
+          padding: Mt.EdgeInsets.all(8.0),
+          child: Mt.Column(
+            mainAxisSize: Mt.MainAxisSize.min,
+            children: <Mt.Widget>[
+              Mt.Row(
+                mainAxisAlignment: Mt.MainAxisAlignment.spaceEvenly,
+                children: [
+                  Mt.GestureDetector(
+                    onTap: () async {
+                      await importExcelFileLocationMaster();
+                      Mt.Navigator.pop(context, true);
+                    },
+                    child: Mt.Container(
+                      padding: Mt.EdgeInsets.only(top: 15),
+                      height: 100,
+                      width: 100,
+                      decoration: Mt.BoxDecoration(
+                        border: Mt.Border.all(
+                          color: Mt.Colors.black,
+                          width: 1,
+                        ),
+                        borderRadius: Mt.BorderRadius.circular(10),
+                      ),
+                      child: Mt.Column(
+                        children: [
+                          Mt.Image.asset(
+                            "assets/icons/iconexcel.png",
+                            height: 50,
+                            width: 50,
+                          ),
+                          Mt.Center(child: Mt.Text("Import  Excel"))
+                        ],
+                      ),
+                    ),
+                  ),
+                  Mt.GestureDetector(
+                    onTap: () async {
+                      await imporLocationMaster_Txt_CSV();
+                      Mt.Navigator.pop(
+                        context,
+                        true,
+                      );
+                    },
+                    child: Mt.Container(
+                      height: 100,
+                      width: 100,
+                      padding: Mt.EdgeInsets.only(top: 15),
+                      decoration: Mt.BoxDecoration(
+                        border: Mt.Border.all(
+                          color: Mt.Colors.black,
+                          width: 1,
+                        ),
+                        borderRadius: Mt.BorderRadius.circular(10),
+                      ),
+                      child: Mt.Column(
+                        children: [
+                          Mt.Image.asset(
+                            "assets/icons/iconCsv.png",
+                            height: 50,
+                            width: 50,
+                          ),
+                          Mt.Center(child: Mt.Text("Export Csv"))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    return result ?? false;
   }
 }

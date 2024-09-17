@@ -7,6 +7,7 @@ import 'package:android_path_provider/android_path_provider.dart';
 import 'package:countstock_rfid/routes/routes.dart';
 import 'package:countstock_rfid/screens/scan/model/dropdownModel.dart';
 import 'package:countstock_rfid/screens/settings/model/appsettingModel.dart';
+import 'package:countstock_rfid/utils/CustomTextInput.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
@@ -46,13 +47,15 @@ class _ScanScreenState extends State<ScanScreen> {
   List<ItemMasterDBData> itemList = [];
   List<dropdownModel> dropdownList = [];
   List<GridDataList> _addTable = [];
+  FocusNode _serialFocus = FocusNode();
   FocusNode focusNode = FocusNode();
   FocusNode fakefocusNode = FocusNode();
-  TextEditingController _controller = TextEditingController();
+  TextEditingController _fakeController = TextEditingController();
   String selectLocationDropdown = "";
   String locationCode = "";
-  String selectSerialDropdown = "";
+  String txt_serial = "";
   String username = "";
+  List<dropdownModel> dataLocation = [];
 
   bool isLocation = false;
   bool isSerial = false;
@@ -69,7 +72,7 @@ class _ScanScreenState extends State<ScanScreen> {
     });
 
     dataSource = GridDataSource(process: []);
-    transactionDB.getValidate();
+    // transactionDB.getValidate();
 
     AppData.setPopupInfo("page_scan");
     super.initState();
@@ -95,14 +98,20 @@ class _ScanScreenState extends State<ScanScreen> {
                   builder: (context) {
                     return AlertDialog(
                       title: Text('Please enter username'),
-                      content: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Username',
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (value) {
-                          AppData.setUsername(value);
-                        },
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Username : $username'),
+                          TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Username',
+                              border: OutlineInputBorder(),
+                            ),
+                            onChanged: (value) {
+                              AppData.setUsername(value);
+                            },
+                          ),
+                        ],
                       ),
                       actions: [
                         TextButton(
@@ -119,8 +128,19 @@ class _ScanScreenState extends State<ScanScreen> {
                     );
                   });
             },
-            child: Text("${appLocalizations.scan_title} : User $username",
-                style: TextStyle(color: Colors.white)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                      "${appLocalizations.scan_title} User : $username ",
+                      style: TextStyle(color: Colors.white)),
+                ),
+                Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                )
+              ],
+            ),
           ),
           actions: [
             IconButton(
@@ -142,7 +162,7 @@ class _ScanScreenState extends State<ScanScreen> {
                     EasyLoading.showError("Please select Location");
                     return;
                   }
-                  if (isSerial && selectSerialDropdown.isEmpty) {
+                  if (isSerial && txt_serial.isEmpty) {
                     EasyLoading.showError("Please select Serial Number");
                     return;
                   }
@@ -172,7 +192,7 @@ class _ScanScreenState extends State<ScanScreen> {
                         width: 1,
                         child: TextFormField(
                           focusNode: fakefocusNode,
-                          controller: _controller,
+                          controller: _fakeController,
                         ),
                       ),
                     )),
@@ -180,81 +200,68 @@ class _ScanScreenState extends State<ScanScreen> {
                   height: 0,
                 ),
                 FutureBuilder(
-                    future: transactionDB.getValidate(),
+                    future: transactionDB.getValidateLocation(),
                     builder: (context, snapshot) {
-                      if (snapshot.data == null) {
-                        return SizedBox.shrink();
-                      }
-                      if (snapshot.data!.isNotEmpty) {
-                        dropdownList = snapshot.data!.cast<dropdownModel>();
-                        dropdownList.where((element) {
-                          if (element.name == "Location Code") {
-                            isLocation = element.is_active;
-                          } else if (element.name == "Serial Number") {
-                            isSerial = element.is_active;
-                          }
-                          return true;
-                        }).toList();
-                        return Expanded(
-                          child: ListView.builder(
-                            itemCount: dropdownList.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  if (dropdownList[index]
-                                      .valueDropdown!
-                                      .isEmpty) {
-                                    EasyLoading.showError("No Data");
-                                  }
-                                },
-                                child: _dropdown(
-                                  prefixIcon: dropdownList[index].is_validate
-                                      ? Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                        )
-                                      : Icon(
-                                          Icons.cancel,
-                                          color: Colors.red,
-                                        ),
-                                  hintText: dropdownList[index].name,
-                                  items: dropdownList[index]
-                                      .valueDropdown!
-                                      .map((e) => DropdownMenuItem<String>(
-                                            value: e.location_name,
-                                            child: Text(e.location_name),
-                                          ))
-                                      .toList(),
-                                  onChanged: (value) {
-                                    if (dropdownList[index].name ==
-                                        "Location Code") {
-                                      locationCode = dropdownList[index]
-                                          .valueDropdown!
-                                          .where((element) =>
-                                              element.location_name == value)
-                                          .first
-                                          .location_code;
-                                      if (kDebugMode) {
-                                        print(locationCode);
-                                      }
-                                      selectLocationDropdown = value!;
-                                    } else {
-                                      selectSerialDropdown = value!;
-                                    }
-                                    setState(() {});
-                                  },
-                                  onSaved: (value) {
-                                    if (dropdownList[index].name ==
-                                        "Location Code") {
-                                      selectLocationDropdown = value!;
-                                    } else {
-                                      selectSerialDropdown = value!;
-                                    }
-                                    setState(() {});
-                                  },
+                      if (snapshot.data != null && snapshot.data!.is_active) {
+                        isLocation = snapshot.data!.is_active;
+                        return _dropdown(
+                          hintText: "Location Code",
+                          items: snapshot.data?.valueDropdown!
+                              .map((e) => DropdownMenuItem<String>(
+                                    value: e.location_name,
+                                    child: Text(e.location_name),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            selectLocationDropdown = value!;
+                            locationCode = snapshot.data!.valueDropdown!
+                                .where(
+                                    (element) => element.location_name == value)
+                                .first
+                                .location_code;
+                            _serialFocus.requestFocus();
+                            setState(() {});
+                          },
+                          onSaved: (value) {
+                            selectLocationDropdown = value!;
+                            setState(() {});
+                          },
+                          prefixIcon: snapshot.data!.is_validate
+                              ? Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                )
+                              : Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
                                 ),
-                              );
+                        );
+                      }
+                      return SizedBox.shrink();
+                    }),
+                FutureBuilder(
+                    future: transactionDB.getValidateSerial(),
+                    builder: (context, snapshot) {
+                      if (snapshot.data != null && snapshot.data!.is_active) {
+                        isSerial = snapshot.data!.is_active;
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomTextInput(
+                            focusNode: _serialFocus,
+                            controller: TextEditingController(text: txt_serial),
+                            onChanged: (p0) {
+                              txt_serial = p0;
                             },
+                            labelText: "Serial Number",
+                            prefixIcon: snapshot.data!.is_validate
+                                ? Icon(
+                                    Icons.check_circle,
+                                    color: Colors.green,
+                                  )
+                                : Icon(
+                                    Icons.cancel,
+                                    color: Colors.red,
+                                  ),
                           ),
                         );
                       }
@@ -262,38 +269,27 @@ class _ScanScreenState extends State<ScanScreen> {
                     }),
                 _gridData(SDK_Function.setTagScannedListener((epc, dbm) {
                   onEventScan(epc.trim(), dbm).then((value) async {});
-                  // _addTable.add(tempRfidItemList(
-                  //   rfid_tag: epc,
-                  //   rssi: dbm,
-                  //   status: "Found",
-                  // ));
-                  // setState(() {
-                  //   zincDataSource =
-                  //       ZincDataSource(process: _addTable);
-                  // });
                 })),
                 SizedBox(
                   height: 5,
                 ),
                 _btnAndDetail(
                   onPressed: () async {
-                    onEventScan(_controller.text, "0").then((value) async {});
-                    // if (isLocation && selectLocationDropdown.isEmpty) {
-                    //   EasyLoading.showError("Please select Location");
-                    //   return;
-                    // }
-                    // if (isSerial && selectSerialDropdown.isEmpty) {
-                    //   EasyLoading.showError("Please select Serial Number");
-                    //   return;
-                    // }
-                    // if (!isScanning) {
-                    //   await SDK_Function.scan(true);
-                    //   isScanning = true;
-                    // } else {
-                    //   await SDK_Function.scan(false);
-                    //   isScanning = false;
-                    // }
-                    setState(() {});
+                    if (isLocation && selectLocationDropdown.isEmpty) {
+                      EasyLoading.showError("Please select Location");
+                      return;
+                    }
+                    if (isSerial && txt_serial.isEmpty) {
+                      EasyLoading.showError("Please select Serial Number");
+                      return;
+                    }
+                    if (!isScanning) {
+                      await SDK_Function.scan(true);
+                      isScanning = true;
+                    } else {
+                      await SDK_Function.scan(false);
+                      isScanning = false;
+                    }
                   },
                 ),
                 SizedBox(
@@ -308,7 +304,10 @@ class _ScanScreenState extends State<ScanScreen> {
       List<DropdownMenuItem<String>>? items,
       Function(String?)? onChanged,
       Function(String?)? onSaved,
-      Widget? prefixIcon}) {
+      Widget? prefixIcon,
+      TextEditingController? textEditingController,
+      bool Function(DropdownMenuItem<String>, String)? searchMatchFn,
+      Function(String?)? onChangedText}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: DropdownButtonFormField2<String>(
@@ -330,6 +329,7 @@ class _ScanScreenState extends State<ScanScreen> {
         items: items,
         onChanged: onChanged,
         onSaved: onSaved,
+
         buttonStyleData: const ButtonStyleData(
           padding: EdgeInsets.only(right: 8),
         ),
@@ -348,6 +348,13 @@ class _ScanScreenState extends State<ScanScreen> {
         menuItemStyleData: const MenuItemStyleData(
           padding: EdgeInsets.symmetric(horizontal: 16),
         ),
+
+        //This to clear the search value when you close the menu
+        onMenuStateChange: (isOpen) {
+          if (!isOpen) {
+            textEditingController?.clear();
+          }
+        },
       ),
     );
   }
@@ -516,7 +523,7 @@ class _ScanScreenState extends State<ScanScreen> {
           key_id: 0,
           count_ItemCode: _controller.toUpperCase(),
           count_location_code: locationCode,
-          serial_number: selectSerialDropdown,
+          serial_number: txt_serial,
           count_location_name: selectLocationDropdown,
           created_date: DateTime.now(),
           rssi: rssi,

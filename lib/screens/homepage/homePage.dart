@@ -2,6 +2,7 @@ import 'package:countstock_rfid/config/appData.dart';
 import 'package:countstock_rfid/main.dart';
 import 'package:countstock_rfid/routes/routes.dart';
 import 'package:countstock_rfid/screens/homepage/dashboard.dart';
+import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,6 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _formkey = GlobalKey<FormState>();
+  TextEditingController _usernameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -23,9 +26,16 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.blue[700],
           appBar: AppBar(
             backgroundColor: Colors.blue[700],
-            title: Text(
-              'Home Page',
-              style: TextStyle(color: Colors.white),
+            title: GestureDetector(
+              onTap: () {
+                final db = appDb;
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => DriftDbViewer(db)));
+              },
+              child: Text(
+                'Home Page',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
           body: Column(
@@ -116,8 +126,20 @@ class _HomePageState extends State<HomePage> {
                                                 return AlertDialog(
                                                   title: Text(
                                                       'Please enter username'),
-                                                  content: TextField(
+                                                  content: TextFormField(
+                                                    autofocus: true,
+                                                    controller:
+                                                        _usernameController,
+                                                    validator: (value) {
+                                                      if (value == null ||
+                                                          !value.isEmpty) {
+                                                        return 'Please enter username';
+                                                      }
+                                                      return null;
+                                                    },
                                                     decoration: InputDecoration(
+                                                      errorText:
+                                                          'Please enter username',
                                                       hintText: 'Username',
                                                       border:
                                                           OutlineInputBorder(),
@@ -130,10 +152,17 @@ class _HomePageState extends State<HomePage> {
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () {
-                                                        Navigator.pop(context);
-                                                        Navigator.pushNamed(
-                                                            context,
-                                                            Routes.scan);
+                                                        if (_usernameController
+                                                            .text.isNotEmpty) {
+                                                          Navigator.pop(
+                                                              context);
+                                                          Navigator.pushNamed(
+                                                              context,
+                                                              Routes.scan);
+                                                          _usernameController
+                                                              .clear();
+                                                        }
+
                                                         setState(() {});
                                                       },
                                                       child: Text('OK'),

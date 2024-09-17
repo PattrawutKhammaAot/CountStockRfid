@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:countstock_rfid/main.dart';
 import 'package:csv/csv.dart';
 import 'package:drift/drift.dart';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:countstock_rfid/database/database.dart';
+import 'package:flutter/material.dart' as Mt;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 
@@ -51,7 +53,14 @@ class ItemMaster {
 
   ItemMaster(this._db);
 
-  Future<void> imporItemMaster() async {
+  Future<dynamic> pagingMaster(int limit, int offset) async {
+    return (_db.select(_db.itemMasterDB)
+          ..limit(limit, offset: offset)
+          ..orderBy([(t) => OrderingTerm(expression: t.item_id)]))
+        .get();
+  }
+
+  Future<void> imporTxtAndCsvItemMaster() async {
     try {
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -227,5 +236,86 @@ class ItemMaster {
             .getSingleOrNull() ??
         ItemMasterDBData(item_id: 0, Quantity: "0");
     return item.Quantity!;
+  }
+
+  Future<bool> importChoice(Mt.BuildContext context) async {
+    final result = await Mt.showModalBottomSheet<bool>(
+      context: context,
+      builder: (Mt.BuildContext context) {
+        return Mt.Padding(
+          padding: Mt.EdgeInsets.all(8.0),
+          child: Mt.Column(
+            mainAxisSize: Mt.MainAxisSize.min,
+            children: <Mt.Widget>[
+              Mt.Row(
+                mainAxisAlignment: Mt.MainAxisAlignment.spaceEvenly,
+                children: [
+                  Mt.GestureDetector(
+                    onTap: () async {
+                      await importFileExcelMaster();
+                      Mt.Navigator.pop(context, true);
+                    },
+                    child: Mt.Container(
+                      padding: Mt.EdgeInsets.only(top: 15),
+                      height: 100,
+                      width: 100,
+                      decoration: Mt.BoxDecoration(
+                        border: Mt.Border.all(
+                          color: Mt.Colors.black,
+                          width: 1,
+                        ),
+                        borderRadius: Mt.BorderRadius.circular(10),
+                      ),
+                      child: Mt.Column(
+                        children: [
+                          Mt.Image.asset(
+                            "assets/icons/iconexcel.png",
+                            height: 50,
+                            width: 50,
+                          ),
+                          Mt.Center(child: Mt.Text("Import  Excel"))
+                        ],
+                      ),
+                    ),
+                  ),
+                  Mt.GestureDetector(
+                    onTap: () async {
+                      await imporTxtAndCsvItemMaster();
+                      Mt.Navigator.pop(
+                        context,
+                        true,
+                      );
+                    },
+                    child: Mt.Container(
+                      height: 100,
+                      width: 100,
+                      padding: Mt.EdgeInsets.only(top: 15),
+                      decoration: Mt.BoxDecoration(
+                        border: Mt.Border.all(
+                          color: Mt.Colors.black,
+                          width: 1,
+                        ),
+                        borderRadius: Mt.BorderRadius.circular(10),
+                      ),
+                      child: Mt.Column(
+                        children: [
+                          Mt.Image.asset(
+                            "assets/icons/iconCsv.png",
+                            height: 50,
+                            width: 50,
+                          ),
+                          Mt.Center(child: Mt.Text("Export Csv"))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    return result ?? false;
   }
 }

@@ -1,4 +1,6 @@
+import 'package:countstock_rfid/database/itemMasterDB.dart';
 import 'package:countstock_rfid/main.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -14,15 +16,36 @@ class ImportMasterScreen extends StatefulWidget {
 class _ImportMasterScreenState extends State<ImportMasterScreen> {
   List<ItemMasterDBData> itemMasterDBData = [];
 
+  ScrollController _scrollController = ScrollController();
+  bool isLoading = false;
+  int currentPage = 0;
+  final int pageSize = 50;
+
   @override
   void initState() {
     // TODO: implement initState
+    _fetchData();
+    _scrollController.addListener(_scrollListener);
 
-    itemMasterDB.searchMaster('').then((value) {
-      itemMasterDBData = value;
+    super.initState();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent * 0.75 &&
+        !isLoading) {
+      isLoading = true;
+      currentPage++;
+      _fetchData();
+    }
+  }
+
+  _fetchData() async {
+    itemMasterDB.pagingMaster(pageSize, currentPage * pageSize).then((value) {
+      itemMasterDBData.addAll(value);
+      isLoading = false;
       setState(() {});
     });
-    super.initState();
   }
 
   @override
@@ -64,14 +87,11 @@ class _ImportMasterScreenState extends State<ImportMasterScreen> {
                             backgroundColor:
                                 WidgetStatePropertyAll(Colors.blue[700])),
                         onPressed: () async {
-                          itemMasterDB.imporItemMaster().then(
-                            (value) async {
-                              EasyLoading.showSuccess('Import Success');
-                              itemMasterDBData =
-                                  await itemMasterDB.searchMaster('');
-                              setState(() {});
-                            },
-                          );
+                          await itemMasterDB.importChoice(context).then((v) {
+                            itemMasterDBData = [];
+                            _fetchData();
+                            setState(() {});
+                          });
                         },
                         child: Text(
                           appLocalizations.btn_import_Item,
@@ -82,31 +102,38 @@ class _ImportMasterScreenState extends State<ImportMasterScreen> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                  itemCount: itemMasterDBData.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        elevation: 5,
-                        color: Colors.white,
-                        child: ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  'Item Name : ${itemMasterDBData[index].ItemCode}'),
-                              Text(
-                                  'SR: ${itemMasterDBData[index].SerialNumber}'),
-                            ],
-                          ),
-                          subtitle: Text(
-                              'Description :${itemMasterDBData[index].ItemDescription}'),
-                          trailing:
-                              Text('${itemMasterDBData[index].Quantity} Qty'),
-                        ),
-                      ),
-                    );
+              child: StreamBuilder<Object>(
+                  stream: null,
+                  builder: (context, snapshot) {
+                    return ListView.builder(
+                        controller: _scrollController,
+                        itemCount:
+                            itemMasterDBData.length + (isLoading ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              elevation: 5,
+                              color: Colors.white,
+                              child: ListTile(
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        'Item Name : ${itemMasterDBData[index].ItemCode}'),
+                                    Text(
+                                        'SR: ${itemMasterDBData[index].SerialNumber}'),
+                                  ],
+                                ),
+                                subtitle: Text(
+                                    'Description :${itemMasterDBData[index].ItemDescription}'),
+                                trailing: Text(
+                                    '${itemMasterDBData[index].Quantity} Qty'),
+                              ),
+                            ),
+                          );
+                        });
                   }),
             )
           ],
