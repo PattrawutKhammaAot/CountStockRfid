@@ -571,7 +571,12 @@ class _ScanScreenState extends State<ScanScreen> {
 
       _addTable
               .where((element) =>
-                  element.rfid_tag?.toUpperCase() == _controller.toUpperCase())
+                  element.rfid_tag?.toUpperCase() ==
+                      _controller.toUpperCase() &&
+                  element.serial_number?.toUpperCase() ==
+                      txt_serial.toUpperCase() &&
+                  element.location?.toUpperCase() ==
+                      selectLocationDropdown.toUpperCase())
               .toList()
               .isEmpty
           ? _addTable.add(itemReturn)
