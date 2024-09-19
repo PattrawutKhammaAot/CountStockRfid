@@ -1146,7 +1146,7 @@ class $TransactionsDBTable extends TransactionsDB
           .read(DriftSqlType.string, data['${effectivePrefix}serial_number']),
       status_item: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}status_item']),
-      rssi: attachedDatabase.typeMapping
+      Rssi: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}rssi']),
       is_Validate_Location: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}is_validate_location']),
@@ -1181,7 +1181,7 @@ class TransactionsDBData extends DataClass
   final int? count_QuantityScan;
   final String? serial_number;
   final String? status_item;
-  final String? rssi;
+  final String? Rssi;
   final bool? is_Validate_Location;
   final bool? is_Validate_ItemCode;
   final bool? is_Validate_SerialNumber;
@@ -1198,7 +1198,7 @@ class TransactionsDBData extends DataClass
       this.count_QuantityScan,
       this.serial_number,
       this.status_item,
-      this.rssi,
+      this.Rssi,
       this.is_Validate_Location,
       this.is_Validate_ItemCode,
       this.is_Validate_SerialNumber,
@@ -1231,8 +1231,8 @@ class TransactionsDBData extends DataClass
     if (!nullToAbsent || status_item != null) {
       map['status_item'] = Variable<String>(status_item);
     }
-    if (!nullToAbsent || rssi != null) {
-      map['rssi'] = Variable<String>(rssi);
+    if (!nullToAbsent || Rssi != null) {
+      map['rssi'] = Variable<String>(Rssi);
     }
     if (!nullToAbsent || is_Validate_Location != null) {
       map['is_validate_location'] = Variable<bool>(is_Validate_Location);
@@ -1281,7 +1281,7 @@ class TransactionsDBData extends DataClass
       status_item: status_item == null && nullToAbsent
           ? const Value.absent()
           : Value(status_item),
-      rssi: rssi == null && nullToAbsent ? const Value.absent() : Value(rssi),
+      rssi: Rssi == null && nullToAbsent ? const Value.absent() : Value(Rssi),
       is_Validate_Location: is_Validate_Location == null && nullToAbsent
           ? const Value.absent()
           : Value(is_Validate_Location),
@@ -1318,7 +1318,7 @@ class TransactionsDBData extends DataClass
       count_QuantityScan: serializer.fromJson<int?>(json['count_QuantityScan']),
       serial_number: serializer.fromJson<String?>(json['serial_number']),
       status_item: serializer.fromJson<String?>(json['status_item']),
-      rssi: serializer.fromJson<String?>(json['rssi']),
+      Rssi: serializer.fromJson<String?>(json['rssi']),
       is_Validate_Location:
           serializer.fromJson<bool?>(json['is_Validate_Location']),
       is_Validate_ItemCode:
@@ -1343,7 +1343,7 @@ class TransactionsDBData extends DataClass
       'count_QuantityScan': serializer.toJson<int?>(count_QuantityScan),
       'serial_number': serializer.toJson<String?>(serial_number),
       'status_item': serializer.toJson<String?>(status_item),
-      'rssi': serializer.toJson<String?>(rssi),
+      'rssi': serializer.toJson<String?>(Rssi),
       'is_Validate_Location': serializer.toJson<bool?>(is_Validate_Location),
       'is_Validate_ItemCode': serializer.toJson<bool?>(is_Validate_ItemCode),
       'is_Validate_SerialNumber':
@@ -1388,7 +1388,7 @@ class TransactionsDBData extends DataClass
         serial_number:
             serial_number.present ? serial_number.value : this.serial_number,
         status_item: status_item.present ? status_item.value : this.status_item,
-        rssi: rssi.present ? rssi.value : this.rssi,
+        Rssi: rssi.present ? rssi.value : this.Rssi,
         is_Validate_Location: is_Validate_Location.present
             ? is_Validate_Location.value
             : this.is_Validate_Location,
@@ -1426,7 +1426,7 @@ class TransactionsDBData extends DataClass
           : this.serial_number,
       status_item:
           data.status_item.present ? data.status_item.value : this.status_item,
-      rssi: data.rssi.present ? data.rssi.value : this.rssi,
+      Rssi: data.rssi.present ? data.rssi.value : this.Rssi,
       is_Validate_Location: data.is_Validate_Location.present
           ? data.is_Validate_Location.value
           : this.is_Validate_Location,
@@ -1458,7 +1458,7 @@ class TransactionsDBData extends DataClass
           ..write('count_QuantityScan: $count_QuantityScan, ')
           ..write('serial_number: $serial_number, ')
           ..write('status_item: $status_item, ')
-          ..write('rssi: $rssi, ')
+          ..write('rssi: $Rssi, ')
           ..write('is_Validate_Location: $is_Validate_Location, ')
           ..write('is_Validate_ItemCode: $is_Validate_ItemCode, ')
           ..write('is_Validate_SerialNumber: $is_Validate_SerialNumber, ')
@@ -1480,7 +1480,7 @@ class TransactionsDBData extends DataClass
       count_QuantityScan,
       serial_number,
       status_item,
-      rssi,
+      Rssi,
       is_Validate_Location,
       is_Validate_ItemCode,
       is_Validate_SerialNumber,
@@ -1500,7 +1500,7 @@ class TransactionsDBData extends DataClass
           other.count_QuantityScan == this.count_QuantityScan &&
           other.serial_number == this.serial_number &&
           other.status_item == this.status_item &&
-          other.rssi == this.rssi &&
+          other.Rssi == this.Rssi &&
           other.is_Validate_Location == this.is_Validate_Location &&
           other.is_Validate_ItemCode == this.is_Validate_ItemCode &&
           other.is_Validate_SerialNumber == this.is_Validate_SerialNumber &&

@@ -77,6 +77,52 @@ class LocationMaster {
       print(s);
     }
   }
+  //Paging
+  // Future<void> importLocationMaster_Txt_CSV() async {
+  //   const int pageSize = 100; // Define the page size
+
+  //   try {
+  //     final FilePickerResult? result = await FilePicker.platform.pickFiles(
+  //       type: FileType.custom,
+  //       allowedExtensions: ['csv'],
+  //     );
+
+  //     if (result != null) {
+  //       final String csvPath = result.files.single.path!;
+
+  //       final String csvString =
+  //           await File(csvPath).readAsString(encoding: utf8);
+
+  //       final List<List<dynamic>> csvData = CsvToListConverter().convert(
+  //           csvString.toString().trim(),
+  //           fieldDelimiter: '|',
+  //           eol: '\n');
+
+  //       // Skip the header row
+  //       final List<List<dynamic>> dataWithoutHeader = csvData.skip(1).toList();
+
+  //       for (int i = 0; i < dataWithoutHeader.length; i += pageSize) {
+  //         final List<List<dynamic>> chunk = dataWithoutHeader.skip(i).take(pageSize).toList();
+
+  //         await _db.transaction(() async {
+  //           for (final row in chunk) {
+  //             // Assuming the columns are in the order: ItemCode, ItemName, ItemDescription, SerialNumber, Quantity, Udf01, Udf02, Udf03, Udf04, Udf05
+  //             final LocationMasterDBCompanion importModel =
+  //                 LocationMasterDBCompanion(
+  //               location_code: Value(row[0].toString()),
+  //               location_name: Value(row[1].toString()),
+  //               location_desc: Value(row[2].toString()),
+  //             );
+  //             await _db.into(_db.locationMasterDB).insert(importModel);
+  //           }
+  //         });
+  //       }
+  //     }
+  //   } catch (e, s) {
+  //     print(e);
+  //     print(s);
+  //   }
+  // }
 
   Future<void> importExcelFileLocationMaster() async {
     try {
@@ -245,7 +291,7 @@ class LocationMaster {
                             height: 50,
                             width: 50,
                           ),
-                          Mt.Center(child: Mt.Text("Export Csv"))
+                          Mt.Center(child: Mt.Text("Import Csv"))
                         ],
                       ),
                     ),

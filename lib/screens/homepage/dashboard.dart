@@ -50,19 +50,14 @@ class DashBoard extends StatelessWidget {
                 );
               } else if (state.status == FetchStatus.failed) {
                 return Center(child: Text('Error: ${state.message}'));
-              } else {
-                return Center(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('No data available'),
-                    ElevatedButton(
-                      onPressed: notifier.refresh,
-                      child: Text('Refresh'),
-                    ),
-                  ],
-                ));
               }
+              return Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('No data available'),
+                ],
+              ));
             },
           );
         },

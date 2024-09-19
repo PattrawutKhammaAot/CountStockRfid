@@ -8,11 +8,14 @@ class SearchEvent extends Equatable {
 }
 
 class GetListEvent extends SearchEvent {
-  const GetListEvent(this.itemCode);
+  const GetListEvent(this.itemCode, this.offset, this.limit, this.filter);
   final String itemCode;
+  final String filter;
+  final int offset;
+  final int limit;
 
   @override
-  List<Object> get props => [itemCode];
+  List<Object> get props => [itemCode, offset, limit, filter];
 }
 
 class DeleteByIDEvent extends SearchEvent {

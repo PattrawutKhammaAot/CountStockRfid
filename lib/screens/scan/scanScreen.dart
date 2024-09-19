@@ -66,15 +66,18 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   void initState() {
     SDK_Function.init();
+    fakefocusNode.requestFocus();
     AppData.getUsername().then((value) {
       username = value;
       setState(() {});
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
     });
 
     dataSource = GridDataSource(process: []);
     // transactionDB.getValidate();
 
     AppData.setPopupInfo("page_scan");
+
     super.initState();
   }
 
@@ -97,7 +100,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text('Please enter username'),
+                      title: Text(' enter username'),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -145,7 +148,9 @@ class _ScanScreenState extends State<ScanScreen> {
           actions: [
             IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, Routes.settings).then((value) {
+                  Navigator.pushNamed(context, Routes.settings, arguments: true)
+                      .then((value) {
+                    print(value);
                     setState(() {});
                   });
                 },
@@ -202,6 +207,13 @@ class _ScanScreenState extends State<ScanScreen> {
                 FutureBuilder(
                     future: transactionDB.getValidateLocation(),
                     builder: (context, snapshot) {
+                      // if (snapshot.connectionState == ConnectionState.waiting) {
+                      //   return Center(
+                      //     child: CircularProgressIndicator(),
+                      //   );
+                      // }
+                      isLocation = false;
+
                       if (snapshot.data != null && snapshot.data!.is_active) {
                         isLocation = snapshot.data!.is_active;
                         return _dropdown(
@@ -242,6 +254,7 @@ class _ScanScreenState extends State<ScanScreen> {
                 FutureBuilder(
                     future: transactionDB.getValidateSerial(),
                     builder: (context, snapshot) {
+                      isSerial = false;
                       if (snapshot.data != null && snapshot.data!.is_active) {
                         isSerial = snapshot.data!.is_active;
                         return Padding(
@@ -267,7 +280,7 @@ class _ScanScreenState extends State<ScanScreen> {
                       }
                       return SizedBox.shrink();
                     }),
-                _gridData(SDK_Function.setTagScannedListener((epc, dbm) {
+                _gridData(SDK_Function.setTagScannedListener((epc, dbm) async {
                   onEventScan(epc.trim(), dbm).then((value) async {});
                 })),
                 SizedBox(
@@ -290,6 +303,7 @@ class _ScanScreenState extends State<ScanScreen> {
                       await SDK_Function.scan(false);
                       isScanning = false;
                     }
+                    setState(() {});
                   },
                 ),
                 SizedBox(
@@ -366,9 +380,7 @@ class _ScanScreenState extends State<ScanScreen> {
         return Expanded(
           flex: 2,
           child: SfDataGrid(
-            onFilterChanged: (details) {
-              print(details.column);
-            },
+            onFilterChanged: (details) {},
             source: dataSource!,
             headerGridLinesVisibility: GridLinesVisibility.both,
             gridLinesVisibility: GridLinesVisibility.both,
@@ -402,6 +414,30 @@ class _ScanScreenState extends State<ScanScreen> {
                     ),
                   ),
                   allowSorting: true),
+              GridColumn(
+                  visible: true,
+                  columnName: 'Loc',
+                  label: Container(
+                    color: Colors.white,
+                    child: Center(
+                      child: Text(
+                        appLocalizations.txt_location_master,
+                      ),
+                    ),
+                  ),
+                  allowSorting: false),
+              GridColumn(
+                  visible: true,
+                  columnName: 'SN',
+                  label: Container(
+                    color: Colors.white,
+                    child: Center(
+                      child: Text(
+                        'Serial Number',
+                      ),
+                    ),
+                  ),
+                  allowSorting: false),
             ],
           ),
         );
@@ -526,9 +562,12 @@ class _ScanScreenState extends State<ScanScreen> {
           serial_number: txt_serial,
           count_location_name: selectLocationDropdown,
           created_date: DateTime.now(),
-          rssi: rssi,
+          Rssi: rssi,
           status_item: StatusAssets.status_normal,
           scan_by: username));
+      if (itemReturn.rfid_tag == null) {
+        return;
+      }
 
       _addTable
               .where((element) =>

@@ -29,7 +29,7 @@ class AppData {
 
   static setPopupInfo(String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(value);
+
     // await storage.write(key: "ApiUrl", value: value);
     await prefs.setString("popupInfo", value);
   }
@@ -43,7 +43,7 @@ class AppData {
 
   static setUsername(String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(value);
+
     // await storage.write(key: "ApiUrl", value: value);
     await prefs.setString("username", value);
   }

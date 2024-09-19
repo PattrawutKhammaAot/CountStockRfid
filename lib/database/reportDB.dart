@@ -50,7 +50,7 @@ class ReportDB {
       var itemMaster = getItemMaster.map((e) => e.item_id).toList();
       var result = itemMaster.length -
           itemTransaction.length; // นับจำนวน item ที่ยังไม่ได้ scan
-      print(result);
+
       if (result < 0) {
         return 0;
       }

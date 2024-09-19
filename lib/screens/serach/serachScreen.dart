@@ -5,6 +5,7 @@ import 'package:android_path_provider/android_path_provider.dart';
 import 'package:countstock_rfid/config/appConstants.dart';
 import 'package:countstock_rfid/database/exportDB.dart';
 import 'package:countstock_rfid/database/transactionsDB.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,21 +38,15 @@ class _SearchScreenState extends State<SearchScreen> {
   String isFilter_status = "Default";
   List<TransactionsDBData> itemModel = [];
   List<TransactionsDBData> temp_itemModel = [];
+  int pageSize = 25;
+  int currentPage = 0;
   // StreamSubscription<SearchRfidState>? _subscription;
 
   @override
   void initState() {
     BlocProvider.of<SearchBloc>(context).add(
-      GetListEvent(''),
+      GetListEvent('', currentPage * pageSize, pageSize, isFilter_status),
     );
-    // appDb.deleteTagRunningDuplicate().then((value) {
-
-    //   focusNode.requestFocus();
-    //   Future.delayed(Duration(milliseconds: 500), () async {
-    //     SystemChannels.textInput.invokeMethod('TextInput.hide');
-    //     setState(() {});
-    //   });
-    // });
 
     // _subscribeToBloc();
     AppData.setPopupInfo("page_serachtag");
@@ -149,9 +144,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     onChanged: (value) {
                       if (value.length > 1) {
-                        context.read<SearchBloc>().add(GetListEvent(value));
+                        context.read<SearchBloc>().add(GetListEvent(value,
+                            currentPage * pageSize, pageSize, isFilter_status));
                       } else if (value.length == 0) {
-                        context.read<SearchBloc>().add(GetListEvent(''));
+                        context.read<SearchBloc>().add(GetListEvent('',
+                            currentPage * pageSize, pageSize, isFilter_status));
                       }
                     },
                   ),
@@ -174,48 +171,68 @@ class _SearchScreenState extends State<SearchScreen> {
                           appLocalizations.btn_export_data,
                           style: TextStyle(color: Colors.white),
                         )),
-                    // ElevatedButton(
-                    //     style: ButtonStyle(
-                    //         backgroundColor: MaterialStatePropertyAll(
-                    //             isFilter_status == "Found"
-                    //                 ? Colors.green
-                    //                 : isFilter_status == "Not Found"
-                    //                     ? Colors.redAccent
-                    //                     : Colors.blue)),
-                    //     onPressed: () {
-                    //       // if (isFilter_status == "Default") {
-                    //       //   itemModel = temp_itemModel
-                    //       //       .where((element) => element.status == "Found")
-                    //       //       .toList();
-                    //       //   isFilter_status = "Found";
-                    //       // } else if (isFilter_status == "Found") {
-                    //       //   itemModel = temp_itemModel
-                    //       //       .where(
-                    //       //           (element) => element.status == "Not Found")
-                    //       //       .toList();
-                    //       //   isFilter_status = "Not Found";
-                    //       // } else if (isFilter_status == "Not Found") {
-                    //       //   context.read<SearchBloc>().add(GetSerachEvent(''));
-                    //       //   isFilter_status = "Default";
-                    //       // }
+                    ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll(
+                                isFilter_status == StatusAssets.status_normal
+                                    ? Colors.green
+                                    : isFilter_status == StatusAssets.status_dmg
+                                        ? Colors.redAccent
+                                        : isFilter_status ==
+                                                StatusAssets.status_loss
+                                            ? Colors.grey
+                                            : Colors.blueAccent)),
+                        onPressed: () {
+                          if (isFilter_status == "Default") {
+                            itemModel = temp_itemModel
+                                .where((element) =>
+                                    element.status_item ==
+                                    StatusAssets.status_normal)
+                                .toList();
+                            isFilter_status = StatusAssets.status_normal;
+                          } else if (isFilter_status ==
+                              StatusAssets.status_normal) {
+                            itemModel = temp_itemModel
+                                .where((element) =>
+                                    element.status_item ==
+                                    StatusAssets.status_dmg)
+                                .toList();
+                            isFilter_status = StatusAssets.status_dmg;
+                          } else if (isFilter_status ==
+                              StatusAssets.status_dmg) {
+                            itemModel = temp_itemModel
+                                .where((element) =>
+                                    element.status_item ==
+                                    StatusAssets.status_loss)
+                                .toList();
+                            isFilter_status = StatusAssets.status_loss;
+                          } else if (isFilter_status ==
+                              StatusAssets.status_loss) {
+                            context.read<SearchBloc>().add(GetListEvent(
+                                '',
+                                currentPage * pageSize,
+                                pageSize,
+                                isFilter_status));
+                            isFilter_status = "Default";
+                          }
 
-                    //       setState(() {});
-                    //     },
-                    //     child: Text(
-                    //       "${isFilter_status == "Default" ? "${appLocalizations.btn_status_select}" : isFilter_status == "Not Found" ? "${appLocalizations.btn_status_not_found}" : "${appLocalizations.btn_status_found}"}",
-                    //       style: TextStyle(color: Colors.white),
-                    //     )),
+                          setState(() {});
+                        },
+                        child: Text(
+                          "${isFilter_status == "Default" ? "${appLocalizations.btn_status_select}" : isFilter_status == StatusAssets.status_dmg ? "${"Damaged"}" : isFilter_status == StatusAssets.status_loss ? "${"Loss"}" : "${"Normal"}"}",
+                          style: TextStyle(color: Colors.white),
+                        )),
                     IconButton(
                         onPressed: () {
                           isFilter = !isFilter;
                           if (isFilter) {
-                            itemModel
-                                .sort((a, b) => a.rssi!.compareTo(b.rssi!));
+                            itemModel.sort((a, b) => int.parse(a.Rssi!)
+                                .compareTo(int.parse(b.Rssi!)));
 
                             // do somethings
                           } else {
-                            itemModel
-                                .sort((a, b) => b.rssi!.compareTo(a.rssi!));
+                            itemModel.sort((a, b) => int.parse(b.Rssi!)
+                                .compareTo(int.parse(a.Rssi!)));
 
                             // do somethings
                           }
@@ -244,7 +261,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                         arguments: itemModel[index])
                                     .then((value) {
                                   BlocProvider.of<SearchBloc>(context).add(
-                                    GetListEvent(''),
+                                    GetListEvent('', currentPage * pageSize,
+                                        pageSize, isFilter_status),
                                   );
                                 });
                               },
@@ -280,7 +298,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                   child: Stack(
                                     children: [
                                       Container(
-                                        width: 170,
                                         padding: EdgeInsets.all(4),
                                         decoration: BoxDecoration(
                                             color: Colors.blue[700],
@@ -292,7 +309,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           padding:
                                               const EdgeInsets.only(left: 4),
                                           child: Text(
-                                            'Item Code : ${itemModel[index].count_ItemCode}',
+                                            '${itemModel[index].count_ItemCode}',
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
@@ -313,7 +330,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   CrossAxisAlignment.end,
                                               children: [
                                                 Text(
-                                                    'Rssi : ${itemModel[index].rssi} dBm',
+                                                    'Rssi : ${itemModel[index].Rssi} dBm',
                                                     style: TextStyle(
                                                         color: Colors.black)),
                                               ],
@@ -437,6 +454,66 @@ class _SearchScreenState extends State<SearchScreen> {
                       )
               ],
             )),
+      ),
+    );
+  }
+
+  Widget _dropdown(
+      {String? hintText,
+      List<DropdownMenuItem<String>>? items,
+      Function(String?)? onChanged,
+      Function(String?)? onSaved,
+      Widget? prefixIcon,
+      TextEditingController? textEditingController,
+      bool Function(DropdownMenuItem<String>, String)? searchMatchFn,
+      Function(String?)? onChangedText}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DropdownButton2<String>(
+        isExpanded: true,
+        // decoration: InputDecoration(
+        //   prefixIcon: prefixIcon,
+        //   // Add Horizontal padding using menuItemStyleData.padding so it matches
+        //   // the menu padding when button's width is not specified.
+        //   contentPadding: const EdgeInsets.symmetric(vertical: 16),
+        //   border: OutlineInputBorder(
+        //     borderRadius: BorderRadius.circular(15),
+        //   ),
+        //   // Add more decoration..
+        // ),
+        hint: Text(
+          hintText!,
+          style: TextStyle(fontSize: 14),
+        ),
+        items: items,
+        onChanged: onChanged,
+        // onSaved: onSaved,
+
+        buttonStyleData: const ButtonStyleData(
+          padding: EdgeInsets.only(right: 8),
+        ),
+        iconStyleData: const IconStyleData(
+          icon: Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black45,
+          ),
+          iconSize: 24,
+        ),
+        dropdownStyleData: DropdownStyleData(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+        menuItemStyleData: const MenuItemStyleData(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+        ),
+
+        //This to clear the search value when you close the menu
+        onMenuStateChange: (isOpen) {
+          if (!isOpen) {
+            textEditingController?.clear();
+          }
+        },
       ),
     );
   }

@@ -60,7 +60,7 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
         await itemMasterDB.getQtyPlan(itemCodeController.text);
     scanByController.text = itemModel.scan_by.toString();
 
-    final formatedDate = DateFormat('dd-MM-yyyy hh:mm')
+    final formatedDate = DateFormat('dd-MM-yyyy HH:mm')
         .format(itemModel.created_date ?? DateTime.now());
     scanDateController.text = formatedDate;
     statusController.text = itemModel.status_item.toString();

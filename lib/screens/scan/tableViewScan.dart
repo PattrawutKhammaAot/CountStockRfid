@@ -13,6 +13,8 @@ class GridDataSource extends DataGridSource {
                 DataGridCell<String>(
                     columnName: 'rfid_tag', value: _item.rfid_tag),
                 DataGridCell(columnName: 'RSSI', value: "${_item.rssi} dBm"),
+                DataGridCell(columnName: 'Loc', value: "${_item.location}"),
+                DataGridCell(columnName: 'SN', value: "${_item.serial_number}"),
 
                 // DataGridCell<String>(columnName: 't1', value: _item.Thickness1),
                 // DataGridCell<String>(columnName: 't2', value: _item.Thickness2),
@@ -94,11 +96,19 @@ class GridDataSource extends DataGridSource {
 }
 
 class GridDataList {
-  GridDataList({this.rfid_tag, this.status, this.rssi});
+  GridDataList(
+      {this.rfid_tag,
+      this.status,
+      this.rssi,
+      this.location,
+      this.serial_number});
 
   final String? status;
   final String? rfid_tag;
   final String? rssi;
+  final String? location;
+  final String? serial_number;
 
-  List<Object> get props => [status!, rfid_tag!];
+  List<Object> get props =>
+      [status!, rfid_tag!, rssi!, location!, serial_number!];
 }

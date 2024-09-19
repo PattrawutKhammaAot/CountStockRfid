@@ -18,6 +18,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _formkey = GlobalKey<FormState>();
   TextEditingController _usernameController = TextEditingController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<DashboardNotifier>().refresh();
+    });
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -41,8 +51,7 @@ class _HomePageState extends State<HomePage> {
           body: Column(
             children: [
               Container(
-                padding: const EdgeInsets.only(top: 0),
-                width: MediaQuery.sizeOf(context).width,
+                padding: const EdgeInsets.only(top: 0, left: 10),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(20),
@@ -55,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       children: [
                         Container(
-                          margin: const EdgeInsets.all(20),
+                          margin: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border.all(
@@ -120,56 +129,86 @@ class _HomePageState extends State<HomePage> {
                                         if (await AppData.getUsername() ==
                                                 null ||
                                             await AppData.getUsername() == '') {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Text(
-                                                      'Please enter username'),
-                                                  content: TextFormField(
-                                                    autofocus: true,
-                                                    controller:
-                                                        _usernameController,
-                                                    validator: (value) {
-                                                      if (value == null ||
-                                                          !value.isEmpty) {
-                                                        return 'Please enter username';
-                                                      }
-                                                      return null;
-                                                    },
-                                                    decoration: InputDecoration(
-                                                      errorText:
-                                                          'Please enter username',
-                                                      hintText: 'Username',
-                                                      border:
-                                                          OutlineInputBorder(),
+                                          showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            builder: (context) {
+                                              return Padding(
+                                                padding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom,
+                                                ),
+                                                child: SingleChildScrollView(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16.0),
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                            'Please enter username',
+                                                            style: TextStyle(
+                                                                fontSize: 18)),
+                                                        SizedBox(height: 16),
+                                                        TextFormField(
+                                                          autofocus: true,
+                                                          controller:
+                                                              _usernameController,
+                                                          validator: (value) {
+                                                            if (value == null ||
+                                                                value.isEmpty) {
+                                                              return 'Please enter username';
+                                                            }
+                                                            return null;
+                                                          },
+                                                          decoration:
+                                                              InputDecoration(
+                                                            errorText:
+                                                                'Please enter username',
+                                                            hintText:
+                                                                'Username',
+                                                            border:
+                                                                OutlineInputBorder(),
+                                                          ),
+                                                          onChanged: (value) {
+                                                            AppData.setUsername(
+                                                                value);
+                                                          },
+                                                        ),
+                                                        SizedBox(height: 16),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomRight,
+                                                          child: TextButton(
+                                                            onPressed: () {
+                                                              if (_usernameController
+                                                                  .text
+                                                                  .isNotEmpty) {
+                                                                Navigator.pop(
+                                                                    context);
+                                                                Navigator
+                                                                    .pushNamed(
+                                                                        context,
+                                                                        Routes
+                                                                            .scan);
+                                                                _usernameController
+                                                                    .clear();
+                                                              }
+                                                              setState(() {});
+                                                            },
+                                                            child: Text('OK'),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    onChanged: (value) {
-                                                      AppData.setUsername(
-                                                          value);
-                                                    },
                                                   ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        if (_usernameController
-                                                            .text.isNotEmpty) {
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.pushNamed(
-                                                              context,
-                                                              Routes.scan);
-                                                          _usernameController
-                                                              .clear();
-                                                        }
-
-                                                        setState(() {});
-                                                      },
-                                                      child: Text('OK'),
-                                                    )
-                                                  ],
-                                                );
-                                              });
+                                                ),
+                                              );
+                                            },
+                                          );
                                           return;
                                         }
                                         Navigator.pushNamed(
@@ -230,7 +269,6 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 flex: 1,
                 child: Container(
-                  width: MediaQuery.sizeOf(context).width,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: const BorderRadius.only(

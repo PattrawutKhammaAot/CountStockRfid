@@ -21,6 +21,7 @@ class _SettingScreenState extends State<SettingScreen> {
   dynamic currentPower;
 
   dynamic isScanHeader;
+  bool isFromScan = false;
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -55,6 +56,14 @@ class _SettingScreenState extends State<SettingScreen> {
         _packageInfo = value;
       });
       AppData.setPopupInfo("page_settings");
+    });
+    Future.microtask(() async {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args != null) {
+        setState(() {
+          isFromScan = args as bool;
+        });
+      }
     });
 
     super.initState();
@@ -127,7 +136,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                   trailing: Column(
                                     children: [
                                       ToggleSwitch(
-                                        minWidth: 90.0,
+                                        minWidth: 70.0,
                                         cornerRadius: 20.0,
                                         activeBgColor:
                                             List.filled(1, Colors.green),
@@ -255,40 +264,45 @@ class _SettingScreenState extends State<SettingScreen> {
         SizedBox(
           height: 10,
         ),
-        TextFormField(
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title:
-                        Text(appLocalizations.settings_txt_clear_title_warning),
-                    content: Text(appLocalizations.settings_txt_clear_content),
-                    actions: [
-                      TextButton(
-                          onPressed: () async {
-                            await appSettingDB.deleteAll();
-                            EasyLoading.showSuccess(appLocalizations.success);
-                            Navigator.pop(context);
-                          },
-                          child: Text(appLocalizations.btn_delete)),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(appLocalizations.btn_cancel)),
-                    ],
-                  );
-                });
-          },
-          controller: TextEditingController(
-              text: "${appLocalizations.settings_btn_clear_transaction_All} "),
-          readOnly: true,
-          decoration: InputDecoration(
-              suffixIcon: Icon(Icons.delete_forever),
-              labelText: appLocalizations.settings_txt_delete_data,
-              border: OutlineInputBorder()),
-        ),
+        !isFromScan
+            ? TextFormField(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(appLocalizations
+                              .settings_txt_clear_title_warning),
+                          content:
+                              Text(appLocalizations.settings_txt_clear_content),
+                          actions: [
+                            TextButton(
+                                onPressed: () async {
+                                  await appSettingDB.deleteAll();
+                                  EasyLoading.showSuccess(
+                                      appLocalizations.success);
+                                  Navigator.pop(context);
+                                },
+                                child: Text(appLocalizations.btn_delete)),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(appLocalizations.btn_cancel)),
+                          ],
+                        );
+                      });
+                },
+                controller: TextEditingController(
+                    text:
+                        "${appLocalizations.settings_btn_clear_transaction_All} "),
+                readOnly: true,
+                decoration: InputDecoration(
+                    suffixIcon: Icon(Icons.delete_forever),
+                    labelText: appLocalizations.settings_txt_delete_data,
+                    border: OutlineInputBorder()),
+              )
+            : SizedBox.fromSize(),
         SizedBox(
           height: 10,
         ),

@@ -72,6 +72,9 @@ class _ImportMasterScreenState extends State<ImportMasterScreen> {
                           itemMasterDB.deleteItemMaster();
                           itemMasterDBData = [];
                           setState(() {});
+                          EasyLoading.showSuccess(
+                              maskType: EasyLoadingMaskType.black,
+                              '${appLocalizations.btn_delete}${appLocalizations.success}');
                         },
                         child: Text(
                           appLocalizations.btn_clear_all,

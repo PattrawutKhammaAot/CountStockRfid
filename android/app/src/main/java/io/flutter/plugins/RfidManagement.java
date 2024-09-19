@@ -238,22 +238,22 @@ public class RfidManagement implements FlutterPlugin, MethodCallHandler {
                 soundTool.playBeep();
                 result.success("Scanner closed");
                 break;
-            // case "CheckScanner":
-            //     try{
-            //     result.success(mScanManager.getScannerState());
-            //     }catch(Exception e){
-            //         Log.e(TAG, "Error in CheckScanner", e);
-            //         result.success(e);
-            //     }
-            // break;
-            //   case "getTriggerLockState":
-            //     try{
-            //     result.success(mScanManager.getTriggerLockState());
-            //     }catch(Exception e){
-            //         Log.e(TAG, "Error in CheckScanner", e);
-            //         result.success(e);
-            //     }
-            // break;
+            case "CheckScanner":
+                try{
+                result.success(mScanManager.getScannerState());
+                }catch(Exception e){
+                    Log.e(TAG, "Error in CheckScanner", e);
+                    result.success(e);
+                }
+            break;
+              case "getTriggerLockState":
+                try{
+                result.success(mScanManager.getTriggerLockState());
+                }catch(Exception e){
+                    Log.e(TAG, "Error in CheckScanner", e);
+                    result.success(e);
+                }
+            break;
             case "initScanner":
                 try{
                initRfid(bindingObject.getApplicationContext());

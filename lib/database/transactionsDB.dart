@@ -76,6 +76,7 @@ class Transactions {
               .firstOrNull
               ?.is_validate ??
           false;
+
       bool isValidateSerialNumber = getValidate
               .where((element) => element.name == 'Serial Number')
               .firstOrNull
@@ -90,7 +91,7 @@ class Transactions {
         count_QuantityScan: Value(data.count_QuantityScan ?? 1),
         serial_number: Value(data.serial_number),
         status_item: Value(data.status_item ?? ""),
-        rssi: Value(data.rssi),
+        rssi: Value(data.Rssi),
         created_date: Value(data.created_date),
         is_Validate_Location: Value(isValidateLocation),
         is_Validate_ItemCode: Value(isValidateItemCode),
@@ -144,11 +145,15 @@ class Transactions {
                     serial_number: Value(data.serial_number),
                     count_QuantityScan: Value(data.count_QuantityScan),
                     status_item: Value(data.status_item),
-                    rssi: Value(data.rssi),
+                    rssi: Value(data.Rssi),
                     updated_date: Value(DateTime.now())));
           }
-          itemReturn = GridDataList(
-              rfid_tag: data.count_ItemCode, status: "Found", rssi: data.rssi);
+          return itemReturn = GridDataList(
+              rfid_tag: data.count_ItemCode,
+              status: "Found",
+              rssi: data.Rssi,
+              location: data.count_location_name ?? "",
+              serial_number: data.serial_number ?? "");
         }
       }
       if (!isValidateItemCode && isValidateLocation && isValidateSerialNumber) {
@@ -190,13 +195,15 @@ class Transactions {
                       serial_number: Value(data.serial_number),
                       count_QuantityScan: Value(data.count_QuantityScan),
                       status_item: Value(data.status_item),
-                      rssi: Value(data.rssi),
+                      rssi: Value(data.Rssi),
                       updated_date: Value(DateTime.now())));
             }
-            itemReturn = GridDataList(
+            return itemReturn = GridDataList(
                 rfid_tag: data.count_ItemCode,
                 status: "Found",
-                rssi: data.rssi);
+                rssi: data.Rssi,
+                location: data.count_location_name ?? "",
+                serial_number: data.serial_number ?? "");
           }
         }
       }
@@ -238,13 +245,15 @@ class Transactions {
                       serial_number: Value(data.serial_number),
                       count_QuantityScan: Value(data.count_QuantityScan),
                       status_item: Value(data.status_item),
-                      rssi: Value(data.rssi),
+                      rssi: Value(data.Rssi),
                       updated_date: Value(DateTime.now())));
             }
-            itemReturn = GridDataList(
+            return itemReturn = GridDataList(
                 rfid_tag: data.count_ItemCode,
                 status: "Found",
-                rssi: data.rssi);
+                rssi: data.Rssi,
+                location: data.count_location_name ?? "",
+                serial_number: data.serial_number ?? "");
           }
         }
       }
@@ -285,11 +294,15 @@ class Transactions {
                     serial_number: Value(data.serial_number),
                     count_QuantityScan: Value(data.count_QuantityScan),
                     status_item: Value(data.status_item),
-                    rssi: Value(data.rssi),
+                    rssi: Value(data.Rssi),
                     updated_date: Value(DateTime.now())));
           }
-          itemReturn = GridDataList(
-              rfid_tag: data.count_ItemCode, status: "Found", rssi: data.rssi);
+          return itemReturn = GridDataList(
+              rfid_tag: data.count_ItemCode,
+              status: "Found",
+              rssi: data.Rssi,
+              location: data.count_location_name ?? "",
+              serial_number: data.serial_number ?? "");
         }
       }
       if (!isValidateItemCode &&
@@ -324,11 +337,15 @@ class Transactions {
                     serial_number: Value(data.serial_number),
                     count_QuantityScan: Value(data.count_QuantityScan),
                     status_item: Value(data.status_item),
-                    rssi: Value(data.rssi),
+                    rssi: Value(data.Rssi),
                     updated_date: Value(DateTime.now())));
           }
-          itemReturn = GridDataList(
-              rfid_tag: data.count_ItemCode, status: "Found", rssi: data.rssi);
+          return itemReturn = GridDataList(
+              rfid_tag: data.count_ItemCode,
+              status: "Found",
+              rssi: data.Rssi,
+              location: data.count_location_name ?? "",
+              serial_number: data.serial_number ?? "");
         }
       }
       if (!isValidateItemCode &&
@@ -363,11 +380,15 @@ class Transactions {
                     serial_number: Value(data.serial_number),
                     count_QuantityScan: Value(data.count_QuantityScan),
                     status_item: Value(data.status_item),
-                    rssi: Value(data.rssi),
+                    rssi: Value(data.Rssi),
                     updated_date: Value(DateTime.now())));
           }
-          itemReturn = GridDataList(
-              rfid_tag: data.count_ItemCode, status: "Found", rssi: data.rssi);
+          return itemReturn = GridDataList(
+              rfid_tag: data.count_ItemCode,
+              status: "Found",
+              rssi: data.Rssi,
+              location: data.count_location_name ?? "",
+              serial_number: data.serial_number ?? "");
         }
       }
       if (isValidateItemCode &&
@@ -402,11 +423,16 @@ class Transactions {
                     serial_number: Value(data.serial_number),
                     count_QuantityScan: Value(data.count_QuantityScan),
                     status_item: Value(data.status_item),
-                    rssi: Value(data.rssi),
+                    rssi: Value(data.Rssi),
                     updated_date: Value(DateTime.now())));
           }
-          itemReturn = GridDataList(
-              rfid_tag: data.count_ItemCode, status: "Found", rssi: data.rssi);
+
+          return itemReturn = GridDataList(
+              rfid_tag: data.count_ItemCode,
+              status: "Found",
+              rssi: data.Rssi,
+              location: data.count_location_name ?? "",
+              serial_number: data.serial_number ?? "");
         }
       }
       if (!isValidateItemCode &&
@@ -438,12 +464,16 @@ class Transactions {
                   serial_number: Value(data.serial_number),
                   count_QuantityScan: Value(data.count_QuantityScan ?? 1),
                   status_item: Value(data.status_item),
-                  rssi: Value(data.rssi),
+                  rssi: Value(data.Rssi),
                   itemDesc: Value(itemDesc.toString()),
                   updated_date: Value(DateTime.now())));
         }
-        itemReturn = GridDataList(
-            rfid_tag: data.count_ItemCode, status: "Found", rssi: data.rssi);
+        return itemReturn = GridDataList(
+            rfid_tag: data.count_ItemCode,
+            status: "Found",
+            rssi: data.Rssi,
+            location: data.count_location_name ?? "",
+            serial_number: data.serial_number ?? "");
       }
       if (itemReturn.rfid_tag != null && itemReturn.rfid_tag!.isNotEmpty) {
         await SDK_Function.playSound();
@@ -453,7 +483,7 @@ class Transactions {
     } catch (e, s) {
       print(e);
       print(s);
-      return itemReturn;
+      throw Exception();
     }
   }
 
@@ -615,7 +645,6 @@ class Transactions {
         print(itemDescription);
         return itemDescription!;
       } else {
-        print("object");
         return "";
       }
     } catch (e, s) {

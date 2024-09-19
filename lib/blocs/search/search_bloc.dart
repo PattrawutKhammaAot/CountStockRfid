@@ -18,7 +18,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<GetListEvent>((event, emit) async {
       try {
         emit(state.copyWith(status: FetchStatus.fetching));
-        var result = await SearchDB().serachResult(event.itemCode);
+        var result = await SearchDB().serachResult(
+            event.itemCode, event.offset, event.limit, event.filter);
         if (result.isNotEmpty) {
           emit(state.copyWith(status: FetchStatus.success, data: result));
         } else {

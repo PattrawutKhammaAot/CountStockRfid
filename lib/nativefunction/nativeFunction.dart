@@ -13,7 +13,7 @@ class SDK_Function {
       status = !status;
       final result =
           await platform.invokeMethod('Scanned', {"statusTrg": true});
-      print(result);
+
       return result;
     } catch (e) {
       print('Error123: $e');
@@ -36,7 +36,7 @@ class SDK_Function {
     try {
       final result =
           await platform.invokeMethod('SetASCII', {"isASCII": isACSII});
-      print(result);
+
       return result;
     } catch (e) {
       print('Error123: $e');
@@ -132,11 +132,10 @@ class SDK_Function {
     try {
       var result = await getPower();
       if (result == 'Error' || result == -1) {
-        await platform.invokeMethod('initScanner');
+        final resultInit = await platform.invokeMethod('initScanner');
         EasyLoading.show(status: appLocalizations.txt_Initializing);
         setPower(33);
         await Future.delayed(Duration(seconds: 2));
-
         EasyLoading.showSuccess(appLocalizations.txt_Initialized);
       }
     } catch (e) {
@@ -171,7 +170,7 @@ class SDK_Function {
   static Future<dynamic> checkScanner() async {
     try {
       dynamic result = await platform.invokeMethod('CheckScanner');
-
+      print("result: $result");
       if (result) {
         return result;
       } else {

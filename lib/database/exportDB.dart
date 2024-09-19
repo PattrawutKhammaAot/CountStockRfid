@@ -90,7 +90,7 @@ class ExportDB {
   Future<void> exportExcel() async {
     try {
       EasyLoading.show(status: 'Exporting...');
-      final item = await SearchDB().serachResult('');
+      final item = await SearchDB().serachResult('', 0, 100000, 'Default');
       final username = await AppData.getUsername() ?? "Unknown";
       final xlsio.Workbook workbook = xlsio.Workbook();
       final xlsio.Worksheet sheet = workbook.worksheets[0];
@@ -133,11 +133,11 @@ class ExportDB {
         final cell6 = sheet.getRangeByIndex(i + 2, 7);
         cell6.setText(username);
         final cell7 = sheet.getRangeByIndex(i + 2, 8);
-        cell7.setText(DateFormat('dd-MM-yyyy hh:mm')
+        cell7.setText(DateFormat('dd-MM-yyyy HH:mm')
             .format(item[i].created_date ?? DateTime.now()));
         cell7.columnWidth = 15;
         final cell8 = sheet.getRangeByIndex(i + 2, 9);
-        cell8.setText("Status");
+        cell8.setText(item[i].status_item.toString());
         final cell10 = sheet.getRangeByIndex(i + 2, 11);
         cell10.setText("");
         final cell11 = sheet.getRangeByIndex(i + 2, 11);
@@ -165,7 +165,7 @@ class ExportDB {
   Future<void> exportCsv() async {
     try {
       EasyLoading.show(status: 'Exporting...');
-      final item = await SearchDB().serachResult('');
+      final item = await SearchDB().serachResult('', 0, 100000, 'Default');
       final username = await AppData.getUsername() ?? "Unknown";
       final List<List<String>> csvData = [
         [
